@@ -102,15 +102,29 @@ function userSetVotes() {
 
 function userSetDelegation(id) {
 	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
-	var name = document.getElementById('node' + id).getElementsByClassName('name')[0].textContent;
-	delegation.textContent = name;
 	delegation.setAttribute('data-id', id);
+	userUpdateDelegation();
 }
 
 function userUnsetDelegation() {
 	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
-	delegation.textContent = '(no delegation)';
 	delegation.removeAttribute('data-id');
+	userUpdateDelegation();
+}
+
+function userUpdateDelegation() {
+	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
+	var id = delegation.getAttribute('data-id');
+	if (id) {
+		var name = document.getElementById('node' + id).getElementsByClassName('name')[0].textContent;
+		var comment = document.getElementById('node' + id).getElementsByClassName('comment')[0].textContent;
+		delegation.textContent = name;
+		delegation.setAttribute('title', comment);
+	}
+	else {
+		delegation.textContent = '(no delegation)';
+		delegation.removeAttribute('title');
+	}
 }
 
 /*** API ***/
@@ -199,6 +213,7 @@ function setNodeName(id, name) {
 	node.getElementsByClassName('delegate')[0].title = "delegate to " + name;
 
 	if (id === ID) userSetName(name);
+	userUpdateDelegation();
 }
 
 function setNodeComment(id, comment) {
@@ -206,6 +221,7 @@ function setNodeComment(id, comment) {
 	node.getElementsByClassName('comment')[0].textContent = comment;
 
 	if (id === ID) userSetComment(comment);
+	userUpdateDelegation();
 }
 
 function setDelegate(id, new_id) {
@@ -243,7 +259,7 @@ function rmDelegate(id) {
 
 	if (id === ID) {
 		_addParentHighlight(o);
-		userUnsetDelegation(new_id);
+		userUnsetDelegation();
 	}
 	userSetVotes();
 }
