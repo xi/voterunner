@@ -57,7 +57,7 @@ function _post(action, id, v) {
 	params += '&v=' + encodeURI(v);
 
 	var http = new XMLHttpRequest();
-	http.open('POST', 'post.php', true);
+	http.open('POST', 'api/post.php', true);
 	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	http.setRequestHeader("Content-length", params.length);
 	http.setRequestHeader("Connection", "close");
@@ -348,7 +348,7 @@ function uid() {
 function build() {
 	// get current state
 	var http = new XMLHttpRequest();
-	http.open('GET', 'state.php', true);
+	http.open('GET', 'api/state.php', true);
 	http.onreadystatechange = function() {
 		if(http.readyState==4) {
 			if(http.status==200) {
@@ -405,7 +405,7 @@ window.onDOMReady(function() {
 	}
 
 	if (!!window.EventSource) {
-		var source = new EventSource('queue.php');
+		var source = new EventSource('api/queue.php');
 	} else {
 		alert("ERROR: Your Browser does not support Server-Sent Events.");
 	}

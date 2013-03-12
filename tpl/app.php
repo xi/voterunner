@@ -3,10 +3,10 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>voterunner</title>
-	<link rel="shortcut icon" href="favicon.ico"/>
-	<link rel="stylesheet" type="text/css" href="style.css" />
-	<script type="text/javascript" src="voterunner.js"></script>
+	<title>voterunner - <?=$_GET['topic']?></title>
+	<link rel="shortcut icon" href="static/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="static/style.css" />
+	<script type="text/javascript" src="static/voterunner.js"></script>
 </head>
 
 <body>

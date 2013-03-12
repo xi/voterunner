@@ -1,0 +1,20 @@
+RewriteEngine on
+
+RewriteBase /
+
+RewriteRule ^(static/.*)$ $1 [L]
+RewriteRule ^(api/.*)$ $1 [L]
+RewriteRule ^([^.]*[^/])$ $1/ [L,R=301]
+RewriteRule ^([^/]*)/(.*)$ $2?topic=$1 [L,QSA]
+
+# block access to several files
+<FilesMatch "\.(htaccess|php|sqlite)$">
+	Order Allow,Deny
+	Deny from all
+</FilesMatch>
+
+# allow access to index.php
+<FilesMatch "(index|post|queue|state)\.php$">
+	Order Allow,Deny
+	Allow from all
+</FilesMatch>

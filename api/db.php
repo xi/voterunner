@@ -1,8 +1,14 @@
 <?php
 //ini_set('display_errors','On');
 
+if (!isset($_GET['topic']) || empty($_GET['topic'])) {
+	header("HTTP/1.0 404 Not Found");
+	include('../tpl/404.htm');
+	die();
+}
+
 try {
-	$db = new PDO('sqlite:public/db.sqlite');
+	$db = new PDO("sqlite:../public/{$_GET['topic']}.sqlite");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 }
