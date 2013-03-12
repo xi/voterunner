@@ -5,49 +5,54 @@ function toggleExpand(o) {
 	o = o.parentElement;
 	if (o.getAttribute('data-expanded')) {
 		o.removeAttribute('data-expanded');
-	}
-	else {
+	} else {
 		o.setAttribute('data-expanded', 1);
 	}
 }
 
 /*** helper ***/
 function _root() {
-	root = document.getElementById('tree');
+	var root = document.getElementById('tree');
 	return root.getElementsByTagName('ul')[0];
 }
 
 function _rmParentVotes(o, votes) {
-	if (o.className !== 'node') return
-	v = o.getElementsByClassName('votes')[0];
-	p = o.parentElement.parentElement;
-	votes2 = parseInt(v.textContent, 10);
-	if (!votes) {votes = votes2}
-	else {v.textContent = votes2 - votes}
+	if (o.className !== 'node') return;
+	var v = o.getElementsByClassName('votes')[0];
+	var p = o.parentElement.parentElement;
+	var votes2 = parseInt(v.textContent, 10);
+	if (!votes) {
+		votes = votes2;
+	} else {
+		v.textContent = votes2 - votes;
+	}
 	_rmParentVotes(p, votes);
 }
 
 function _addParentVotes(o, votes) {
-	if (o.className !== 'node') return
-	v = o.getElementsByClassName('votes')[0];
-	p = o.parentElement.parentElement;
-	votes2 = parseInt(v.textContent, 10);
-	if (!votes) {votes = votes2}
-	else {v.textContent = votes2 + votes}
+	if (o.className !== 'node') return;
+	var v = o.getElementsByClassName('votes')[0];
+	var p = o.parentElement.parentElement;
+	var votes2 = parseInt(v.textContent, 10);
+	if (!votes) {
+		votes = votes2;
+	} else {
+		v.textContent = votes2 + votes;
+	}
 	_addParentVotes(p, votes);
 }
 
 function _addParentHighlight(o) {
-	if (o.className !== 'node') return
+	if (o.className !== 'node') return;
 	o.setAttribute('data-highlight', 1);
-	p = o.parentElement.parentElement;
+	var p = o.parentElement.parentElement;
 	_addParentHighlight(p);
 }
 
 function _rmParentHighlight(o) {
-	if (o.className !== 'node') return
+	if (o.className !== 'node') return;
 	o.removeAttribute('data-highlight');
-	p = o.parentElement.parentElement;
+	var p = o.parentElement.parentElement;
 	_rmParentHighlight(p);
 }
 
@@ -120,8 +125,7 @@ function userUpdateDelegation() {
 		var comment = document.getElementById('node' + id).getElementsByClassName('comment')[0].textContent;
 		delegation.textContent = name;
 		delegation.setAttribute('title', comment);
-	}
-	else {
+	} else {
 		delegation.textContent = '(no delegation)';
 		delegation.removeAttribute('title');
 	}
@@ -131,7 +135,7 @@ function addChatMsg(user, text) {
 	var ul = document.getElementById('chat').getElementsByTagName('ul')[0];
 	var li = document.createElement('li');
 
-	var scroll = ul.scrollTop + ul.offsetHeight === ul.scrollHeight
+	var scroll = ul.scrollTop + ul.offsetHeight === ul.scrollHeight;
 
 	li.textContent = user + ': ' + text;
 	ul.appendChild(li);
@@ -158,7 +162,7 @@ function createNode(id) {
 	var header = document.createElement('div');
 	header.className = 'header';
 	body.appendChild(header);
-	
+
 	var votes = document.createElement('div');
 	votes.className = 'votes';
 	votes.textContent = '1';
@@ -191,7 +195,7 @@ function createNode(id) {
 
 	root.appendChild(node);
 
-	if (id == ID) {
+	if (id === ID) {
 		_addParentHighlight(node);
 		node.setAttribute('data-self', 1);
 	}
@@ -200,13 +204,13 @@ function createNode(id) {
 }
 
 function rmNode(id) {
-	o = document.getElementById('node' + id);
-	old = o.parentElement.parentElement;
+	var o = document.getElementById('node' + id);
+	var old = o.parentElement.parentElement;
 
 	// mv followers to root
-	root = _root()
-	children = o.getElementsByClassName('followers')[0].children;
-	for (i=0; i<children.length; i++) {
+	var root = _root();
+	var children = o.getElementsByClassName('followers')[0].children;
+	for (var i=0; i<children.length; i++) {
 		root.appendChild(children[i]);
 	}
 
@@ -220,7 +224,7 @@ function rmNode(id) {
 }
 
 function setNodeName(id, name) {
-	if (!name) {name = 'anonymous'};
+	name = name || 'anonymous';
 	var node = document.getElementById('node' + id);
 	node.getElementsByClassName('name')[0].textContent = name;
 	node.getElementsByClassName('delegate')[0].title = "delegate to " + name;
@@ -238,14 +242,14 @@ function setNodeComment(id, comment) {
 }
 
 function setDelegate(id, new_id) {
-	o = document.getElementById('node' + id);
+	var o = document.getElementById('node' + id);
 
 	// substract own votes from parents
 	_rmParentVotes(o);
 	if (id === ID) _rmParentHighlight(o);
 
 	// move in DOM
-	n = document.getElementById('node' + new_id);
+	var n = document.getElementById('node' + new_id);
 	n = n.getElementsByTagName('ul')[0];
 	n.appendChild(o);
 
@@ -260,8 +264,8 @@ function setDelegate(id, new_id) {
 }
 
 function rmDelegate(id) {
-	o = document.getElementById('node' + id);
-	root = _root();
+	var o = document.getElementById('node' + id);
+	var root = _root();
 
 	// substract own votes from parents
 	_rmParentVotes(o);
@@ -317,8 +321,9 @@ function setCookie(key, value, days) {
 		var date = new Date();
 		date.setTime(date.getTime()+(days*24*60*60*1000));
 		var expires = "; expires="+date.toGMTString();
+	} else {
+		var expires = "";
 	}
-	else var expires = "";
 	document.cookie = key+"="+value+expires;
 }
 
@@ -340,7 +345,7 @@ function rmCookie(key) {
 function uid() {
 	// just enough uniqueness
 	var a = Math.random() * Date.now() * 0x1000;
-	return Math.floor(a).toString(36)
+	return Math.floor(a).toString(36);
 }
 
 
