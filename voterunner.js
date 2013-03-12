@@ -195,13 +195,13 @@ function _get() {
 	return node;
 }
 
-function _name() {
+function _getName() {
 	var name = document.getElementById('name');
 	name = name.getElementsByTagName('input')[0];
 	return name.value;
 }
 
-function _comment() {
+function _getComment() {
 	var comment = document.getElementById('comment');
 	comment = comment.getElementsByTagName('textarea')[0];
 	return comment.value;
@@ -235,14 +235,14 @@ function undelegate() {
 
 function setName() {
 	_get();
-	name = _name();
+	name = _getName();
 	setNodeName(ID, name);
 	_post('setNodeName', ID, name);
 }
 
 function setComment() {
 	_get();
-	comment = _comment();
+	comment = _getComment();
 	setNodeComment(ID, comment);
 	_post('setNodeComment', ID, comment);
 }
