@@ -56,19 +56,6 @@ function _rmParentHighlight(o) {
 	_rmParentHighlight(p);
 }
 
-function _post(action, id, v) {
-	var params = 'action=' + encodeURI(action);
-	params += '&id=' + encodeURI(id);
-	params += '&v=' + encodeURI(v);
-
-	var http = new XMLHttpRequest();
-	http.open('POST', 'api/post.php', true);
-	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	http.setRequestHeader("Content-length", params.length);
-	http.setRequestHeader("Connection", "close");
-	http.send(params);
-}
-
 function _get() {
 	var node = document.getElementById('node' + ID);
 	if (!node) {
@@ -311,6 +298,7 @@ function setComment() {
 
 function chat(text) {
 	var name = userGetName();
+	addChatMsg(name, text.value);
 	_post('chat', name, text.value);
 	text.value = '';
 }
@@ -351,36 +339,78 @@ function uid() {
 
 /*** build ***/
 function build() {
-	// get current state
-	var http = new XMLHttpRequest();
-	http.open('GET', 'api/state.php', true);
-	http.onreadystatechange = function() {
-		if(http.readyState==4) {
-			if(http.status==200) {
-				var data = JSON.parse(http.responseText);
-				setCookie('t', data.t);
-				buildNodes(data.tree);
-				buildChat(data.chat);
+	var http1 = new XMLHttpRequest();
+	http1.open('GET', '/state/', true);
+	http1.onreadystatechange = function() {
+		if(http1.readyState==4) {
+			if(http1.status==200) {
+				var data = JSON.parse(http1.responseText);
+				buildNodes(data);
 			}
 		}
 	};
-	http.send(null);
+	http1.send(null);
+
+	var http2 = new XMLHttpRequest();
+	http2.open('GET', '/chat/', true);
+	http2.onreadystatechange = function() {
+		if(http2.readyState==4) {
+			if(http2.status==200) {
+				var data = JSON.parse(http2.responseText);
+				buildChat(data);
+			}
+		}
+	};
+	http2.send(null);
 }
 
-function buildNodes(data, p) {
+function buildNodes(data) {
 	for (var i=0; i<data.length; i++) {
 		createNode(data[i].id);
 		if (!!data[i].name) setNodeName(data[i].id, data[i].name);
 		if (!!data[i].comment) setNodeComment(data[i].id, data[i].comment);
-		if (!!p) setDelegate(data[i].id, p);
-		buildNodes(data[i].followers, data[i].id);
+	}
+	for (var i=0; i<data.length; i++) {
+		if (data[i].delegate) {
+			setDelegate(data[i].id, data[i].delegate);
+		}
 	}
 }
 
 function buildChat(data) {
 	for (var i=0; i<data.length; i++) {
-		addChatMsg(data[i].id, data[i].v);
+		addChatMsg(data[i].id, data[i].text);
 	}
+}
+
+
+/*** socket ***/
+socket = io.connect('/');
+
+socket.on('createNode', function(data) {
+	createNode(data.id);
+});
+socket.on('rmNode', function(data) {
+	rmNode(data.id);
+});
+socket.on('setNodeName', function(data) {
+	setNodeName(data.id, data.v);
+});
+socket.on('setNodeComment', function(data) {
+	setNodeComment(data.id, data.v);
+});
+socket.on('setDelegate', function(data) {
+	setDelegate(data.id, data.v);
+});
+socket.on('rmDelegate', function(data) {
+	rmDelegate(data.id);
+});
+socket.on('chat', function(data) {
+	addChatMsg(data.id, data.v);
+});
+
+function _post(action, id, v) {
+	socket.emit(action, {'id': id, 'v': v});
 }
 
 
@@ -397,49 +427,4 @@ window.onDOMReady = function(fn) {
 
 window.onDOMReady(function() {
 	build();
-
-	function msg(ev) {
-		if (parseInt(ev.lastEventId, 10) > parseInt(getCookie('t', 10))) {
-			setCookie('t', ev.lastEventId);
-			data = JSON.parse(ev.data);
-			if (data.id !== ID) {
-				return data;
-			}
-		}
-	}
-
-	if (!!window.EventSource) {
-		var source = new EventSource('api/queue.php');
-	} else {
-		alert("ERROR: Your Browser does not support Server-Sent Events.");
-	}
-
-	source.addEventListener('createNode', function(ev) {
-		ev = msg(ev);
-		if (ev) createNode(ev.id);
-	});
-	source.addEventListener('rmNode', function(ev) {
-		ev = msg(ev);
-		if (ev) rmNode(ev.id);
-	});
-	source.addEventListener('setNodeName', function(ev) {
-		ev = msg(ev);
-		if (ev) setNodeName(ev.id, ev.v);
-	});
-	source.addEventListener('setNodeComment', function(ev) {
-		ev = msg(ev);
-		if (ev) setNodeComment(ev.id, ev.v);
-	});
-	source.addEventListener('setDelegate', function(ev) {
-		ev = msg(ev);
-		if (ev) setDelegate(ev.id, ev.v);
-	});
-	source.addEventListener('rmDelegate', function(ev) {
-		ev = msg(ev);
-		if (ev) rmDelegate(ev.id);
-	});
-	source.addEventListener('chat', function(ev) {
-		var data = msg(ev);
-		if (data) addChatMsg(data.id, data.v);
-	});
 });
