@@ -149,12 +149,12 @@ header {
 	width: 42%;
 	float: right;
 	height: 100%;
-	padding-top: 24em; /* 23 + 1 */
+	padding-top: 22em; /* 21 + 1 */
 	position: relative;
 
 	#user {
 		background: @h3;
-		height: 23em;
+		height: 21em;
 		width: 100%;
 		position: absolute;
 		top: 0;
@@ -197,5 +197,34 @@ header {
 	}
 	#chat {
 		height: 100%;
+		position: relative;
+		padding-bottom: 2.5em;
+		background: @h3;
+		ul {
+			display: block;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			list-style: none;
+			.padding;
+			overflow-y: scroll;
+			li {
+				border-top: 1px solid @ll;
+				padding: 0.5em 0.2em;
+			}
+			background: white;
+		}
+		form {
+			display: block;
+			width: 100%;
+			position: absolute;
+			bottom: 0;
+			border-top: 1px solid @ll;
+			padding: 0 0.2em;
+			text-align: center;
+			label input {
+				width: 80%;
+			}
+		}
 	}
 }

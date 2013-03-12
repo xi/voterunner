@@ -8,13 +8,13 @@ $stmt = $db->prepare('SELECT MAX(t) FROM queue');
 $stmt->execute();
 $t = $stmt->fetch()['MAX(t)'];
 
-$stmt = $db->prepare('SELECT * FROM state WHERE delegate = :delegate');
+$delstmt = $db->prepare('SELECT * FROM state WHERE delegate = :delegate');
 
 function getByDelegate($delegate='') {
-	global $stmt;
-	$stmt->bindValue(':delegate', $delegate);
-	$stmt->execute();
-	$l = $stmt->fetchAll();
+	global $delstmt;
+	$delstmt->bindValue(':delegate', $delegate);
+	$delstmt->execute();
+	$l = $delstmt->fetchAll();
 
 	foreach ($l as $k => $d) {
 		$followers = getByDelegate($d['id']);
@@ -24,9 +24,14 @@ function getByDelegate($delegate='') {
 	return $l;
 }
 
+$stmt = $db->prepare('SELECT * FROM queue WHERE action = "chat" ORDER BY t ASC');
+$stmt->execute();
+$chat = $stmt->fetchAll();
+
 $result = array(
 	't' => $t,
 	'tree' => getByDelegate(),
+	'chat' => $chat
 );
 echo json_encode($result);
 ?>

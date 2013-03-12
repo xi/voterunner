@@ -127,6 +127,19 @@ function userUpdateDelegation() {
 	}
 }
 
+function addChatMsg(user, text) {
+	var ul = document.getElementById('chat').getElementsByTagName('ul')[0];
+	var li = document.createElement('li');
+
+	var scroll = ul.scrollTop + ul.offsetHeight === ul.scrollHeight
+
+	li.textContent = user + ': ' + text;
+	ul.appendChild(li);
+
+	// scroll to bottom
+	if (scroll) li.scrollIntoView();
+}
+
 /*** API ***/
 function createNode(id) {
 	if (!!document.getElementById('node' + id)) return;
@@ -292,6 +305,11 @@ function setComment() {
 	_post('setNodeComment', ID, comment);
 }
 
+function chat(text) {
+	var name = userGetName();
+	_post('chat', name, text.value);
+	text.value = '';
+}
 
 /*** helper ***/
 function setCookie(key, value, days) {
@@ -337,7 +355,8 @@ function build() {
 				var data = JSON.parse(http.responseText);
 				setCookie('t', data.t);
 
-				buildNodes(data.tree)
+				buildNodes(data.tree);
+				buildChat(data.chat);
 			}
 		}
 	};
@@ -353,6 +372,13 @@ function buildNodes(data) {
 		buildNodes(data[i].followers);
 	}
 }
+
+function buildChat(data) {
+	for (var i=0; i<data.length; i++) {
+		addChatMsg(data[i].id, data[i].v);
+	}
+}
+
 
 /*** main ***/
 var ID = getCookie('id');
@@ -407,5 +433,9 @@ window.onDOMReady(function() {
 	source.addEventListener('rmDelegate', function(ev) {
 		ev = msg(ev);
 		if (ev) rmDelegate(ev.id);
+	});
+	source.addEventListener('chat', function(ev) {
+		data = msg(ev);
+		if (data) addChatMsg(data.id, data.v);
 	});
 });

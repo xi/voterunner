@@ -31,7 +31,10 @@
 			</div>
 
 			<div id="chat">
-				chat
+				<ul></ul>
+				<form onsubmit="event.preventDefault(); chat(this.text)">
+					<label>Chat: <input type="text" name="text" required="required"/></label>
+				</form>
 			</div>
 		</div>
 

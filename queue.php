@@ -4,13 +4,9 @@ header('Cache-Control: no-cache'); // recommended to prevent caching of event da
 
 include('db.php');
 
-// clean queue
-$stmt = $db->prepare('DELETE FROM queue WHERE t < :t');
-$stmt->bindValue(':t', time() - 60*5); // 5 minutes
-$stmt->execute();
-
 // send latest messages
-$stmt = $db->prepare('SELECT * FROM queue ORDER BY t ASC');
+$stmt = $db->prepare('SELECT * FROM queue WHERE t > :t ORDER BY t ASC');
+$stmt->bindValue(':t', time() - 60*5); // 5 minutes
 $stmt->execute();
 $queue = $stmt->fetchAll();
 
