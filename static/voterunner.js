@@ -367,13 +367,13 @@ function build() {
 	http.send(null);
 }
 
-function buildNodes(data) {
+function buildNodes(data, p) {
 	for (var i=0; i<data.length; i++) {
 		createNode(data[i].id);
 		if (!!data[i].name) setNodeName(data[i].id, data[i].name);
 		if (!!data[i].comment) setNodeComment(data[i].id, data[i].comment);
-		if (!!data[i].delegate) setDelegate(data[i].id, data[i].delegate);
-		buildNodes(data[i].followers);
+		if (!!p) setDelegate(data[i].id, p);
+		buildNodes(data[i].followers, data[i].id);
 	}
 }
 

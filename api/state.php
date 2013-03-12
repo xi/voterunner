@@ -7,8 +7,9 @@ include('db.php');
 $stmt = $db->prepare('SELECT MAX(t) FROM queue');
 $stmt->execute();
 $t = $stmt->fetch()['MAX(t)'];
+if (!$t) $t = 0;
 
-$delstmt = $db->prepare('SELECT * FROM state WHERE delegate = :delegate');
+$delstmt = $db->prepare('SELECT id, name, comment FROM state WHERE delegate = :delegate');
 
 function getByDelegate($delegate='') {
 	global $delstmt;
