@@ -36,7 +36,7 @@ if (isset($_POST['action']) && isset($_POST['id']) && isset($_POST['v'])) {
 		$stmt->bindValue(':v', $_POST['v']);
 	}
 	elseif ($_POST['action'] === 'rmDelegate') {
-		$stmt = $db->prepare("UPDATE state SET delegate = null WHERE id = :id");
+		$stmt = $db->prepare("UPDATE state SET delegate = '' WHERE id = :id");
 	}
 	else {
 		exit(1);

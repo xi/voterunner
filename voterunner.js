@@ -37,11 +37,6 @@ function _addParentVotes(o, votes) {
 	_addParentVotes(p, votes);
 }
 
-function _getNodeName(id) {
-	var node = document.getElementById('node' + id);
-	return node.getElementsByClassName('name')[0].textContent;
-}
-
 function _addParentHighlight(o) {
 	if (o.className !== 'node') return
 	o.setAttribute('data-highlight', 1);
@@ -67,6 +62,55 @@ function _post(action, id, v) {
 	http.setRequestHeader("Content-length", params.length);
 	http.setRequestHeader("Connection", "close");
 	http.send(params);
+}
+
+function _get() {
+	var node = document.getElementById('node' + ID);
+	if (!node) {
+		node = createNode(ID);
+		_post('createNode', ID);
+	}
+	return node;
+}
+
+
+/*** user ***/
+function userSetName(name) {
+	document.getElementById('name').getElementsByTagName('input')[0].value = name;
+}
+
+function userGetName() {
+	var name = document.getElementById('name');
+	name = name.getElementsByTagName('input')[0];
+	return name.value;
+}
+
+function userSetComment(comment) {
+	document.getElementById('comment').getElementsByTagName('textarea')[0].value = comment;
+}
+
+function userGetComment() {
+	var comment = document.getElementById('comment');
+	comment = comment.getElementsByTagName('textarea')[0];
+	return comment.value;
+}
+
+function userSetVotes() {
+	var votes = document.getElementById('node'+ID).getElementsByClassName('votes')[0].textContent;
+	document.getElementById('user').getElementsByClassName('votes')[0].innerText = votes;
+}
+
+function userSetDelegation(id) {
+	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
+	var name = document.getElementById('node' + id).getElementsByClassName('name')[0].textContent;
+	delegation.textContent = name;
+	delegation.setAttribute('data-id', id);
+}
+
+function userUnsetDelegation() {
+	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
+	delegation.textContent = '(no delegation)';
+	delegation.removeAttribute('data-id');
 }
 
 /*** API ***/
@@ -144,6 +188,8 @@ function rmNode(id) {
 
 	// rm this from DOM
 	o.remove();
+
+	userSetVotes();
 }
 
 function setNodeName(id, name) {
@@ -151,11 +197,15 @@ function setNodeName(id, name) {
 	var node = document.getElementById('node' + id);
 	node.getElementsByClassName('name')[0].textContent = name;
 	node.getElementsByClassName('delegate')[0].title = "delegate to " + name;
+
+	if (id === ID) userSetName(name);
 }
 
 function setNodeComment(id, comment) {
 	var node = document.getElementById('node' + id);
 	node.getElementsByClassName('comment')[0].textContent = comment;
+
+	if (id === ID) userSetComment(comment);
 }
 
 function setDelegate(id, new_id) {
@@ -163,6 +213,7 @@ function setDelegate(id, new_id) {
 
 	// substract own votes from parents
 	_rmParentVotes(o);
+	if (id === ID) _rmParentHighlight(o);
 
 	// move in DOM
 	n = document.getElementById('node' + new_id);
@@ -171,6 +222,12 @@ function setDelegate(id, new_id) {
 
 	// add own votes to parents
 	_addParentVotes(o);
+
+	if (id === ID) {
+		_addParentHighlight(o);
+		userSetDelegation(new_id);
+	}
+	userSetVotes();
 }
 
 function rmDelegate(id) {
@@ -179,70 +236,42 @@ function rmDelegate(id) {
 
 	// substract own votes from parents
 	_rmParentVotes(o);
+	if (id === ID) _rmParentHighlight(o);
 
 	// append to root
 	root.appendChild(o);
-}
 
-
-/*** helper ***/
-function _get() {
-	var node = document.getElementById('node' + ID);
-	if (!node) {
-		node = createNode(ID);
-		_post('createNode', ID);
+	if (id === ID) {
+		_addParentHighlight(o);
+		userUnsetDelegation(new_id);
 	}
-	return node;
-}
-
-function _getName() {
-	var name = document.getElementById('name');
-	name = name.getElementsByTagName('input')[0];
-	return name.value;
-}
-
-function _getComment() {
-	var comment = document.getElementById('comment');
-	comment = comment.getElementsByTagName('textarea')[0];
-	return comment.value;
+	userSetVotes();
 }
 
 
 /*** actions ***/
 function delegate(id) {
 	node = _get();
-	_rmParentHighlight(node);
 	setDelegate(ID, id);
 	_post('setDelegate', ID, id);
-	_addParentHighlight(node);
-
-	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
-	delegation.textContent = _getNodeName(id);
-	delegation.setAttribute('data-id', id);
 }
 
 function undelegate() {
 	node = _get();
-	_rmParentHighlight(node);
 	rmDelegate(ID);
 	_post('rmDelegate', ID);
-	_addParentHighlight(node);
-
-	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
-	delegation.textContent = '(no delegation)';
-	delegation.removeAttribute('data-id');
 }
 
 function setName() {
 	_get();
-	name = _getName();
+	name = userGetName();
 	setNodeName(ID, name);
 	_post('setNodeName', ID, name);
 }
 
 function setComment() {
 	_get();
-	comment = _getComment();
+	comment = userGetComment();
 	setNodeComment(ID, comment);
 	_post('setNodeComment', ID, comment);
 }
@@ -326,7 +355,10 @@ window.onDOMReady(function() {
 	function msg(ev) {
 		if (parseInt(ev.lastEventId, 10) > parseInt(getCookie('t', 10))) {
 			setCookie('t', ev.lastEventId);
-			return JSON.parse(ev.data);
+			data = JSON.parse(ev.data);
+			if (data.id !== ID) {
+				return data;
+			}
 		}
 	}
 
