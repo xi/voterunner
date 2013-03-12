@@ -359,7 +359,6 @@ function build() {
 			if(http.status==200) {
 				var data = JSON.parse(http.responseText);
 				setCookie('t', data.t);
-
 				buildNodes(data.tree);
 				buildChat(data.chat);
 			}
@@ -440,7 +439,7 @@ window.onDOMReady(function() {
 		if (ev) rmDelegate(ev.id);
 	});
 	source.addEventListener('chat', function(ev) {
-		data = msg(ev);
+		var data = msg(ev);
 		if (data) addChatMsg(data.id, data.v);
 	});
 });

@@ -38,7 +38,9 @@ if (isset($_POST['action']) && isset($_POST['id']) && isset($_POST['v'])) {
 	elseif ($_POST['action'] === 'rmDelegate') {
 		$stmt = $db->prepare("UPDATE state SET delegate = '' WHERE id = :id");
 	}
-	elseif ($_POST['action'] === 'chat') {}
+	elseif ($_POST['action'] === 'chat') {
+		exit(0);
+	}
 	else {
 		exit(1);
 	}
