@@ -10,6 +10,32 @@ function toggleExpand(o) {
 	}
 }
 
+function blockScreen() {
+	var block = document.createElement('div');
+	document.body.appendChild(block);
+	block.id = 'block';
+	block.style.position = 'absolute';
+	block.style.width = '100%';
+	block.style.height = '100%';
+	block.style.top = 0;
+	block.style.left = 0;
+	block.style.backgroundColor = 'white';
+	block.style.opacity = 0.7;
+
+	var opts = {
+		lines: 13, // The number of lines to draw
+		length: 13, // The length of each line
+		width: 7, // The line thickness
+		radius: 40, // The radius of the inner circle
+		color: '#000', // #rgb or #rrggbb
+	};
+	var spinner = new Spinner(opts).spin(block);
+}
+
+function unblockScreen() {
+	document.getElementById('block').remove();
+}
+
 /*** helper ***/
 function _root() {
 	var root = document.getElementById('tree');
@@ -355,6 +381,9 @@ function buildNodes(data) {
 			setDelegate(data[i].id, data[i].delegate);
 		}
 	}
+
+	// now we can start
+	unblockScreen();
 }
 
 function buildChat(data) {
@@ -418,6 +447,7 @@ window.onDOMReady = function(fn) {
 };
 
 window.onDOMReady(function() {
-	document.title += ' - ' + TOPIC;
+	blockScreen();
+	document.title += TOPIC + ' - ' + document.title;
 	socket.emit('getState');
 });
