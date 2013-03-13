@@ -41,14 +41,13 @@ Install
 voterunner is a [node.js](http://nodejs.org/) app so the following lines
 will bring it up:
 
-```.shell
-$ git clone https://git.gitorious.org/electomat/voterunner.git
-$ cd voterunner
-$ npm install
-$ node app.js
-      info  - socket.io started
-      info  - Listening on 5000
-```
+    $ git clone https://git.gitorious.org/electomat/voterunner.git
+    $ cd voterunner
+    $ npm install
+    $ node app.js
+        info  - socket.io started
+        info  - Listening on 5000
+
 
 API
 ---
@@ -62,6 +61,7 @@ The communication is done using socket.io sockets.
     socket.on(action, function(data1, data2, ...) {
       ...
     });
+
 
 ### setup
 
@@ -114,8 +114,8 @@ to the same topic as the one emitting in:
 `setNodeComment(id, comment)`
 :   set the comment of node `id` to `comment`
 
-`setDelegate(id, new)`
-:   make node `id` follow node `new`
+`setDelegate(id, id2)`
+:   make node `id` follow node `id2`
 
 `rmDelegate(id)`
 :   make node `id` follow noone

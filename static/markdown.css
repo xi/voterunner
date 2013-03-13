@@ -40,12 +40,12 @@ body {
 }
 
 code {
-	padding: 0 0.1em;
-	background: #eee;
+	padding: 0 0.2em;
+	border-radius: 0.25em !important;
+	-moz-border-radius: 0.25em !important;
 }
 pre code {
 	padding: 0;
-	background: transparent;
 }
 pre {
 	overflow: auto;

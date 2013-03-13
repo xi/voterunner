@@ -5,8 +5,9 @@
 	<meta charset="utf-8">
 	<title>voterunner</title>
 	<link rel="shortcut icon" href="/favicon.ico"/>
-	<script type="text/javascript" src="http://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=sunburst&autorun=true"></script>
-	<script type="text/javascript" src="https://raw.github.com/coreyti/showdown/master/src/showdown.js"></script>
+	<script type="text/javascript" src="http://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=sunburst"></script>
+	<script type="text/javascript" src="http://raw.github.com/coreyti/showdown/master/src/showdown.js"></script>
+	<script type="text/javascript" src="http://raw.github.com/coreyti/showdown/master/src/extensions/prettify.js"></script>
 	<link rel="stylesheet" type="text/css" href="/markdown.css" />
 </head>
 
@@ -16,13 +17,9 @@
 
 <script type="text/javascript">
 	var html = document.body.innerHTML;
-	html = new Showdown.converter().makeHtml(html);
+	var conv = new Showdown.converter({extensions: ['prettify']});
+	html = conv.makeHtml(html);
 	document.body.innerHTML = html;
-
-	var pres = document.getElementsByTagName('pre');
-	for (var i=0; i<pres.length; i++) {
-		pres[i].className = 'prettyprint';
-	}
 
 	// prettyPrint() is called automatically
 </script>
