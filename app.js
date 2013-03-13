@@ -4,11 +4,12 @@ var express = require('express')
   , app = express.createServer()
   , io = require('socket.io').listen(app)
   , sqlite3 = require('sqlite3').verbose()
-  , db = new sqlite3.Database('db.sqlite');
+  , db = new sqlite3.Database('db.sqlite')
+  , log = io.log;
 
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
-	console.log("Listening on " + port);
+	log.info("Listening on " + port);
 });
 app.use(express.static('static'));
 
@@ -22,7 +23,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/:topic/', function (req, res) {
-	res.sendfile('tpl/app.htm');
+	res.sendfile('index.html');
 });
 
 // socket.io
@@ -49,7 +50,7 @@ io.sockets.on('connection', function (socket) {
 			var sql = "INSERT INTO state (id, name, comment, delegate, topic) VALUES (:id, 'anonymous', '', '', :topic)";
 			db.run(sql, {':id': id, ':topic': topic}, function(err) {
 				if (err) {
-					console.warn("failed to apply `createNode` to state:", err.toString());
+					log.warn("failed to apply `createNode` to state:", err.toString());
 				}
 			});
 		});
