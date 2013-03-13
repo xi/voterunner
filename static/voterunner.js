@@ -456,6 +456,6 @@ window.onDOMReady = function(fn) {
 
 window.onDOMReady(function() {
 	blockScreen();
-	document.title += TOPIC + ' - ' + document.title;
+	document.title = TOPIC + ' - ' + document.title;
 	socket.emit('getState');
 });
