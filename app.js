@@ -4,7 +4,7 @@ var express = require('express')
   , app = express.createServer()
   , io = require('socket.io').listen(app)
   , sqlite3 = require('sqlite3').verbose()
-  , db = new sqlite3.Database('public/db.sqlite');
+  , db = new sqlite3.Database('db.sqlite');
 
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
