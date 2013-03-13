@@ -1,3 +1,11 @@
+/*
+ * voterunner - quick and dirty votes and discussions
+ *
+ * copyright: 2013 Tobias Bengfort <tobias.bengfort@gmx.net>
+ * license: AGPL-3+
+ * url: http://voterunner.herokuapp.com/
+ */
+
 /*** gui ***/
 function toggleExpand(o) {
 	o = o.parentElement;
