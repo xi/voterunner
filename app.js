@@ -11,7 +11,7 @@ app.listen(8001);
 app.use(express.static('static'));
 
 db.run("CREATE TABLE IF NOT EXISTS state (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
-db.run("CREATE TABLE IF NOT EXISTS chat (topic TEXT, id TEXT, text TEXT)");
+db.run("CREATE TABLE IF NOT EXISTS chat (topic TEXT, id TEXT, text TEXT, t INTEGER)");
 
 
 // routes
@@ -23,60 +23,75 @@ app.get('/:topic/', function (req, res) {
 	res.sendfile('tpl/app.htm');
 });
 
-app.get('/:topic/state/', function (req, res) {
-	var sql = 'SELECT * FROM state WHERE topic = ' + req.params.topic;
-	db.all(sql, function(err, data) {
-		res.json(data);
-	});
-});
-
-app.get('/:topic/chat/', function (req, res) {
-	var sql = 'SELECT * FROM chat WHERE topic = ' + req.params.topic;
-	db.all(sql, function(err, data) {
-		res.json(data);
-	});
-});
-
-
 // socket.io
 io.sockets.on('connection', function (socket) {
-	socket.on('createNode', function(data) {
-		socket.broadcast.emit('createNode', data);
-		var sql = "INSERT INTO state (id, name, comment, delegate, topic) VALUES (:id, 'anonymous', '', '', :topic)";
-		db.run(sql, {':id': data.id, ':topic': data.topic}, function(err) {
-			if (err) {
-				console.warn("failed to apply `createNode` to state:", data, err.toString());
-			}
+	socket.on('topic', function(topic) {
+		socket.set('topic', topic);
+		socket.join(topic);
+	});
+
+	socket.on('getState', function() {
+		socket.get('topic', function(err, topic) {
+			db.all('SELECT * FROM state WHERE topic = :topic', {':topic': topic}, function(err, data) {
+				socket.emit('state', {'nodes': data});
+			});
+			db.all('SELECT * FROM chat WHERE topic = :topic ORDER BY t ASC', {':topic': topic}, function(err, data) {
+				socket.emit('state', {'chat': data});
+			});
 		});
 	});
-	socket.on('rmNode', function(data) {
-		socket.broadcast.emit('rmNode', data);
-		var sql = "DELETE FROM state WHERE id = :id AND topic = :topic";
-		db.run(sql, {':id': data.id, ':topic': data.topic});
+
+	socket.on('createNode', function(id) {
+		socket.get('topic', function(err, topic) {
+			socket.broadcast.to(topic).emit('createNode', id);
+			var sql = "INSERT INTO state (id, name, comment, delegate, topic) VALUES (:id, 'anonymous', '', '', :topic)";
+			db.run(sql, {':id': id, ':topic': topic}, function(err) {
+				if (err) {
+					console.warn("failed to apply `createNode` to state:", err.toString());
+				}
+			});
+		});
 	});
-	socket.on('setNodeName', function(data) {
-		socket.broadcast.emit('setNodeName', data);
-		var sql = "UPDATE state SET name = :v WHERE id = :id AND topic = :topic";
-		db.run(sql, {':id': data.id, ':v': data.v, ':topic': data.topic});
+	socket.on('rmNode', function(id) {
+		socket.get('topic', function(err, topic) {
+			socket.broadcast.to(topic).emit('rmNode', id);
+			var sql = "DELETE FROM state WHERE id = :id AND topic = :topic";
+			db.run(sql, {':id': id, ':topic': topic});
+		});
 	});
-	socket.on('setNodeComment', function(data) {
-		socket.broadcast.emit('setNodeComment', data);
-		var sql = "UPDATE state SET comment = :v WHERE id = :id AND topic = :topic";
-		db.run(sql, {':id': data.id, ':v': data.v, ':topic': data.topic});
+	socket.on('setNodeName', function(id, name) {
+		socket.get('topic', function(err, topic) {
+			socket.broadcast.to(topic).emit('setNodeName', id, name);
+			var sql = "UPDATE state SET name = :name WHERE id = :id AND topic = :topic";
+			db.run(sql, {':id': id, ':name': name, ':topic': topic});
+		});
 	});
-	socket.on('setDelegate', function(data) {
-		socket.broadcast.emit('setDelegate', data);
-		var sql = "UPDATE state SET delegate = :v WHERE id = :id AND topic= :topic";
-		db.run(sql, {':id': data.id, ':v': data.v, ':topic': data.topic});
+	socket.on('setNodeComment', function(id, comment) {
+		socket.get('topic', function(err, topic) {
+			socket.broadcast.to(topic).emit('setNodeComment', id, comment);
+			var sql = "UPDATE state SET comment = :comment WHERE id = :id AND topic = :topic";
+			db.run(sql, {':id': id, ':comment': comment, ':topic': topic});
+		});
 	});
-	socket.on('rmDelegate', function(data) {
-		socket.broadcast.emit('rmDelegate', data);
-		var sql = "UPDATE state SET delegate = '' WHERE id = :id AND topic = :topic";
-		db.run(sql, {':id': data.id, ':topic': data.topic});
+	socket.on('setDelegate', function(id, delegate) {
+		socket.get('topic', function(err, topic) {
+			socket.broadcast.to(topic).emit('setDelegate', id, delegate);
+			var sql = "UPDATE state SET delegate = :delegate WHERE id = :id AND topic= :topic";
+			db.run(sql, {':id': id, ':v': delegate, ':topic': topic});
+		});
 	});
-	socket.on('chat', function(data) {
-		socket.broadcast.emit('chat', data);
-		var sql = "INSERT INTO chat (id, text, topic) VALUES (:id, :text, :topic)";
-		db.run(sql, {':id': data.id, ':text': data.v, ':topic': data.topic});
+	socket.on('rmDelegate', function(id) {
+		socket.get('topic', function(err, topic) {
+			socket.broadcast.to(topic).emit('rmDelegate', id);
+			var sql = "UPDATE state SET delegate = '' WHERE id = :id AND topic = :topic";
+			db.run(sql, {':id': id, ':topic': topic});
+		});
+	});
+	socket.on('chat', function(id, text, t) {
+		socket.get('topic', function(err, topic) {
+			socket.broadcast.to(topic).emit('chat', id, text, t);
+			var sql = "INSERT INTO chat (topic, id, text, t) VALUES (:topic, :id, :text, :t)";
+			db.run(sql, {':topic': topic, ':id': id, ':text': text, ':t': t});
+		});
 	});
 });

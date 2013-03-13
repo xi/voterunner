@@ -344,32 +344,6 @@ function uid() {
 
 
 /*** build ***/
-function build() {
-	var http1 = new XMLHttpRequest();
-	http1.open('GET', '/state/', true);
-	http1.onreadystatechange = function() {
-		if(http1.readyState==4) {
-			if(http1.status==200) {
-				var data = JSON.parse(http1.responseText);
-				buildNodes(data);
-			}
-		}
-	};
-	http1.send(null);
-
-	var http2 = new XMLHttpRequest();
-	http2.open('GET', '/chat/', true);
-	http2.onreadystatechange = function() {
-		if(http2.readyState==4) {
-			if(http2.status==200) {
-				var data = JSON.parse(http2.responseText);
-				buildChat(data);
-			}
-		}
-	};
-	http2.send(null);
-}
-
 function buildNodes(data) {
 	for (var i=0; i<data.length; i++) {
 		createNode(data[i].id);
@@ -390,37 +364,7 @@ function buildChat(data) {
 }
 
 
-/*** socket ***/
-socket = io.connect('/');
-
-socket.on('createNode', function(data) {
-	createNode(data.id);
-});
-socket.on('rmNode', function(data) {
-	rmNode(data.id);
-});
-socket.on('setNodeName', function(data) {
-	setNodeName(data.id, data.v);
-});
-socket.on('setNodeComment', function(data) {
-	setNodeComment(data.id, data.v);
-});
-socket.on('setDelegate', function(data) {
-	setDelegate(data.id, data.v);
-});
-socket.on('rmDelegate', function(data) {
-	rmDelegate(data.id);
-});
-socket.on('chat', function(data) {
-	addChatMsg(data.id, data.v);
-});
-
-function _post(action, v) {
-	socket.emit(action, {'topic': TOPIC, 'id': ID, 'v': v});
-}
-
-
-/*** main ***/
+/*** globals ***/
 var TOPIC = document.documentURI.split('/')[3];
 var ID = getCookie('id');
 if (!ID) {
@@ -429,11 +373,51 @@ if (!ID) {
 }
 
 
+/*** socket ***/
+socket = io.connect('/');
+socket.emit('topic', TOPIC);
+
+socket.on('createNode', function(id) {
+	createNode(id);
+});
+socket.on('rmNode', function(id) {
+	rmNode(id);
+});
+socket.on('setNodeName', function(id, name) {
+	setNodeName(id, name);
+});
+socket.on('setNodeComment', function(id, comment) {
+	setNodeComment(id, comment);
+});
+socket.on('setDelegate', function(id, delegate) {
+	setDelegate(id, delegate);
+});
+socket.on('rmDelegate', function(id) {
+	rmDelegate(id);
+});
+socket.on('chat', function(id, text) {
+	addChatMsg(id, text);
+});
+socket.on('state', function(data) {
+	if (data.hasOwnProperty('nodes')) {
+		buildNodes(data.nodes);
+	}
+	if (data.hasOwnProperty('chat')) {
+		buildChat(data.chat);
+	}
+})
+
+function _post(action, v) {
+	socket.emit(action, ID, v);
+}
+
+
+/*** onDOMReady ***/
 window.onDOMReady = function(fn) {
 	document.addEventListener("DOMContentLoaded", fn, false);
 };
 
 window.onDOMReady(function() {
 	document.title += ' - ' + TOPIC;
-	build();
+	socket.emit('getState');
 });
