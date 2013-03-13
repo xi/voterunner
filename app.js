@@ -6,8 +6,10 @@ var express = require('express')
   , sqlite3 = require('sqlite3').verbose()
   , db = new sqlite3.Database('public/db.sqlite');
 
-
-app.listen(8001);
+var port = process.env.PORT || 5000;
+app.listen(port function() {
+	console.log("Listening on " + port);
+});
 app.use(express.static('static'));
 
 db.run("CREATE TABLE IF NOT EXISTS state (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
