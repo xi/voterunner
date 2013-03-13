@@ -5,6 +5,7 @@ var express = require('express')
   , io = require('socket.io').listen(app)
   , sqlite3 = require('sqlite3').verbose()
   , db = new sqlite3.Database('db.sqlite')
+  , fs = require('fs')
   , log = io.log;
 
 var port = process.env.PORT || 5000;
@@ -16,14 +17,21 @@ app.use(express.static('static'));
 db.run("CREATE TABLE IF NOT EXISTS state (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
 db.run("CREATE TABLE IF NOT EXISTS chat (topic TEXT, id TEXT, text TEXT, t INTEGER)");
 
-
 // routes
+function markdown(file, res) {
+	fs.readFile('markdown.html', 'utf8', function(err, html) {
+		fs.readFile(file, 'utf8', function(err, markdown) {
+			res.send(html.replace('<data/>', markdown));
+		});
+	});
+}
+
 app.get('/', function (req, res) {
-	res.sendfile('tpl/welcome.htm');
+	markdown('README.md', res);
 });
 
 app.get('/:topic/', function (req, res) {
-	res.sendfile('index.html');
+	res.sendfile('app.html');
 });
 
 // socket.io

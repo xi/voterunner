@@ -9,5 +9,7 @@
 	"engines": {
 		"node": "0.8.x",
 		"npm": "1.2.x"
-	}
+	},
+	"author": "Tobias Bengfort",
+	"license": "AGPL-3+"
 }
