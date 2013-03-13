@@ -41,7 +41,8 @@ function blockScreen() {
 }
 
 function unblockScreen() {
-	document.getElementById('block').remove();
+	var o = document.getElementById('block');
+	o.parentElement.removeChild(o);
 }
 
 /*** helper ***/
