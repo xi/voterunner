@@ -43,7 +43,11 @@ io.sockets.on('connection', function (socket) {
 	socket.on('createNode', function(data) {
 		socket.broadcast.emit('createNode', data);
 		var sql = "INSERT INTO state (id, name, comment, delegate, topic) VALUES (:id, 'anonymous', '', '', :topic)";
-		db.run(sql, {':id': data.id, ':topic': data.topic});
+		db.run(sql, {':id': data.id, ':topic': data.topic}, function(err) {
+			if (err) {
+				console.warn("failed to apply `createNode` to state:", data, err.toString());
+			}
+		});
 	});
 	socket.on('rmNode', function(data) {
 		socket.broadcast.emit('rmNode', data);
