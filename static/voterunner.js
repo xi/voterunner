@@ -119,8 +119,12 @@ function userUpdateDelegation() {
 }
 
 function addChatMsg(id, text) {
-	var name = document.getElementById('node'+id).getElementsByClassName('name')[0].textContent;
-	name = name || 'anonymous';
+	var name = document.getElementById('node'+id);
+	if (name) {
+		name = name.getElementsByClassName('name')[0].textContent;
+	} else {
+		name = 'anonymous';
+	}
 
 	var ul = document.getElementById('chat').getElementsByTagName('ul')[0];
 	var li = document.createElement('li');
@@ -300,8 +304,7 @@ function setComment() {
 }
 
 function chat(text) {
-	var name = userGetName();
-	addChatMsg(name, text.value);
+	addChatMsg(ID, text.value);
 	_post('chat', text.value);
 	text.value = '';
 }
