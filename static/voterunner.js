@@ -57,10 +57,10 @@ function _rmParentHighlight(o) {
 }
 
 function _get() {
-	var node = document.getElementById('node' + ID);
+	var node = document.getElementById('node'+ID);
 	if (!node) {
 		node = createNode(ID);
-		_post('createNode', ID);
+		_post('createNode');
 	}
 	return node;
 }
@@ -108,8 +108,8 @@ function userUpdateDelegation() {
 	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
 	var id = delegation.getAttribute('data-id');
 	if (id) {
-		var name = document.getElementById('node' + id).getElementsByClassName('name')[0].textContent;
-		var comment = document.getElementById('node' + id).getElementsByClassName('comment')[0].textContent;
+		var name = document.getElementById('node'+id).getElementsByClassName('name')[0].textContent;
+		var comment = document.getElementById('node'+id).getElementsByClassName('comment')[0].textContent;
 		delegation.textContent = name;
 		delegation.setAttribute('title', comment);
 	} else {
@@ -118,13 +118,16 @@ function userUpdateDelegation() {
 	}
 }
 
-function addChatMsg(user, text) {
+function addChatMsg(id, text) {
+	var name = document.getElementById('node'+id).getElementsByClassName('name')[0].textContent;
+	name = name || 'anonymous';
+
 	var ul = document.getElementById('chat').getElementsByTagName('ul')[0];
 	var li = document.createElement('li');
 
 	var scroll = ul.scrollTop + ul.offsetHeight === ul.scrollHeight;
 
-	li.textContent = user + ': ' + text;
+	li.textContent = name + ': ' + text;
 	ul.appendChild(li);
 
 	// scroll to bottom
@@ -133,7 +136,7 @@ function addChatMsg(user, text) {
 
 /*** API ***/
 function createNode(id) {
-	if (!!document.getElementById('node' + id)) return;
+	if (!!document.getElementById('node'+id)) return;
 
 	var root = document.getElementById('tree');
 	root = root.getElementsByTagName('ul')[0];
@@ -191,7 +194,7 @@ function createNode(id) {
 }
 
 function rmNode(id) {
-	var o = document.getElementById('node' + id);
+	var o = document.getElementById('node'+id);
 	var old = o.parentElement.parentElement;
 
 	// mv followers to root
@@ -212,7 +215,7 @@ function rmNode(id) {
 
 function setNodeName(id, name) {
 	name = name || 'anonymous';
-	var node = document.getElementById('node' + id);
+	var node = document.getElementById('node'+id);
 	node.getElementsByClassName('name')[0].textContent = name;
 	node.getElementsByClassName('delegate')[0].title = "delegate to " + name;
 
@@ -221,7 +224,7 @@ function setNodeName(id, name) {
 }
 
 function setNodeComment(id, comment) {
-	var node = document.getElementById('node' + id);
+	var node = document.getElementById('node'+id);
 	node.getElementsByClassName('comment')[0].textContent = comment;
 
 	if (id === ID) userSetComment(comment);
@@ -229,14 +232,14 @@ function setNodeComment(id, comment) {
 }
 
 function setDelegate(id, new_id) {
-	var o = document.getElementById('node' + id);
+	var o = document.getElementById('node'+id);
 
 	// substract own votes from parents
 	_rmParentVotes(o);
 	if (id === ID) _rmParentHighlight(o);
 
 	// move in DOM
-	var n = document.getElementById('node' + new_id);
+	var n = document.getElementById('node'+new_id);
 	n = n.getElementsByTagName('ul')[0];
 	n.appendChild(o);
 
@@ -251,7 +254,7 @@ function setDelegate(id, new_id) {
 }
 
 function rmDelegate(id) {
-	var o = document.getElementById('node' + id);
+	var o = document.getElementById('node'+id);
 	var root = _root();
 
 	// substract own votes from parents
@@ -273,33 +276,33 @@ function rmDelegate(id) {
 function delegate(id) {
 	node = _get();
 	setDelegate(ID, id);
-	_post('setDelegate', ID, id);
+	_post('setDelegate', id);
 }
 
 function undelegate() {
 	node = _get();
 	rmDelegate(ID);
-	_post('rmDelegate', ID);
+	_post('rmDelegate');
 }
 
 function setName() {
 	_get();
 	name = userGetName();
 	setNodeName(ID, name);
-	_post('setNodeName', ID, name);
+	_post('setNodeName', name);
 }
 
 function setComment() {
 	_get();
 	comment = userGetComment();
 	setNodeComment(ID, comment);
-	_post('setNodeComment', ID, comment);
+	_post('setNodeComment', comment);
 }
 
 function chat(text) {
 	var name = userGetName();
 	addChatMsg(name, text.value);
-	_post('chat', name, text.value);
+	_post('chat', text.value);
 	text.value = '';
 }
 
@@ -409,22 +412,25 @@ socket.on('chat', function(data) {
 	addChatMsg(data.id, data.v);
 });
 
-function _post(action, id, v) {
-	socket.emit(action, {'id': id, 'v': v});
+function _post(action, v) {
+	socket.emit(action, {'topic': TOPIC, 'id': ID, 'v': v});
 }
 
 
 /*** main ***/
+var TOPIC = document.documentURI.split('/')[3];
 var ID = getCookie('id');
 if (!ID) {
 	ID = uid();
 	setCookie('id', ID);
 }
 
+
 window.onDOMReady = function(fn) {
 	document.addEventListener("DOMContentLoaded", fn, false);
 };
 
 window.onDOMReady(function() {
+	document.title += ' - ' + TOPIC;
 	build();
 });
