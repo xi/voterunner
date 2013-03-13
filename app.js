@@ -19,7 +19,7 @@ db.run("CREATE TABLE IF NOT EXISTS chat (topic TEXT, id TEXT, text TEXT, t INTEG
 
 // routes
 function markdown(file, res) {
-	fs.readFile('markdown.html', 'utf8', function(err, html) {
+	fs.readFile('tpl/markdown.html', 'utf8', function(err, html) {
 		fs.readFile(file, 'utf8', function(err, markdown) {
 			res.send(html.replace('<data/>', markdown));
 		});
@@ -31,7 +31,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/:topic/', function (req, res) {
-	res.sendfile('app.html');
+	res.sendfile('tpl/app.html');
 });
 
 // socket.io
