@@ -4,7 +4,7 @@ voterunner
 tl;dr
 -----
 
-[Try it!](http://voterunner.herokuapp.com/{your-topic}/)
+[Try it!](http://voterunner.herokuapp.com/(your-topic)/)
 
 what is this?
 -------------
@@ -34,6 +34,30 @@ You can go on discussing until you reach a consensus.
 
 While this concept is not perfect for every situation it is beautifull 
 in its simplicity.
+
+How to use it
+-------------
+
+*One goal of voterunner is to experiment with this concept in practice.
+Since I really just wrote it the following section is more or less fiction.*
+
+You are lazy, right? So of course you want the group to make the
+right decision but you don't want to do the whole discussion
+thing yourself. So you will delegate your vote.
+
+Now you can concentrate on convincing those who have not already 
+delegated their votes to follow you. 
+You may also try to steer the one you follow in the right direction.
+
+To achieve this you work on your arguments. 
+Try to address counter arguments and be as precise as possible.
+Remember that you are a node in a graph so you don't need to repeat
+everything your followers already said. Just make your own point very clear.
+
+But maybe you even have an innovative idea. In that case you may
+revoke the delegation. Now you compete directly with other
+ideas. Maybe you can convince others, but maybe you should delegate
+your vote again in order to agree on a compromise.
 
 Install
 -------
