@@ -151,6 +151,7 @@ function addChatMsg(id, text) {
 	if (scroll) li.scrollIntoView();
 }
 
+
 /*** API ***/
 function createNode(id) {
 	if (!!document.getElementById('node'+id)) return;
@@ -237,8 +238,10 @@ function setNodeName(id, name) {
 	node.getElementsByClassName('name')[0].textContent = name;
 	node.getElementsByClassName('delegate')[0].title = "delegate to " + name;
 
-	if (id === ID) userSetName(name);
-	userUpdateDelegate();
+	if (id === ID) {
+		userSetName(name);
+		userUpdateDelegate();
+	}
 }
 
 function setNodeComment(id, comment) {
@@ -246,8 +249,10 @@ function setNodeComment(id, comment) {
 	if (!node) return;
 	node.getElementsByClassName('comment')[0].textContent = comment;
 
-	if (id === ID) userSetComment(comment);
-	userUpdateDelegate();
+	if (id === ID) {
+		userSetComment(comment);
+		userUpdateDelegate();
+	}
 }
 
 function setDelegate(id, new_id) {
@@ -324,10 +329,13 @@ function setComment() {
 }
 
 function rm() {
-	_get();
 	rmNode(ID);
-	// TODO user interface
 	_post('rmNode');
+
+	// update user interface
+	userSetName('');
+	userSetComment('');
+	userRemoveDelegate('');
 }
 
 function chat(text) {
