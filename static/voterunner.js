@@ -97,7 +97,7 @@ function userGetComment() {
 }
 
 function userSetVotes() {
-	var votes = document.getElementById('node'+ID).getElementsByClassName('votes')[0].textContent; // TODO bug
+	var votes = _get().getElementsByClassName('votes')[0].textContent;
 	document.getElementById('user').getElementsByClassName('votes')[0].innerText = votes;
 }
 
