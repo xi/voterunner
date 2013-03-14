@@ -60,6 +60,7 @@ function markdown(file, res) {
 // setup tables
 query("CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
 query("CREATE TABLE IF NOT EXISTS chat (topic TEXT, id TEXT, text TEXT, t INTEGER)");
+query("CREATE TABLE IF NOT EXISTS online (topic TEXT, id TEXT, UNIQUE (topic, id))");
 
 // welcome view
 app.get('/', function (req, res) {
@@ -74,22 +75,16 @@ app.get('/:topic/', function (req, res) {
 	query(sql, [topic], function(nodes) {
 		var sql = 'SELECT id, text, t FROM chat WHERE topic = $1 ORDER BY t ASC';
 		query(sql, [topic], function(chat) {
-			tpl('app.html', {'nodes': nodes, 'chat': chat}, res);
+			var sql = 'SELECT id FROM online WHERE topic = $1';
+			query(sql, [topic], function(online) {
+				tpl('app.html', {'nodes': nodes, 'chat': chat, 'online': online}, res);
+			});
 		});
 	});
 });
 
 // socket.io
 io.sockets.on('connection', function (socket) {
-	socket.on('register', function(topic, id) {
-		log.debug("Registration:", topic, id);
-
-		socket.set('topic', topic);
-		socket.set('id', id);
-
-		socket.join(topic);
-	});
-
 	function handleMsg(action, sql, v1, v2) {
 		socket.get('topic', function(err, topic) {
 			socket.get('id', function(err, id) {
@@ -106,6 +101,21 @@ io.sockets.on('connection', function (socket) {
 			});
 		});
 	}
+
+	socket.on('register', function(topic, id) {
+		log.debug("Registration:", topic, id);
+
+		socket.set('topic', topic);
+		socket.set('id', id);
+		socket.join(topic);
+
+		var sql = "INSERT INTO online (topic, id) VALUES ($1, $2)";
+		handleMsg('online', sql);
+	});
+	socket.on('disconnect', function() {
+		var sql = "DELETE FROM online WHERE topic = $1 AND id = $2";
+		handleMsg('offline', sql);
+	});
 
 	socket.on('createNode', function() {
 		var sql = "INSERT INTO nodes (topic, id) VALUES ($1, $2)";

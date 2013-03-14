@@ -68,34 +68,47 @@ The communication is done using socket.io sockets.
 These messages are used to set up the connection between client and
 server:
 
-`topic(topic)`
-:   register for a topic. needs to be done before anything else.
+`register(topic, id)`
+:   register for id and topic. needs to be done before anything else.
 
 ### change the Graph
 
 These messages will be broadcasted to all sockets which are registered
-to the same topic as the one emitting in:
+to the same topic as the one emitting in. The emitting socket must
+obmit the id because it was already set when registering.
 
-`createNode(id)`
+`createNode([id])`
 :   add node `id` to the graph
 
-`rmNode(id)`
+`rmNode([id])`
 :   remove node `id` from the graph.
 
-`setNodeName(id, name)`
+`setNodeName([id, ]name)`
 :   set the name of node `id` to `name`
 
-`setNodeComment(id, comment)`
+`setNodeComment([id, ]comment)`
 :   set the comment of node `id` to `comment`
 
-`setDelegate(id, id2)`
+`setDelegate([id, ]id2)`
 :   make node `id` follow node `id2`
 
-`rmDelegate(id)`
+`rmDelegate([id])`
 :   make node `id` follow noone
 
-`chat(id, text)`
-:   add the chat message `text` by `id`
+### Chat
+
+`chat([id, ]text, t)`
+:   add the chat message `text` by `id` at time `t`
+
+`online(id)`
+:   user `id` is now online.
+    is emitted automatically on registration
+
+`offline(id)`
+:   user `id` is now offline.
+    is emitted automatically on disconnect
+
+
 
 License
 -------

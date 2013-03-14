@@ -97,7 +97,7 @@ function userGetComment() {
 }
 
 function userSetVotes() {
-	var votes = document.getElementById('node'+ID).getElementsByClassName('votes')[0].textContent;
+	var votes = document.getElementById('node'+ID).getElementsByClassName('votes')[0].textContent; // TODO bug
 	document.getElementById('user').getElementsByClassName('votes')[0].innerText = votes;
 }
 
@@ -358,9 +358,13 @@ function build() {
 	buildNodes(JSON.parse(jsonNodes.textContent));
 	jsonNodes.parentElement.removeChild(jsonNodes);
 
-	var jsonChat = document.getElementById('json-chat');	
+	var jsonChat = document.getElementById('json-chat');
 	buildChat(JSON.parse(jsonChat.textContent));
 	jsonChat.parentElement.removeChild(jsonChat);
+
+	var jsonOnline = document.getElementById('json-online');
+	// TODO
+	jsonOnline.parentElement.removeChild(jsonOnline);
 }
 
 function buildNodes(data) {
