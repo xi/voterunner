@@ -107,7 +107,7 @@ function userSetDelegation(id) {
 	userUpdateDelegation();
 }
 
-function userUnsetDelegation() {
+function userRemoveDelegation() {
 	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
 	delegation.removeAttribute('data-id');
 	userUpdateDelegation();
@@ -290,7 +290,7 @@ function rmDelegate(id) {
 
 	if (id === ID) {
 		_addParentHighlight(node);
-		userUnsetDelegation();
+		userRemoveDelegation();
 	}
 	userSetVotes();
 }
