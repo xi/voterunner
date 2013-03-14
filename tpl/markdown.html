@@ -12,11 +12,14 @@
 </head>
 
 <body>
-	<data/>
+	<% markdown %>
 </body>
 
 <script type="text/javascript">
-	var html = document.body.innerHTML;
+	var jsonMarkdown = document.getElementById('json-markdown');
+	var html = JSON.parse(jsonMarkdown.textContent);
+	jsonMarkdown.parentElement.removeChild(jsonMarkdown);
+
 	var conv = new Showdown.converter({extensions: ['prettify']});
 	html = conv.makeHtml(html);
 	document.body.innerHTML = html;

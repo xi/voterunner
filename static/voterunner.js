@@ -18,32 +18,6 @@ function toggleExpand(o) {
 	}
 }
 
-function blockScreen() {
-	var block = document.createElement('div');
-	document.body.appendChild(block);
-	block.id = 'block';
-	block.style.position = 'absolute';
-	block.style.width = '100%';
-	block.style.height = '100%';
-	block.style.top = 0;
-	block.style.left = 0;
-	block.style.backgroundColor = 'white';
-	block.style.opacity = 0.7;
-
-	var opts = {
-		lines: 13, // The number of lines to draw
-		length: 13, // The length of each line
-		width: 7, // The line thickness
-		radius: 40, // The radius of the inner circle
-		color: '#000', // #rgb or #rrggbb
-	};
-	var spinner = new Spinner(opts).spin(block);
-}
-
-function unblockScreen() {
-	var o = document.getElementById('block');
-	o.parentElement.removeChild(o);
-}
 
 /*** helper ***/
 function _root() {
@@ -379,6 +353,16 @@ function uid() {
 
 
 /*** build ***/
+function build() {
+	var jsonNodes = document.getElementById('json-nodes');
+	buildNodes(JSON.parse(jsonNodes.textContent));
+	jsonNodes.parentElement.removeChild(jsonNodes);
+
+	var jsonChat = document.getElementById('json-chat');	
+	buildChat(JSON.parse(jsonChat.textContent));
+	jsonChat.parentElement.removeChild(jsonChat);
+}
+
 function buildNodes(data) {
 	for (var i=0; i<data.length; i++) {
 		createNode(data[i].id);
@@ -390,9 +374,6 @@ function buildNodes(data) {
 			setDelegate(data[i].id, data[i].delegate);
 		}
 	}
-
-	// now we can start
-	unblockScreen();
 }
 
 function buildChat(data) {
@@ -436,14 +417,6 @@ socket.on('rmDelegate', function(id) {
 socket.on('chat', function(id, text) {
 	addChatMsg(id, text);
 });
-socket.on('state', function(data) {
-	if (data.hasOwnProperty('nodes')) {
-		buildNodes(data.nodes);
-	}
-	if (data.hasOwnProperty('chat')) {
-		buildChat(data.chat);
-	}
-})
 
 function _post(action, v) {
 	socket.emit(action, ID, v);
@@ -456,7 +429,6 @@ window.onDOMReady = function(fn) {
 };
 
 window.onDOMReady(function() {
-	blockScreen();
-	document.title = TOPIC + ' - ' + document.title;
-	socket.emit('getState');
+	document.title += " - " + TOPIC;;
+	build();
 });

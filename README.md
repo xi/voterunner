@@ -71,32 +71,6 @@ server:
 `topic(topic)`
 :   register for a topic. needs to be done before anything else.
 
-`getState()`
-:   request current state from server (this is done by clients on
-    connection)
-
-`state(data)`
-:   answer to `getState`. `data` may optionally have the properties
-    `data.nodes` and `data.chat`, e.g.
-
-        data = {
-            "nodes": [{
-                "id": "8mmxndo8da",
-                "name": "max",
-                "comment": "smoking is unhealthy",
-                "delegate": "k6gsn1hlsh"
-            },{
-                "id": "k6gsn1hlsh",
-                "name": "alice",
-                "comment": "everyone is free to do what she wants",
-                "delegate": ""
-            }],
-            "chat": [{
-                "id": "8mmxndo8da",
-                "text": "@alice I guess you are right."
-            }]
-        }
-
 ### change the Graph
 
 These messages will be broadcasted to all sockets which are registered
