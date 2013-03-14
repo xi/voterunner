@@ -78,6 +78,78 @@ app.get('/', function (req, res) {
 	markdown('README.md', res);
 });
 
+// json state
+app.get('/:topic/json/', function(req, res) {
+	var topic = req.params.topic;
+	var sql = "SELECT id, name, comment, delegate FROM nodes WHERE topic = $1";
+
+	query(sql, [topic], function(tree) {
+		res.json(tree);
+	});
+});
+
+// opml state
+app.get('/:topic/opml/', function(req, res) {
+	var topic = req.params.topic;
+	var sql = "SELECT id, name, comment, delegate FROM nodes WHERE topic = $1";
+
+	query(sql, [topic], function(tree) {
+		for (var i=0; i<tree.length; i++) {
+			tree[i].followers = [];
+		}
+
+		function insert(tree, node) {
+			for (var i=0; i<tree.length; i++) {
+				if (tree[i].id === node.id) continue;
+				if (tree[i].id === node.delegate) {
+					tree[i].followers.push(node);
+					return true;
+				}
+				if (insert(tree[i].followers, node)) {
+					return true;
+				}
+			}
+		}
+
+		var n = tree.length;
+		for (var i=0; i<n; i++) {
+			var node = tree.shift();
+			if (!insert(tree, node)) {
+				tree.push(node);
+			}
+		}
+
+		function opml(tree, indent) {
+			var s = '';
+			if (!indent) {
+				s += '<?xml version="1.0" encoding="UTF-8"?>\n';
+				s += '<opml version="1.0">\n';
+				s += '  <head>\n';
+				s += '    <title>voterunner - ' + topic + '</title>\n';
+				s += '    <dateCreated>' + new Date() + '</dateCreated>\n'
+				s += '  </head>\n';
+				s += '  <body>\n';
+				s += opml(tree, '    ');
+				s += '  </body>\n';
+				s += '</opml>';
+			} else {
+				for (var i=0; i<tree.length; i++) {
+					s += indent + '<outline';
+					s += tree[i].id ? ' id="'+tree[i].id+'"' : '';
+					s += tree[i].name ? ' name="'+tree[i].name+'"' : '';
+					s += tree[i].comment ? ' text="'+tree[i].comment+'"' : '';
+					s += '>\n'
+					s += opml(tree[i].followers, indent + '  ');
+					s += indent + '</outline>\n';
+				}
+			}
+			return s;
+		}
+
+		res.send(opml(tree));
+	});
+});
+
 // app view
 app.get('/:topic/', function (req, res) {
 	var topic = req.params.topic;
