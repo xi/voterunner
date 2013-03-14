@@ -108,7 +108,7 @@ io.sockets.on('connection', function (socket) {
 	}
 
 	socket.on('createNode', function() {
-		var sql = "INSERT INTO nodes (topic, id, name, comment, delegate) VALUES ($1, $2, 'anonymous', '', '')";
+		var sql = "INSERT INTO nodes (topic, id) VALUES ($1, $2)";
 		handleMsg('createNode', sql);
 	});
 	socket.on('rmNode', function() {
@@ -128,7 +128,7 @@ io.sockets.on('connection', function (socket) {
 		handleMsg('setDelegate', sql, delegate);
 	});
 	socket.on('rmDelegate', function() {
-		var sql = "UPDATE nodes SET delegate = '' WHERE topic = $1 AND id = $2";
+		var sql = "UPDATE nodes SET delegate = null WHERE topic = $1 AND id = $2";
 		handleMsg('rmDelegate', sql);
 	});
 	socket.on('chat', function(text, t) {

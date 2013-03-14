@@ -325,7 +325,7 @@ function setCookie(key, value, days) {
 		date.setTime(date.getTime()+(days*24*60*60*1000));
 		var expires = "; expires="+date.toGMTString();
 	} else {
-		var expires = "";
+		var expires = '';
 	}
 	document.cookie = key+"="+value+expires;
 }
@@ -342,7 +342,7 @@ function getCookie(key) {
 }
 
 function rmCookie(key) {
-	setCookie(key, "", -1);
+	setCookie(key, '', -1);
 }
 
 function uid() {
