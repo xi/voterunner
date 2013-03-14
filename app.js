@@ -103,12 +103,15 @@ io.sockets.on('connection', function (socket) {
 
 				socket.broadcast.to(topic).emit(action, id, v1, v2);
 
-				var params = [topic, id];
-				var n = sql.match(/\$/g).length;
-				if (n >= 3) params.push(v1);
-				if (n >= 4) params.push(v2);
+				if (typeof(sql) === 'string') sql = [sql];
+				for (var i=0; i<sql.length; i++) {
+					var params = [topic, id];
+					var n = sql[i].match(/\$/g).length;
+					if (n >= 3) params.push(v1);
+					if (n >= 4) params.push(v2);
 
-				query(sql, params);
+					query(sql[i], params);
+				}
 			});
 		});
 	}
@@ -133,7 +136,10 @@ io.sockets.on('connection', function (socket) {
 		handleMsg('createNode', sql);
 	});
 	socket.on('rmNode', function() {
-		var sql = "DELETE FROM nodes WHERE topic = $1 AND id = $2";
+		var sql = [
+			"UPDATE nodes SET delegate = null WHERE topic = $1 AND delegate = $2",
+			"DELETE FROM nodes WHERE topic = $1 AND id = $2"
+		];
 		handleMsg('rmNode', sql);
 	});
 	socket.on('setNodeName', function(name) {

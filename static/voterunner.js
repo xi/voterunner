@@ -312,11 +312,19 @@ function setComment() {
 	_post('setNodeComment', comment);
 }
 
+function rm() {
+	_get();
+	rmNode(ID);
+	// TODO user interface
+	_post('rmNode');
+}
+
 function chat(text) {
 	addChatMsg(ID, text.value);
 	_post('chat', text.value);
 	text.value = '';
 }
+
 
 /*** helper ***/
 function setCookie(key, value, days) {
