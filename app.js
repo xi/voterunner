@@ -81,52 +81,58 @@ app.get('/:topic/', function (req, res) {
 
 // socket.io
 io.sockets.on('connection', function (socket) {
-	socket.on('topic', function(topic) {
+	socket.on('register', function(topic, id) {
+		log.debug("Registration:", topic, id);
+
 		socket.set('topic', topic);
+		socket.set('id', id);
+
 		socket.join(topic);
 	});
 
-	function handleMsg(action, sql, id, v1, v2) {
-		log.debug("Handeling " + action, id, v1, v2);
-
+	function handleMsg(action, sql, v1, v2) {
 		socket.get('topic', function(err, topic) {
-			socket.broadcast.to(topic).emit(action, id, v1, v2);
+			socket.get('id', function(err, id) {
+				log.debug("Handeling:", action, topic, id, v1, v2);
 
-			var params = [topic, id];
-			var n = sql.match(/\$/g).length;
-			if (n >= 3) params.push(v1);
-			if (n >= 4) params.push(v2);
+				socket.broadcast.to(topic).emit(action, id, v1, v2);
 
-			query(sql, params);
+				var params = [topic, id];
+				var n = sql.match(/\$/g).length;
+				if (n >= 3) params.push(v1);
+				if (n >= 4) params.push(v2);
+
+				query(sql, params);
+			});
 		});
 	}
 
-	socket.on('createNode', function(id) {
+	socket.on('createNode', function() {
 		var sql = "INSERT INTO nodes (topic, id, name, comment, delegate) VALUES ($1, $2, 'anonymous', '', '')";
-		handleMsg('createNode', sql, id);
+		handleMsg('createNode', sql);
 	});
-	socket.on('rmNode', function(id) {
+	socket.on('rmNode', function() {
 		var sql = "DELETE FROM nodes WHERE topic = $1 AND id = $2";
-		handleMsg('rmNode', sql, id);
+		handleMsg('rmNode', sql);
 	});
-	socket.on('setNodeName', function(id, name) {
+	socket.on('setNodeName', function(name) {
 		var sql = "UPDATE nodes SET name = $3 WHERE topic = $1 AND id = $2";
-		handleMsg('setNodeName', sql, id, name);
+		handleMsg('setNodeName', sql, name);
 	});
-	socket.on('setNodeComment', function(id, comment) {
+	socket.on('setNodeComment', function(comment) {
 		var sql = "UPDATE nodes SET comment = $3 WHERE topic = $1 AND id = $2";
-		handleMsg('setNodeComment', sql, id, comment);
+		handleMsg('setNodeComment', sql, comment);
 	});
-	socket.on('setDelegate', function(id, delegate) {
+	socket.on('setDelegate', function(delegate) {
 		var sql = "UPDATE nodes SET delegate = $3 WHERE topic = $1 AND id = $2";
-		handleMsg('setDelegate', sql, id, delegate);
+		handleMsg('setDelegate', sql, delegate);
 	});
-	socket.on('rmDelegate', function(id) {
+	socket.on('rmDelegate', function() {
 		var sql = "UPDATE nodes SET delegate = '' WHERE topic = $1 AND id = $2";
-		handleMsg('rmDelegate', sql, id);
+		handleMsg('rmDelegate', sql);
 	});
-	socket.on('chat', function(id, text, t) {
+	socket.on('chat', function(text, t) {
 		var sql = "INSERT INTO chat (topic, id, text, t) VALUES ($1, $2, $3, $4)";
-		handleMsg('chat', sql, id, text, t);
+		handleMsg('chat', sql, text, t);
 	});
 });

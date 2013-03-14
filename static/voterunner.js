@@ -394,7 +394,7 @@ if (!ID) {
 
 /*** socket ***/
 socket = io.connect('/');
-socket.emit('topic', TOPIC);
+socket.emit('register', TOPIC, ID);
 
 socket.on('createNode', function(id) {
 	createNode(id);
@@ -418,8 +418,8 @@ socket.on('chat', function(id, text) {
 	addChatMsg(id, text);
 });
 
-function _post(action, v) {
-	socket.emit(action, ID, v);
+function _post(action, v1, v2) {
+	socket.emit(action, v1, v2);
 }
 
 
