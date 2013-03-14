@@ -117,20 +117,24 @@ function userUpdateDelegation() {
 	var delegation = document.getElementById('user').getElementsByClassName('delegation')[0];
 	var id = delegation.getAttribute('data-id');
 	if (id) {
-		var name = document.getElementById('node'+id).getElementsByClassName('name')[0].textContent;
-		var comment = document.getElementById('node'+id).getElementsByClassName('comment')[0].textContent;
-		delegation.textContent = name;
-		delegation.setAttribute('title', comment);
-	} else {
-		delegation.textContent = '(no delegation)';
-		delegation.removeAttribute('title');
+		var node = document.getElementById('node'+id);
+		if (node) {
+			var name = node.getElementsByClassName('name')[0].textContent;
+			var comment = node.getElementsByClassName('comment')[0].textContent;
+			delegation.textContent = name;
+			delegation.setAttribute('title', comment);
+			return;
+		}
 	}
+	delegation.textContent = '(no delegation)';
+	delegation.removeAttribute('title');
 }
 
 function addChatMsg(id, text) {
-	var name = document.getElementById('node'+id);
-	if (name) {
-		name = name.getElementsByClassName('name')[0].textContent;
+	var node = document.getElementById('node'+id);
+	var name;
+	if (node) {
+		name = node.getElementsByClassName('name')[0].textContent;
 	} else {
 		name = 'anonymous';
 	}
@@ -207,28 +211,29 @@ function createNode(id) {
 }
 
 function rmNode(id) {
-	var o = document.getElementById('node'+id);
-	var old = o.parentElement.parentElement;
+	var node = document.getElementById('node'+id);
+	if (!node) return;
+	var old = node.parentElement.parentElement;
 
 	// mv followers to root
 	var root = _root();
-	var children = o.getElementsByClassName('followers')[0].children;
+	var children = node.getElementsByClassName('followers')[0].children;
 	for (var i=0; i<children.length; i++) {
 		root.appendChild(children[i]);
 	}
 
 	// substract own votes from parents
-	_rmParentVotes(o);
+	_rmParentVotes(node);
+	userSetVotes();
 
 	// rm this from DOM
-	o.remove();
-
-	userSetVotes();
+	node.parentElement.removeChild(node);
 }
 
 function setNodeName(id, name) {
 	name = name || 'anonymous';
 	var node = document.getElementById('node'+id);
+	if (!node) return;
 	node.getElementsByClassName('name')[0].textContent = name;
 	node.getElementsByClassName('delegate')[0].title = "delegate to " + name;
 
@@ -238,6 +243,7 @@ function setNodeName(id, name) {
 
 function setNodeComment(id, comment) {
 	var node = document.getElementById('node'+id);
+	if (!node) return;
 	node.getElementsByClassName('comment')[0].textContent = comment;
 
 	if (id === ID) userSetComment(comment);
@@ -245,40 +251,45 @@ function setNodeComment(id, comment) {
 }
 
 function setDelegate(id, new_id) {
-	var o = document.getElementById('node'+id);
+	var node = document.getElementById('node'+id);
+	if (!node) return;
+
+	var n = document.getElementById('node'+new_id);
+	if (!n) return rmDelegate(id);
 
 	// substract own votes from parents
-	_rmParentVotes(o);
-	if (id === ID) _rmParentHighlight(o);
+	_rmParentVotes(node);
+	if (id === ID) _rmParentHighlight(node);
 
 	// move in DOM
-	var n = document.getElementById('node'+new_id);
-	n = n.getElementsByTagName('ul')[0];
-	n.appendChild(o);
+	n.getElementsByTagName('ul')[0].appendChild(node);
 
 	// add own votes to parents
-	_addParentVotes(o);
+	_addParentVotes(node);
+	userSetVotes();
 
 	if (id === ID) {
-		_addParentHighlight(o);
+		_addParentHighlight(node);
 		userSetDelegation(new_id);
 	}
-	userSetVotes();
 }
 
 function rmDelegate(id) {
-	var o = document.getElementById('node'+id);
+	var node = document.getElementById('node'+id);
+	if (!node) return;
 	var root = _root();
 
 	// substract own votes from parents
-	_rmParentVotes(o);
-	if (id === ID) _rmParentHighlight(o);
+	_rmParentVotes(node);
+	if (id === ID) {
+		_rmParentHighlight(node);
+	}
 
 	// append to root
-	root.appendChild(o);
+	root.appendChild(node);
 
 	if (id === ID) {
-		_addParentHighlight(o);
+		_addParentHighlight(node);
 		userUnsetDelegation();
 	}
 	userSetVotes();
