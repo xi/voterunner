@@ -41,6 +41,12 @@ How to use it
 *One goal of voterunner is to experiment with this concept in practice.
 Since I really just wrote it the following section is more or less fiction.*
 
+Your group needs to make a decision, but doing this on a
+mailinglist would definitly get messy. So instead you create a 
+discussion on voterunner simply by typing 
+`http://voterunner.herokuapp.com/(your-topic)` into the address bar of 
+your browser.
+
 You are lazy, right? So of course you want the group to make the
 right decision but you don't want to do the whole discussion
 thing yourself. So you will delegate your vote.
@@ -58,6 +64,7 @@ But maybe you even have an innovative idea. In that case you may
 revoke the delegation. Now you compete directly with other
 ideas. Maybe you can convince others, but maybe you should delegate
 your vote again in order to agree on a compromise.
+
 
 Install
 -------
