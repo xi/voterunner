@@ -38,7 +38,8 @@ function query(sql, params, fn) {
 }
 
 function tpl(file, data, res) {
-	// embed `data` as json in a template
+	// `<% key %>` in template `file` will be replaced by `data.key` as json
+	// `<= key =>` in template `file` will be replaced by `data.key` as string
 	fs.readFile('tpl/'+file, 'utf8', function(err, html) {
 		html = html.replace(/<% ([^>]*) %>/g, function(match, key) {
 			if (data.hasOwnProperty(key)) {
@@ -47,6 +48,16 @@ function tpl(file, data, res) {
 				return '';
 			}
 		});
+
+		html = html.replace(/<= ([^>]*) =>/g, function(match, key) {
+			if (data.hasOwnProperty(key)) {
+				return data[key].toString();
+			} else {
+				return '';
+			}
+			
+		});
+
 		res.send(html);
 	});
 }
@@ -77,7 +88,7 @@ app.get('/:topic/', function (req, res) {
 		query(sql, [topic], function(chat) {
 			var sql = 'SELECT id FROM online WHERE topic = $1';
 			query(sql, [topic], function(online) {
-				tpl('app.html', {'nodes': nodes, 'chat': chat, 'online': online}, res);
+				tpl('app.html', {'nodes': nodes, 'chat': chat, 'online': online, 'topic': topic}, res);
 			});
 		});
 	});

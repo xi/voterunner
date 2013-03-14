@@ -433,6 +433,5 @@ window.onDOMReady = function(fn) {
 };
 
 window.onDOMReady(function() {
-	document.title += " - " + TOPIC;;
 	build();
 });
