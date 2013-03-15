@@ -13,15 +13,20 @@ function toggleExpand(o) {
 		.parentElement;
 	if (node.getAttribute('data-expanded')) {
 		node.removeAttribute('data-expanded');
-		o.title = "expand";
+		o.title = _("expand");
 	} else {
 		node.setAttribute('data-expanded', 1);
-		o.title = "collapse";
+		o.title = _("collapse");
 	}
 }
 
 
 /*** helper ***/
+function _(s) {
+	// i18n: gettext placeholder
+	return s;
+}
+
 function _root() {
 	var root = document.getElementById('tree');
 	return root.getElementsByTagName('ul')[0];
@@ -124,11 +129,11 @@ function userUpdateDelegate() {
 			var name = node.getElementsByClassName('name')[0].textContent;
 			var comment = node.getElementsByClassName('comment')[0].textContent;
 			delegate.textContent = name;
-			delegate.setAttribute('title', comment);
+			delegate.title = comment;
 			return;
 		}
 	}
-	delegate.textContent = '(no delegation)';
+	delegate.textContent = _('(no delegation)');
 	delegate.removeAttribute('title');
 }
 
@@ -138,7 +143,7 @@ function addChatMsg(id, text) {
 	if (node) {
 		name = node.getElementsByClassName('name')[0].textContent;
 	} else {
-		name = 'anonymous';
+		name = _('anonymous');
 	}
 
 	var ul = document.getElementById('chat').getElementsByTagName('ul')[0];
@@ -181,19 +186,19 @@ function createNode(id) {
 	var delegate = document.createElement('a');
 	delegate.className = 'delegate';
 	delegate.textContent = '+';
-	delegate.title = 'delegate to anonymous';
+	delegate.title = _('delegate to anonymous');
 	delegate.setAttribute('onclick', 'delegate("' + id + '")');
 	header.appendChild(delegate);
 
 	var expand = document.createElement('a');
 	expand.className = 'expand';
-	expand.title = 'expand';
+	expand.title = _('expand');
 	expand.setAttribute('onclick', 'toggleExpand(this)');
 	header.appendChild(expand);
 
 	var name = document.createElement('span');
 	name.className = 'name';
-	name.textContent = 'anonymous';
+	name.textContent = _('anonymous');
 	header.appendChild(name);
 
 	var comment = document.createElement('p');
@@ -239,7 +244,7 @@ function setNodeName(id, name) {
 	var node = document.getElementById('node'+id);
 	if (!node) return;
 	node.getElementsByClassName('name')[0].textContent = name;
-	node.getElementsByClassName('delegate')[0].title = "delegate to " + name;
+	node.getElementsByClassName('delegate')[0].title = _("delegate to ") + name;
 
 	if (id === ID) {
 		userSetName(name);
@@ -332,7 +337,7 @@ function setComment() {
 }
 
 function rm() {
-	if (!confirm("Do you really want to delete this opinion?")) return;
+	if (!confirm(_("Do you really want to delete this opinion?"))) return;
 
 	rmNode(ID);
 	_post('rmNode');
