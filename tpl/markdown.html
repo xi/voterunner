@@ -18,17 +18,13 @@
 </head>
 
 <body>
-	<% markdown %>
+	<pre><= markdown =></pre>
 </body>
 
 <script type="text/javascript">
-	var jsonMarkdown = document.getElementById('json-markdown');
-	var html = JSON.parse(jsonMarkdown.getAttribute('data-value'));
-	jsonMarkdown.parentElement.removeChild(jsonMarkdown);
-
 	var conv = new Showdown.converter({extensions: ['prettify']});
-	html = conv.makeHtml(html);
-	document.body.innerHTML = html;
+	var html = document.body.textContent;
+	document.body.innerHTML = conv.makeHtml(html);
 
 	// prettyPrint() is called automatically
 </script>

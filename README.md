@@ -23,7 +23,8 @@ Votorolla is a complex liquid democracy project. But the core idea is
 simple:
 
 Every Person is a node in a forest (the disjoint union of trees in graph
-theory, not [this](http://miriadna.com/desctopwalls/images/max/Fairy-forest.jpg)).
+theory, not
+[this](http://miriadna.com/desctopwalls/images/max/Fairy-forest.jpg)).
 At first, there are no edges at all. So people start to explain why
 their opinion is the one to choose. When you see some convincing
 argument you can *follow* that node (*delegate your vote*).
@@ -32,39 +33,39 @@ After a while it becomes clear which competing positions exist and which
 arguments are important. The whole discussion is conserved in the graph.
 You can go on discussing until you reach a consensus.
 
-While this concept is not perfect for every situation it is beautifull 
+While this concept is not perfect for every situation it is beautifull
 in its simplicity.
 
 How to use it
 -------------
 
 *One goal of voterunner is to experiment with this concept in practice.
-Since I really just wrote it the following section is more or less fiction.*
+Since I really just wrote it the following section is more or less
+fiction.*
 
-Your group needs to make a decision, but doing this on a
-mailinglist would definitly get messy. So instead you create a 
-discussion on voterunner simply by typing 
-`http://voterunner.herokuapp.com/(your-topic)` into the address bar of 
+Your group needs to make a decision, but doing this on a mailinglist
+would definitly get messy. So instead you create a discussion on
+voterunner simply by typing
+`http://voterunner.herokuapp.com/(your-topic)` into the address bar of
 your browser.
 
-You are lazy, right? So of course you want the group to make the
-right decision but you don't want to do the whole discussion
-thing yourself. So you will delegate your vote.
+You are lazy, right? So of course you want the group to make the right
+decision but you don’t want to do the whole discussion thing yourself.
+So you will delegate your vote.
 
-Now you can concentrate on convincing those who have not already 
-delegated their votes to follow you. 
-You may also try to steer the one you follow in the right direction.
+Now you can concentrate on convincing those who have not already
+delegated their votes to follow you. You may also try to steer the one
+you follow in the right direction.
 
-To achieve this you work on your arguments. 
-Try to address counter arguments and be as precise as possible.
-Remember that you are a node in a graph so you don't need to repeat
-everything your followers already said. Just make your own point very clear.
+To achieve this you work on your arguments. Try to address counter
+arguments and be as precise as possible. Remember that you are a node in
+a graph so you don’t need to repeat everything your followers already
+said. Just make your own point very clear.
 
-But maybe you even have an innovative idea. In that case you may
-revoke the delegation. Now you compete directly with other
-ideas. Maybe you can convince others, but maybe you should delegate
-your vote again in order to agree on a compromise.
-
+But maybe you even have an innovative idea. In that case you may revoke
+the delegation. Now you compete directly with other ideas. Maybe you can
+convince others, but maybe you should delegate your vote again in order
+to agree on a compromise.
 
 Install
 -------
@@ -79,7 +80,6 @@ will bring it up:
         info  - socket.io started
         info  - Listening on 5000
 
-
 API
 ---
 
@@ -93,7 +93,6 @@ The communication is done using socket.io sockets.
       ...
     });
 
-
 ### setup
 
 These messages are used to set up the connection between client and
@@ -105,8 +104,8 @@ server:
 ### change the Graph
 
 These messages will be broadcasted to all sockets which are registered
-to the same topic as the one emitting in. The emitting socket must
-obmit the id because it was already set when registering.
+to the same topic as the one emitting in. The emitting socket must obmit
+the id because it was already set when registering.
 
 `createNode([id])`
 :   add node `id` to the graph
@@ -132,30 +131,26 @@ obmit the id because it was already set when registering.
 :   add the chat message `text` by `id` at time `t`
 
 `online(id)`
-:   user `id` is now online.
-    is emitted automatically on registration
+:   user `id` is now online. is emitted automatically on registration
 
 `offline(id)`
-:   user `id` is now offline.
-    is emitted automatically on disconnect
-
-
+:   user `id` is now offline. is emitted automatically on disconnect
 
 License
 -------
 
 voterunner - quick and dirty votes and discussions \
-Copyright (C) 2013  Tobias Bengfort <tobias.bengfort@gmx.net>
+Copyright (C) 2013 Tobias Bengfort <tobias.bengfort@gmx.net>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <http://www.gnu.org/licenses/>.
