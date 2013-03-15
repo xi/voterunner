@@ -352,8 +352,8 @@ function rm() {
 }
 
 function chat(text) {
-	addChatMsg(ID, text.value);
-	_post('chat', text.value);
+	addChatMsg(ID, text);
+	_post('chat', text);
 	text.value = '';
 }
 
