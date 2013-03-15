@@ -136,7 +136,7 @@ app.get('/:topic/opml/', function(req, res) {
 				s += '<opml version="1.0">\n';
 				s += '  <head>\n';
 				s += '    <title>voterunner - ' + escapeHTML(topic) + '</title>\n';
-				s += '    <dateCreated>' + escapeHTML((new Date()).toString()) + '</dateCreated>\n'
+				s += '    <dateCreated>' + escapeHTML(new Date().toString()) + '</dateCreated>\n'
 				s += '  </head>\n';
 				s += '  <body>\n';
 				s += opml(tree, '    ');
@@ -249,6 +249,7 @@ io.sockets.on('connection', function (socket) {
 		handleMsg('rmDelegate', sql);
 	});
 	socket.on('chat', function(text, t) {
+		t = t || new Date().getTime();
 		var sql = "INSERT INTO chat (topic, id, text, t) VALUES ($1, $2, $3, $4)";
 		handleMsg('chat', sql, text, t);
 	});
