@@ -7,15 +7,15 @@
 * {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
-	//max-width: 100%; collides with spin.js
-}
-
-input[type="text"], textarea {
-	background: white;
+	max-width: 100%;
 }
 
 .padding {
 	padding: 0.4em;
+}
+
+input[type="text"], textarea {
+	background: white;
 }
 
 textarea {
@@ -23,30 +23,8 @@ textarea {
 	font-size: inherit;
 }
 
-p.comment {
-	white-space: pre-wrap;
-	font-family: inherit;
-	font-size: inherit;
-}
-
 *[onclick]:not(.inactive) {
 	cursor: pointer;
-}
-
-.button {
-	background: -webkit-linear-gradient(270deg, white 0%, silver 100%);
-	background: linear-gradient(270deg, white 0%, silver 100%);
-	padding: 0.2em;
-	border-radius: 0.5em;
-	&.inactive {
-		color: gray;
-	}
-	&:not(.inactive) {
-		&:hover {
-			background: -webkit-linear-gradient(270deg, white 0%, silver 70%);
-			background: linear-gradient(270deg, white 0%, silver 70%);
-		}
-	}
 }
 
 html {
@@ -123,9 +101,12 @@ header {
 						.padding;
 					}
 				}
-				p {
+				p.comment {
 					margin: 0;
 					.padding;
+					white-space: pre-wrap;
+					font-family: inherit;
+					font-size: inherit;
 				}
 			}
 			ul {
@@ -166,7 +147,7 @@ header {
 		> .statusbar {
 			width: 100%;
 			border-bottom: 1px solid @ll;
-			.delegation {
+			.delegate {
 				.padding;
 				max-width: 80%;
 				white-space: nowrap;
