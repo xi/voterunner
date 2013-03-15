@@ -174,22 +174,31 @@ header {
 			.delegate {
 				.bar-item;
 			}
-			.votes, .undelegate {
+			.votes {
 				.bar-button-right;
+			}
+			.undelegate {
+				.bar-button-right;
+				&:before {
+					content: "‒";
+				}
 			}
 		}
 		#name {
 			.bar-item;
 			input {
 				font-size: 1.2em;
-				height: 2em;
+				height: 1.6em;
 			}
 		}
 		#rm {
 			.bar-button-right;
-			font-size: 1.2em;
-			padding: 0.4em 0.8em;
-			line-height: 2em;
+			&:before {
+				content: "X";
+				font-size: 1.2em;
+				.padding;
+				line-height: 1.6em;
+			}
 		}
 		#comment {
 			textarea {

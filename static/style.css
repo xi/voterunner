@@ -210,7 +210,17 @@ header h1 span {
   overflow: hidden;
   display: inline-block;
 }
-#sidebar #user > .statusbar .votes,
+#sidebar #user > .statusbar .votes {
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  float: right;
+  border-left: 1px solid lightgray;
+}
+#sidebar #user > .statusbar .votes[onclick]:hover {
+  background-color: rgba(255,255,255,0.2);
+}
 #sidebar #user > .statusbar .undelegate {
   padding: 0.4em;
   white-space: nowrap;
@@ -219,9 +229,11 @@ header h1 span {
   float: right;
   border-left: 1px solid lightgray;
 }
-#sidebar #user > .statusbar .votes[onclick]:hover,
 #sidebar #user > .statusbar .undelegate[onclick]:hover {
   background-color: rgba(255,255,255,0.2);
+}
+#sidebar #user > .statusbar .undelegate:before {
+  content: "‒";
 }
 #sidebar #user #name {
   padding: 0.4em;
@@ -231,7 +243,7 @@ header h1 span {
 }
 #sidebar #user #name input {
   font-size: 1.2em;
-  height: 2em;
+  height: 1.6em;
 }
 #sidebar #user #rm {
   padding: 0.4em;
@@ -240,12 +252,15 @@ header h1 span {
   display: inline-block;
   float: right;
   border-left: 1px solid lightgray;
-  font-size: 1.2em;
-  padding: 0.4em 0.8em;
-  line-height: 2em;
 }
 #sidebar #user #rm[onclick]:hover {
   background-color: rgba(255,255,255,0.2);
+}
+#sidebar #user #rm:before {
+  content: "X";
+  font-size: 1.2em;
+  padding: 0.4em;
+  line-height: 1.6em;
 }
 #sidebar #user #comment textarea {
   width: 100%;
