@@ -46,7 +46,7 @@ fiction.*
 Your group needs to make a decision, but doing this on a mailinglist
 would definitly get messy. So instead you create a discussion on
 voterunner simply by typing
-`http://voterunner.herokuapp.com/(your-topic)` into the address bar of
+`http://voterunner.herokuapp.com/(your-topic)/` into the address bar of
 your browser.
 
 You are lazy, right? So of course you want the group to make the right
