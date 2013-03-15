@@ -72,15 +72,6 @@ function _rmParentHighlight(o) {
 	_rmParentHighlight(p);
 }
 
-function _get() {
-	var node = document.getElementById('node'+ID);
-	if (!node) {
-		node = createNode(ID);
-		_post('createNode');
-	}
-	return node;
-}
-
 
 /*** user ***/
 function userSetName(name) {
@@ -313,30 +304,48 @@ function rmDelegate(id) {
 
 
 /*** actions ***/
+function create(fn) {
+	// ensures that node exists when executing fn
+	var node = document.getElementById('node'+ID);
+	if (node) {
+		fn(node);
+	} else {
+		node = createNode(ID);
+		_post('createNode', function() {
+			fn(node);
+		});
+	}
+}
+
+	
 function delegate(id) {
-	node = _get();
-	setDelegate(ID, id);
-	_post('setDelegate', id);
+	create(function(node) {
+		setDelegate(ID, id);
+		_post('setDelegate', id);
+	});
 }
 
 function undelegate() {
-	node = _get();
-	rmDelegate(ID);
-	_post('rmDelegate');
+	create(function(node) {
+		rmDelegate(ID);
+		_post('rmDelegate');
+	});
 }
 
 function setName() {
-	_get();
-	name = userGetName();
-	setNodeName(ID, name);
-	_post('setNodeName', name);
+	create(function(node) {
+		var name = userGetName();
+		setNodeName(ID, name);
+		_post('setNodeName', name);
+	});
 }
 
 function setComment() {
-	_get();
-	comment = userGetComment();
-	setNodeComment(ID, comment);
-	_post('setNodeComment', comment);
+	create(function(node) {
+		var comment = userGetComment();
+		setNodeComment(ID, comment);
+		_post('setNodeComment', comment);
+	});
 }
 
 function rm() {
@@ -468,7 +477,9 @@ socket.on('chat', function(id, text) {
 });
 
 function _post(action, v1, v2) {
-	socket.emit(action, v1, v2);
+	// if callback function is used it must be the last parameter
+	if (v2) socket.emit(action, v1, v2);
+	else socket.emit(action, v1);
 }
 
 

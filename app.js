@@ -28,7 +28,7 @@ function query(sql, params, fn) {
 		} else {
 			db.query(sql, params, function(err, result) {
 				if (err) {
-					log.warn("db error:", err.toString());
+					log.warn("db error:", err.toString(), sql, params);
 				} else {
 					if (fn) fn(result.rows);
 				}
@@ -221,9 +221,15 @@ io.sockets.on('connection', function (socket) {
 		handleMsg('offline', sql);
 	});
 
-	socket.on('createNode', function() {
+	socket.on('createNode', function(fn) {
 		var sql = "INSERT INTO nodes (topic, id) VALUES ($1, $2)";
-		handleMsg('createNode', sql);
+		socket.get('topic', function(err, topic) {
+			socket.get('id', function(err, id) {
+				log.debug("Handeling:", 'createNode', topic, id);
+				socket.broadcast.to(topic).emit('createNode', id);
+				query(sql, [topic, id], fn); // not possible with handleMsg()
+			});
+		});
 	});
 	socket.on('rmNode', function() {
 		var sql = [
