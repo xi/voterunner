@@ -391,17 +391,22 @@ function uid() {
 
 /*** build ***/
 function build() {
-	var jsonNodes = document.getElementById('json-nodes');
-	buildNodes(JSON.parse(jsonNodes.getAttribute('data-value')));
-	jsonNodes.parentElement.removeChild(jsonNodes);
+	var jsonNodes, jsonChat, jsonOnline;
 
-	var jsonChat = document.getElementById('json-chat');
-	buildChat(JSON.parse(jsonChat.getAttribute('data-value')));
-	jsonChat.parentElement.removeChild(jsonChat);
+	if (jsonNodes = document.getElementById('json-nodes')) {
+		buildNodes(JSON.parse(jsonNodes.getAttribute('data-value')));
+		jsonNodes.parentElement.removeChild(jsonNodes);
+	}
 
-	var jsonOnline = document.getElementById('json-online');
-	// TODO
-	jsonOnline.parentElement.removeChild(jsonOnline);
+	if (jsonChat = document.getElementById('json-chat')) {
+		buildChat(JSON.parse(jsonChat.getAttribute('data-value')));
+		jsonChat.parentElement.removeChild(jsonChat);
+	}
+
+	if (jsonOnline = document.getElementById('json-online')) {
+		// TODO
+		jsonOnline.parentElement.removeChild(jsonOnline);
+	}
 }
 
 function buildNodes(data) {
