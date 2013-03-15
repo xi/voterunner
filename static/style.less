@@ -114,6 +114,13 @@ header {
 					.votes, .delegate {
 						.bar-button-right;
 					}
+					.online {
+						.bar-button-right;
+						display: none;
+						&:before {
+							content: "o";
+						}
+					}
 				}
 				p.comment {
 					margin: 0;
@@ -140,6 +147,9 @@ header {
 			}
 			&[data-expanded] > .body .header .expand:before {
 				content: "v";
+			}
+			&[data-online]:not([data-self]) > .body .header .online {
+				display: block;
 			}
 		}
 	}

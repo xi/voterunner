@@ -184,13 +184,18 @@ function createNode(id) {
 	delegate.setAttribute('onclick', 'delegate("' + id + '")');
 	header.appendChild(delegate);
 
+	var online = document.createElement('div');
+	online.className = 'online';
+	online.title = _('user is online');
+	header.appendChild(online);
+
 	var expand = document.createElement('a');
 	expand.className = 'expand';
 	expand.title = _('expand');
 	expand.setAttribute('onclick', 'toggleExpand(this)');
 	header.appendChild(expand);
 
-	var name = document.createElement('span');
+	var name = document.createElement('div');
 	name.className = 'name';
 	name.textContent = _('anonymous');
 	header.appendChild(name);
@@ -302,6 +307,17 @@ function rmDelegate(id) {
 	userSetVotes();
 }
 
+function online(id, online) {
+	var node = document.getElementById('node'+id);
+	if (!node) remove;
+
+	if (online) {
+		node.setAttribute('data-online', 1);
+	} else {
+		node.removeAttribute('data-online');
+	}
+}
+
 
 /*** actions ***/
 function create(fn) {
@@ -317,7 +333,6 @@ function create(fn) {
 	}
 }
 
-	
 function delegate(id) {
 	create(function(node) {
 		setDelegate(ID, id);
@@ -416,7 +431,7 @@ function build() {
 	}
 
 	if (jsonOnline = document.getElementById('json-online')) {
-		// TODO
+		buildOnline(JSON.parse(jsonOnline.getAttribute('data-value')));
 		jsonOnline.parentElement.removeChild(jsonOnline);
 	}
 }
@@ -437,6 +452,12 @@ function buildNodes(data) {
 function buildChat(data) {
 	for (var i=0; i<data.length; i++) {
 		addChatMsg(data[i].id, data[i].text);
+	}
+}
+
+function buildOnline(data) {
+	for (var i=0; i<data.length; i++) {
+		online(data[i].id, true);
 	}
 }
 
@@ -471,6 +492,12 @@ socket.on('setDelegate', function(id, delegate) {
 });
 socket.on('rmDelegate', function(id) {
 	rmDelegate(id);
+});
+socket.on('online', function(id) {
+	online(id, 1);
+});
+socket.on('offline', function(id) {
+	online(id, '');
 });
 socket.on('chat', function(id, text) {
 	addChatMsg(id, text);

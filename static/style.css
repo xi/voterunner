@@ -143,6 +143,21 @@ header h1 span {
 #tree ul li .body .header .delegate[onclick]:hover {
   background-color: rgba(255,255,255,0.2);
 }
+#tree ul li .body .header .online {
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  float: right;
+  border-left: 1px solid lightgray;
+  display: none;
+}
+#tree ul li .body .header .online[onclick]:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+#tree ul li .body .header .online:before {
+  content: "o";
+}
 #tree ul li .body p.comment {
   margin: 0;
   padding: 0.4em;
@@ -167,6 +182,9 @@ header h1 span {
 }
 #tree ul li[data-expanded] > .body .header .expand:before {
   content: "v";
+}
+#tree ul li[data-online]:not([data-self]) > .body .header .online {
+  display: block;
 }
 #sidebar {
   width: 42%;
