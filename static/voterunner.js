@@ -309,7 +309,7 @@ function rmDelegate(id) {
 
 function online(id, online) {
 	var node = document.getElementById('node'+id);
-	if (!node) remove;
+	if (!node) return;
 
 	if (online) {
 		node.setAttribute('data-online', 1);
