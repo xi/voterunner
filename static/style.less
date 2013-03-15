@@ -10,10 +10,6 @@
 	max-width: 100%;
 }
 
-.padding {
-	padding: 0.4em;
-}
-
 input[type="text"], textarea {
 	background: white;
 }
@@ -25,6 +21,33 @@ textarea {
 
 *[onclick]:not(.inactive) {
 	cursor: pointer;
+}
+
+.padding {
+	padding: 0.4em;
+}
+
+.bar-item {
+	.padding;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+}
+.bar-button {
+	.bar-item;
+	&[onclick]:hover {
+		background-color: rgba(255,255,255,0.2);
+	}
+}
+.bar-button-left {
+	.bar-button;
+	float: left;
+	border-right: 1px solid @ll;
+}
+.bar-button-right {
+	.bar-button;
+	float: right;
+	border-left: 1px solid @ll;
 }
 
 html {
@@ -83,22 +106,13 @@ header {
 				.header {
 					background: @h2;
 					.expand {
-						float: left;
-						border-right: 1px solid @ll;
-						margin-right: 0.5em;
-						.padding;
+						.bar-button-left;
 					}
 					.name {
-						max-width: 80%;
-						white-space: nowrap;
-						display: block;
-						.padding;
+						.bar-item;
 					}
 					.votes, .delegate {
-						max-width: 20%;
-						float: right;
-						border-left: 1px solid @ll;
-						.padding;
+						.bar-button-right;
 					}
 				}
 				p.comment {
@@ -148,21 +162,24 @@ header {
 			width: 100%;
 			border-bottom: 1px solid @ll;
 			.delegate {
-				.padding;
-				max-width: 80%;
-				white-space: nowrap;
-				overflow: hidden;
-				display: inline-block;
+				.bar-item;
 			}
 			.votes, .undelegate {
-				.padding;
-				max-width: 20%;
-				float: right;
-				border-left: 1px solid @ll;
+				.bar-button-right;
 			}
 		}
 		#name {
-			.padding;
+			.bar-item;
+			input {
+				font-size: 1.2em;
+				height: 2em;
+			}
+		}
+		#rm {
+			.bar-button-right;
+			font-size: 1.2em;
+			padding: 0.4em 0.8em;
+			line-height: 2em;
 		}
 		#comment {
 			textarea {
@@ -172,12 +189,6 @@ header {
 				border: none;
 				resize: none;
 				.padding;
-			}
-			.statusbar {
-				.padding;
-				.button {
-					float: right;
-				}
 			}
 		}
 	}

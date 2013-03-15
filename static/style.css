@@ -3,9 +3,6 @@
   -moz-box-sizing: border-box;
   max-width: 100%;
 }
-.padding {
-  padding: 0.4em;
-}
 input[type="text"],
 textarea {
   background: white;
@@ -16,6 +13,46 @@ textarea {
 }
 *[onclick]:not(.inactive) {
   cursor: pointer;
+}
+.padding {
+  padding: 0.4em;
+}
+.bar-item {
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+.bar-button {
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+.bar-button[onclick]:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+.bar-button-left {
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  float: left;
+  border-right: 1px solid lightgray;
+}
+.bar-button-left[onclick]:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+.bar-button-right {
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  float: right;
+  border-left: 1px solid lightgray;
+}
+.bar-button-right[onclick]:hover {
+  background-color: rgba(255,255,255,0.2);
 }
 html {
   height: 100%;
@@ -77,23 +114,34 @@ header h1 span {
   background: #ABC3E3;
 }
 #tree ul li .body .header .expand {
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
   float: left;
   border-right: 1px solid lightgray;
-  margin-right: 0.5em;
-  padding: 0.4em;
+}
+#tree ul li .body .header .expand[onclick]:hover {
+  background-color: rgba(255,255,255,0.2);
 }
 #tree ul li .body .header .name {
-  max-width: 80%;
-  white-space: nowrap;
-  display: block;
   padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
 }
 #tree ul li .body .header .votes,
 #tree ul li .body .header .delegate {
-  max-width: 20%;
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
   float: right;
   border-left: 1px solid lightgray;
-  padding: 0.4em;
+}
+#tree ul li .body .header .votes[onclick]:hover,
+#tree ul li .body .header .delegate[onclick]:hover {
+  background-color: rgba(255,255,255,0.2);
 }
 #tree ul li .body p.comment {
   margin: 0;
@@ -140,7 +188,6 @@ header h1 span {
 }
 #sidebar #user > .statusbar .delegate {
   padding: 0.4em;
-  max-width: 80%;
   white-space: nowrap;
   overflow: hidden;
   display: inline-block;
@@ -148,12 +195,39 @@ header h1 span {
 #sidebar #user > .statusbar .votes,
 #sidebar #user > .statusbar .undelegate {
   padding: 0.4em;
-  max-width: 20%;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
   float: right;
   border-left: 1px solid lightgray;
 }
+#sidebar #user > .statusbar .votes[onclick]:hover,
+#sidebar #user > .statusbar .undelegate[onclick]:hover {
+  background-color: rgba(255,255,255,0.2);
+}
 #sidebar #user #name {
   padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+#sidebar #user #name input {
+  font-size: 1.2em;
+  height: 2em;
+}
+#sidebar #user #rm {
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  float: right;
+  border-left: 1px solid lightgray;
+  font-size: 1.2em;
+  padding: 0.4em 0.8em;
+  line-height: 2em;
+}
+#sidebar #user #rm[onclick]:hover {
+  background-color: rgba(255,255,255,0.2);
 }
 #sidebar #user #comment textarea {
   width: 100%;
@@ -162,12 +236,6 @@ header h1 span {
   border: none;
   resize: none;
   padding: 0.4em;
-}
-#sidebar #user #comment .statusbar {
-  padding: 0.4em;
-}
-#sidebar #user #comment .statusbar .button {
-  float: right;
 }
 #sidebar #chat {
   height: 100%;
