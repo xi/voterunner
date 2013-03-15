@@ -155,7 +155,11 @@ app.get('/:topic/:id?', function (req, res) {
 	var topic = req.params.topic;
 
 	if (req.params.id) {
-		res.cookie('id', req.params.id);
+		if (req.params.id === 'clear') {
+			res.clearCookie('id');
+		} else {
+			res.cookie('id', req.params.id);
+		}
 	}
 
 	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
