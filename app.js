@@ -37,13 +37,22 @@ function query(sql, params, fn) {
 	});
 }
 
+function escapeHTML(unsafe) {
+	return unsafe
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+}
+
 function tpl(file, data, res) {
 	// `<% key %>` in template `file` will be replaced by `data.key` as json
 	// `<= key =>` in template `file` will be replaced by `data.key` as string
 	fs.readFile('tpl/'+file, 'utf8', function(err, html) {
 		html = html.replace(/<% ([^>]*) %>/g, function(match, key) {
 			if (data.hasOwnProperty(key)) {
-				return '<data id="json-' + key + '">' + JSON.stringify(data[key]) + '</data>';
+				return '<div id="json-' + key + '" data-value="' + escapeHTML(JSON.stringify(data[key])) + '"></div>';
 			} else {
 				return '';
 			}
@@ -51,7 +60,7 @@ function tpl(file, data, res) {
 
 		html = html.replace(/<= ([^>]*) =>/g, function(match, key) {
 			if (data.hasOwnProperty(key)) {
-				return data[key].toString();
+				return escapeHTML(data[key].toString());
 			} else {
 				return '';
 			}
@@ -67,6 +76,7 @@ function markdown(file, res) {
 		tpl('markdown.html', {'markdown': markdown}, res);
 	});
 }
+
 
 // setup tables
 query("CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
@@ -125,8 +135,8 @@ app.get('/:topic/opml/', function(req, res) {
 				s += '<?xml version="1.0" encoding="UTF-8"?>\n';
 				s += '<opml version="1.0">\n';
 				s += '  <head>\n';
-				s += '    <title>voterunner - ' + topic + '</title>\n';
-				s += '    <dateCreated>' + new Date() + '</dateCreated>\n'
+				s += '    <title>voterunner - ' + escapeHTML(topic) + '</title>\n';
+				s += '    <dateCreated>' + escapeHTML((new Date()).toString()) + '</dateCreated>\n'
 				s += '  </head>\n';
 				s += '  <body>\n';
 				s += opml(tree, '    ');
@@ -135,9 +145,9 @@ app.get('/:topic/opml/', function(req, res) {
 			} else {
 				for (var i=0; i<tree.length; i++) {
 					s += indent + '<outline';
-					s += tree[i].id ? ' id="'+tree[i].id+'"' : '';
-					s += tree[i].name ? ' name="'+tree[i].name+'"' : '';
-					s += tree[i].comment ? ' text="'+tree[i].comment+'"' : '';
+					s += tree[i].id ? ' id="' + escapeHTML(tree[i].id) + '"' : '';
+					s += tree[i].name ? ' name="' + escapeHTML(tree[i].name) + '"' : '';
+					s += tree[i].comment ? ' text="' + escapeHTML(tree[i].comment) + '"' : '';
 					s += '>\n'
 					s += opml(tree[i].followers, indent + '  ');
 					s += indent + '</outline>\n';

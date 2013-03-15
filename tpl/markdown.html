@@ -23,7 +23,7 @@
 
 <script type="text/javascript">
 	var jsonMarkdown = document.getElementById('json-markdown');
-	var html = JSON.parse(jsonMarkdown.textContent);
+	var html = JSON.parse(jsonMarkdown.getAttribute('data-value'));
 	jsonMarkdown.parentElement.removeChild(jsonMarkdown);
 
 	var conv = new Showdown.converter({extensions: ['prettify']});

@@ -382,11 +382,11 @@ function uid() {
 /*** build ***/
 function build() {
 	var jsonNodes = document.getElementById('json-nodes');
-	buildNodes(JSON.parse(jsonNodes.textContent));
+	buildNodes(JSON.parse(jsonNodes.getAttribute('data-value')));
 	jsonNodes.parentElement.removeChild(jsonNodes);
 
 	var jsonChat = document.getElementById('json-chat');
-	buildChat(JSON.parse(jsonChat.textContent));
+	buildChat(JSON.parse(jsonChat.getAttribute('data-value')));
 	jsonChat.parentElement.removeChild(jsonChat);
 
 	var jsonOnline = document.getElementById('json-online');
