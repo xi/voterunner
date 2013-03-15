@@ -107,19 +107,26 @@ These messages will be broadcasted to all sockets which are registered
 to the same topic as the one emitting in. The emitting socket must obmit
 the id because it was already set when registering.
 
-`createNode([id])`
-:   add node `id` to the graph
+`createNode([id], [fn])`
+:   add node `id` to the graph.
+    if the function `fn` is provided, it will be executed 
+    when this action has completed.
+
+        socket.emit('createNode', function() {
+          // node exists
+          socket.emit('setNodeName', '<username>');
+        });
 
 `rmNode([id])`
 :   remove node `id` from the graph.
 
-`setNodeName([id, ]name)`
+`setNodeName([id], name)`
 :   set the name of node `id` to `name`
 
-`setNodeComment([id, ]comment)`
+`setNodeComment([id], comment)`
 :   set the comment of node `id` to `comment`
 
-`setDelegate([id, ]id2)`
+`setDelegate([id], id2)`
 :   make node `id` follow node `id2`
 
 `rmDelegate([id])`
