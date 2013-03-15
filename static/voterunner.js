@@ -104,8 +104,11 @@ function userGetComment() {
 }
 
 function userSetVotes() {
-	var votes = _get().getElementsByClassName('votes')[0].textContent;
-	document.getElementById('user').getElementsByClassName('votes')[0].innerText = votes;
+	var node = document.getElementById('node'+ID);
+	if (node) {
+		var votes = node.getElementsByClassName('votes')[0].textContent;
+		document.getElementById('user').getElementsByClassName('votes')[0].innerText = votes;
+	}
 }
 
 function userSetDelegate(id) {
