@@ -18,15 +18,15 @@
 </head>
 
 <body>
-	<pre><= markdown =></pre>
+	<pre id="markdown"><= markdown =></pre>
+
+	<script type="text/javascript">
+		var conv = new Showdown.converter({extensions: ['prettify']});
+		var html = document.getElementById('markdown').textContent;
+		document.body.innerHTML = conv.makeHtml(html);
+
+		// prettyPrint() is called automatically
+	</script>
 </body>
-
-<script type="text/javascript">
-	var conv = new Showdown.converter({extensions: ['prettify']});
-	var html = document.body.textContent;
-	document.body.innerHTML = conv.makeHtml(html);
-
-	// prettyPrint() is called automatically
-</script>
 
 </html>
