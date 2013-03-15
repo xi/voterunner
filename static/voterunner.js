@@ -329,6 +329,8 @@ function setComment() {
 }
 
 function rm() {
+	if (!confirm("Do you really want to delete this opinion?")) return;
+
 	rmNode(ID);
 	_post('rmNode');
 

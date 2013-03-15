@@ -31,13 +31,14 @@
 		<div id="sidebar">
 			<div id="user">
 				<div class="statusbar">
-					<div class="votes" title="number of votes of you and all your followers">1</div>
 					<div class="delegate">(no delegation)</div>
+					<span class="votes" title="number of votes of you and all your followers">1</span>
 					<a class="undelegate" title="revoke delegation" onclick="undelegate()">‒</a>
 				</div>
 				<div id="name">
 					<input type="text" placeholder="<enter your name>" onchange="setName()"/>
 				</div>
+				<a id="rm" onclick="rm()">X</a>
 				<div id="comment">
 					<textarea onchange="setComment()"></textarea>
 				</div>
