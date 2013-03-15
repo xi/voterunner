@@ -8,13 +8,15 @@
 
 /*** gui ***/
 function toggleExpand(o) {
-	o = o.parentElement;
-	o = o.parentElement;
-	o = o.parentElement;
-	if (o.getAttribute('data-expanded')) {
-		o.removeAttribute('data-expanded');
+	var node = o.parentElement
+		.parentElement
+		.parentElement;
+	if (node.getAttribute('data-expanded')) {
+		node.removeAttribute('data-expanded');
+		o.title = "expand";
 	} else {
-		o.setAttribute('data-expanded', 1);
+		node.setAttribute('data-expanded', 1);
+		o.title = "collapse";
 	}
 }
 
@@ -185,6 +187,7 @@ function createNode(id) {
 
 	var expand = document.createElement('a');
 	expand.className = 'expand';
+	expand.title = 'expand';
 	expand.setAttribute('onclick', 'toggleExpand(this)');
 	header.appendChild(expand);
 
