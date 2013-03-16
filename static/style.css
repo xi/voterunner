@@ -62,20 +62,29 @@ html {
 }
 body {
   height: 100%;
+  min-width: 40em;
   width: 88%;
   margin: 0 auto;
+  position: relative;
 }
 body > div {
-  padding-top: 3em;
-  height: 95%;
+  padding: 3em 0 1em;
+  height: 100%;
+  min-height: 37em;
+}
+body > div > div {
+  position: relative;
+  height: 100%;
+  min-height: 33em;
 }
 header {
   background: #336DBE;
   text-align: center;
   border-radius: 0 0 0.4em 0.4em;
   margin: 0;
-  float: left;
   width: 100%;
+  position: absolute;
+  top: 0;
 }
 header h1 {
   margin: 0;
@@ -93,8 +102,12 @@ header h1 span {
   border-radius: 0.2em 0.2em 0 0;
 }
 #tree {
-  margin-right: 43%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 57%;
   height: 100%;
+  margin-right: 1em;
   overflow: auto;
   background: white;
   padding: 0.4em;
@@ -187,11 +200,12 @@ header h1 span {
   display: block;
 }
 #sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 42%;
-  float: right;
   height: 100%;
   padding-top: 22em;
-  position: relative;
 }
 #sidebar #user {
   background: #D9E7F9;
@@ -240,6 +254,7 @@ header h1 span {
   white-space: nowrap;
   overflow: hidden;
   display: inline-block;
+  max-width: 80%;
 }
 #sidebar #user #name input {
   font-size: 1.2em;
