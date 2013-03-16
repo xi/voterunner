@@ -234,6 +234,7 @@ io.sockets.on('connection', function (socket) {
 			socket.get('id', function(err, id) {
 				log.debug("Handeling:", 'createNode', topic, id);
 				socket.broadcast.to(topic).emit('createNode', id);
+				socket.broadcast.to(topic).emit('online', id);
 				query(sql, [topic, id], fn); // not possible with handleMsg()
 			});
 		});
