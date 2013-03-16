@@ -25,13 +25,13 @@ function query(sql, params, fn) {
 	pg.connect(conString, function(err, db) {
 		if (err) {
 			log.warn("error on db connect", err.toString());
+			if (fn) fn(err);
 		} else {
 			db.query(sql, params, function(err, result) {
 				if (err) {
 					log.warn("db error:", err.toString(), sql, params);
-				} else {
-					if (fn) fn(result.rows);
 				}
+				if (fn) fn(err, result.rows);
 			});
 		}
 	});
@@ -93,7 +93,8 @@ app.get('/:topic/json/', function(req, res) {
 	var topic = req.params.topic;
 	var sql = "SELECT id, name, comment, delegate FROM nodes WHERE topic = $1";
 
-	query(sql, [topic], function(tree) {
+	query(sql, [topic], function(err, tree) {
+		if (err) return res.status(500).send(err.toString());
 		res.json(tree);
 	});
 });
@@ -103,7 +104,9 @@ app.get('/:topic/opml/', function(req, res) {
 	var topic = req.params.topic;
 	var sql = "SELECT id, name, comment, delegate FROM nodes WHERE topic = $1";
 
-	query(sql, [topic], function(tree) {
+	query(sql, [topic], function(err, tree) {
+		if (err) return res.status(500).send(err.toString());
+
 		for (var i=0; i<tree.length; i++) {
 			tree[i].followers = [];
 		}
@@ -161,7 +164,7 @@ app.get('/:topic/opml/', function(req, res) {
 });
 
 // app view
-app.get('/:topic/:id?', function (req, res) {	
+app.get('/:topic/:id?', function (req, res) {
 	var topic = req.params.topic;
 
 	if (req.params.id) {
@@ -173,11 +176,15 @@ app.get('/:topic/:id?', function (req, res) {
 	}
 
 	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
-	query(sql, [topic], function(nodes) {
+	query(sql, [topic], function(err, nodes) {
+		if (err) return res.status(500).send(err.toString());
+
 		var sql = 'SELECT id, text, t FROM chat WHERE topic = $1 ORDER BY t ASC';
-		query(sql, [topic], function(chat) {
+		query(sql, [topic], function(err, chat) {
+			if (err) return res.status(500).send(err.toString());
 			var sql = 'SELECT id FROM online WHERE topic = $1';
-			query(sql, [topic], function(online) {
+			query(sql, [topic], function(err, online) {
+				if (err) return res.status(500).send(err.toString());
 				tpl('app.html', {'nodes': nodes, 'chat': chat, 'online': online, 'topic': topic}, res);
 			});
 		});
