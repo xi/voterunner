@@ -254,10 +254,8 @@ function setNodeName(id, name) {
 	node.getElementsByClassName('name')[0].textContent = name;
 	node.getElementsByClassName('delegate')[0].title = _("delegate to ") + name;
 
-	if (id === ID) {
-		userSetName(name);
-		userUpdateDelegate();
-	}
+	if (id === ID) userSetName(name);
+	userUpdateDelegate();
 }
 
 function setNodeComment(id, comment) {
@@ -273,10 +271,8 @@ function setNodeComment(id, comment) {
 		o.setAttribute('data-type', 'pre');
 	}
 
-	if (id === ID) {
-		userSetComment(comment);
-		userUpdateDelegate();
-	}
+	if (id === ID) userSetComment(comment);
+	userUpdateDelegate();
 }
 
 function setDelegate(id, new_id) {
