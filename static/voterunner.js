@@ -72,6 +72,15 @@ function _rmParentHighlight(o) {
 	_rmParentHighlight(p);
 }
 
+function escapeHTML(unsafe) {
+	return unsafe
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+}
+
 
 /*** user ***/
 function userSetName(name) {
@@ -200,7 +209,7 @@ function createNode(id) {
 	name.textContent = _('anonymous');
 	header.appendChild(name);
 
-	var comment = document.createElement('p');
+	var comment = document.createElement('div');
 	comment.className = 'comment';
 	body.appendChild(comment);
 
@@ -254,7 +263,15 @@ function setNodeName(id, name) {
 function setNodeComment(id, comment) {
 	var node = document.getElementById('node'+id);
 	if (!node) return;
-	node.getElementsByClassName('comment')[0].textContent = comment;
+	var o = node.getElementsByClassName('comment')[0]
+
+	if (window.Showdown) {
+		o.innerHTML = new Showdown.converter().makeHtml(escapeHTML(comment));
+		o.setAttribute('data-type', 'markdown');
+	} else {
+		node.getElementsByClassName('comment')[0].textContent = comment;
+		o.setAttribute('data-type', 'pre');
+	}
 
 	if (id === ID) {
 		userSetComment(comment);

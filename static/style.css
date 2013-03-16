@@ -171,12 +171,12 @@ header h1 span {
 #tree ul li .body .header .online:before {
   content: "o";
 }
-#tree ul li .body p.comment {
+#tree ul li .body .comment {
   margin: 0;
   padding: 0.4em;
+}
+#tree ul li .body .comment[data-type="pre"] {
   white-space: pre-wrap;
-  font-family: inherit;
-  font-size: inherit;
 }
 #tree ul li ul {
   margin-left: 2em;

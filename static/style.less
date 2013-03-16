@@ -135,12 +135,12 @@ header {
 						}
 					}
 				}
-				p.comment {
+				.comment {
 					margin: 0;
 					.padding;
-					white-space: pre-wrap;
-					font-family: inherit;
-					font-size: inherit;
+					&[data-type="pre"] {
+						white-space: pre-wrap;
+					}
 				}
 			}
 			ul {
