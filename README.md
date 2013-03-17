@@ -67,6 +67,19 @@ the delegation. Now you compete directly with other ideas. Maybe you can
 convince others, but maybe you should delegate your vote again in order
 to agree on a compromise.
 
+Privacy
+-------
+
+Apart from the data you enter in the interface, voterunner also stores
+your current status (online/offline). This data is publicly available for 
+anyone.
+
+It also saves your user id in a *long lasting cookie* so it can identify
+you on every revisit. If you block cookies in your webbrowser you can also
+manually identify by appending your user id to the url like this:
+
+    http://voterunner.herokuapp.com/(topic)/(user-id)
+
 Install
 -------
 
