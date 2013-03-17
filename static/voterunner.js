@@ -478,10 +478,8 @@ function buildOnline(data) {
 /*** globals ***/
 var TOPIC = document.documentURI.split('/')[3];
 var ID = getCookie('id');
-if (!ID) {
-	ID = uid();
-	setCookie('id', ID);
-}
+if (!ID) ID = uid();
+setCookie('id', ID, 100);
 
 
 /*** socket ***/
