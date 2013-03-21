@@ -80,7 +80,7 @@ function markdown(file, res) {
 
 // setup tables
 query("CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
-query("CREATE TABLE IF NOT EXISTS chat (topic TEXT, id TEXT, text TEXT, t INTEGER)");
+query("CREATE TABLE IF NOT EXISTS chat (topic TEXT, id TEXT, text TEXT, t TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 query("CREATE TABLE IF NOT EXISTS online (topic TEXT, id TEXT, UNIQUE (topic, id))");
 
 // welcome view
@@ -262,10 +262,9 @@ io.sockets.on('connection', function (socket) {
 		var sql = "UPDATE nodes SET delegate = null WHERE topic = $1 AND id = $2";
 		handleMsg('rmDelegate', sql);
 	});
-	socket.on('chat', function(text, t) {
-		t = t || new Date().getTime();
-		var sql = "INSERT INTO chat (topic, id, text, t) VALUES ($1, $2, $3, $4)";
-		handleMsg('chat', sql, text, t);
+	socket.on('chat', function(text) {
+		var sql = "INSERT INTO chat (topic, id, text) VALUES ($1, $2, $3)";
+		handleMsg('chat', sql, text);
 	});
 
 	socket.on('testClear', function() {
