@@ -476,7 +476,7 @@ function buildOnline(data) {
 
 
 /*** globals ***/
-var TOPIC = document.documentURI.split('/')[3];
+var TOPIC = document.URL.split('/')[3];
 var ID = getCookie('id');
 if (!ID) ID = uid();
 setCookie('id', ID, 100);
