@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="robots" content="noindex" />
+		<title>voterunner - automated test</title>
+		<link rel="stylesheet" href="http://visionmedia.github.com/mocha/example/mocha.css" />
+	</head>
+
+	<body>
+		<div id="mocha"></div>
+		<div id="testarea" style="display: none"></div>
+		<script src="http://visionmedia.github.com/mocha/example/mocha.js"></script>
+		<script src="http://chaijs.com/chai.js"></script>
+		<script>mocha.setup({ui: 'bdd', timeout: 4000})</script>
+		<script>expect = chai.expect</script>
+		<script src="test.js"></script>
+		<script>
+			if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
+			else { mocha.run(); }
+		</script>
+	</body>
+</html>
