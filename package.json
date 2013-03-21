@@ -6,6 +6,8 @@
 		"socket.io": "0.9.x",
 		"pg": "0.6.15"
 	},
+	"devDependencies": {
+	},
 	"engines": {
 		"node": "0.8.x",
 		"npm": "1.2.x"
