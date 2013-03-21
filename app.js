@@ -267,4 +267,14 @@ io.sockets.on('connection', function (socket) {
 		var sql = "INSERT INTO chat (topic, id, text, t) VALUES ($1, $2, $3, $4)";
 		handleMsg('chat', sql, text, t);
 	});
+
+	socket.on('testClear', function() {
+		socket.get('topic', function(err, topic) {
+			if (topic.substr(0,4) === 'test') {
+				query("DELETE FROM nodes WHERE topic = $1", [topic]);
+				query("DELETE FROM chat WHERE topic = $1", [topic]);
+				query("DELETE FROM online WHERE topic = $1", [topic]);
+			}
+		});
+	});
 });
