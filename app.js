@@ -80,10 +80,8 @@ function markdown(file, res) {
 }
 
 
-// setup tables
+// setup table
 query("CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
-query("CREATE TABLE IF NOT EXISTS chat (topic TEXT, id TEXT, text TEXT, t TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-query("CREATE TABLE IF NOT EXISTS online (topic TEXT, id TEXT, UNIQUE (topic, id))");
 
 // welcome view
 app.get('/', function (req, res) {
@@ -180,16 +178,7 @@ app.get('/:topic/:id?', function (req, res) {
 	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
 	query(sql, [topic], function(err, nodes) {
 		if (err) return res.status(500).send(err.toString());
-
-		var sql = 'SELECT id, text, t FROM chat WHERE topic = $1 ORDER BY t ASC';
-		query(sql, [topic], function(err, chat) {
-			if (err) return res.status(500).send(err.toString());
-			var sql = 'SELECT id FROM online WHERE topic = $1';
-			query(sql, [topic], function(err, online) {
-				if (err) return res.status(500).send(err.toString());
-				tpl('app.html', {'nodes': nodes, 'chat': chat, 'online': online, 'topic': topic}, res);
-			});
-		});
+		tpl('app.html', {'nodes': nodes, 'topic': topic}, res);
 	});
 });
 
@@ -221,13 +210,6 @@ io.sockets.on('connection', function (socket) {
 		socket.set('topic', topic);
 		socket.set('id', id);
 		socket.join(topic);
-
-		var sql = "INSERT INTO online (topic, id) VALUES ($1, $2)";
-		handleMsg('online', sql);
-	});
-	socket.on('disconnect', function() {
-		var sql = "DELETE FROM online WHERE topic = $1 AND id = $2";
-		handleMsg('offline', sql);
 	});
 
 	socket.on('createNode', function(fn) {
@@ -236,7 +218,6 @@ io.sockets.on('connection', function (socket) {
 			socket.get('id', function(err, id) {
 				log.debug("Handeling:", 'createNode', topic, id);
 				socket.broadcast.to(topic).emit('createNode', id);
-				socket.broadcast.to(topic).emit('online', id);
 				query(sql, [topic, id], fn); // not possible with handleMsg()
 			});
 		});
@@ -264,17 +245,11 @@ io.sockets.on('connection', function (socket) {
 		var sql = "UPDATE nodes SET delegate = null WHERE topic = $1 AND id = $2";
 		handleMsg('rmDelegate', sql);
 	});
-	socket.on('chat', function(text) {
-		var sql = "INSERT INTO chat (topic, id, text) VALUES ($1, $2, $3)";
-		handleMsg('chat', sql, text);
-	});
 
 	socket.on('testClear', function() {
 		socket.get('topic', function(err, topic) {
 			if (topic.substr(0,4) === 'test') {
 				query("DELETE FROM nodes WHERE topic = $1", [topic]);
-				query("DELETE FROM chat WHERE topic = $1", [topic]);
-				query("DELETE FROM online WHERE topic = $1", [topic]);
 			}
 		});
 	});

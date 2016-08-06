@@ -140,27 +140,6 @@ function userUpdateDelegate() {
 	delegate.removeAttribute('title');
 }
 
-function addChatMsg(id, text) {
-	var node = document.getElementById('node'+id);
-	var name;
-	if (node) {
-		name = node.getElementsByClassName('name')[0].textContent;
-	} else {
-		name = _('anonymous');
-	}
-
-	var ul = document.getElementById('chat').getElementsByTagName('ul')[0];
-	var li = document.createElement('li');
-
-	var scroll = ul.scrollTop + ul.offsetHeight === ul.scrollHeight;
-
-	li.textContent = name + ': ' + text;
-	ul.appendChild(li);
-
-	// scroll to bottom
-	if (scroll) li.scrollIntoView();
-}
-
 
 /*** API ***/
 function createNode(id) {
@@ -192,11 +171,6 @@ function createNode(id) {
 	delegate.title = _('delegate to anonymous');
 	delegate.setAttribute('onclick', 'delegate("' + id + '")');
 	header.appendChild(delegate);
-
-	var online = document.createElement('div');
-	online.className = 'online';
-	online.title = _('user is online');
-	header.appendChild(online);
 
 	var expand = document.createElement('a');
 	expand.className = 'expand';
@@ -320,17 +294,6 @@ function rmDelegate(id) {
 	userSetVotes();
 }
 
-function online(id, online) {
-	var node = document.getElementById('node'+id);
-	if (!node) return;
-
-	if (online) {
-		node.setAttribute('data-online', 1);
-	} else {
-		node.removeAttribute('data-online');
-	}
-}
-
 
 /*** actions ***/
 function create(fn) {
@@ -388,12 +351,6 @@ function rm() {
 	userRemoveDelegate('');
 }
 
-function chat(text) {
-	addChatMsg(ID, text.value);
-	_post('chat', text.value);
-	text.value = '';
-}
-
 
 /*** helper ***/
 function setCookie(key, value, days) {
@@ -431,21 +388,11 @@ function uid() {
 
 /*** build ***/
 function build() {
-	var jsonNodes, jsonChat, jsonOnline;
+	var jsonNodes;
 
 	if (jsonNodes = document.getElementById('json-nodes')) {
 		buildNodes(JSON.parse(jsonNodes.getAttribute('data-value')));
 		jsonNodes.parentElement.removeChild(jsonNodes);
-	}
-
-	if (jsonChat = document.getElementById('json-chat')) {
-		buildChat(JSON.parse(jsonChat.getAttribute('data-value')));
-		jsonChat.parentElement.removeChild(jsonChat);
-	}
-
-	if (jsonOnline = document.getElementById('json-online')) {
-		buildOnline(JSON.parse(jsonOnline.getAttribute('data-value')));
-		jsonOnline.parentElement.removeChild(jsonOnline);
 	}
 }
 
@@ -459,18 +406,6 @@ function buildNodes(data) {
 		if (data[i].delegate) {
 			setDelegate(data[i].id, data[i].delegate);
 		}
-	}
-}
-
-function buildChat(data) {
-	for (var i=0; i<data.length; i++) {
-		addChatMsg(data[i].id, data[i].text);
-	}
-}
-
-function buildOnline(data) {
-	for (var i=0; i<data.length; i++) {
-		online(data[i].id, true);
 	}
 }
 
@@ -503,15 +438,6 @@ socket.on('setDelegate', function(id, delegate) {
 });
 socket.on('rmDelegate', function(id) {
 	rmDelegate(id);
-});
-socket.on('online', function(id) {
-	online(id, 1);
-});
-socket.on('offline', function(id) {
-	online(id, '');
-});
-socket.on('chat', function(id, text) {
-	addChatMsg(id, text);
 });
 
 function _post(action, v1, v2) {
