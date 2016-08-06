@@ -156,17 +156,21 @@ function createNode(id) {
 	votes.textContent = '1';
 	header.appendChild(votes);
 
-	var delegate = document.createElement('a');
-	delegate.className = 'delegate';
-	delegate.textContent = '+';
-	delegate.title = _('delegate to anonymous');
-	delegate.setAttribute('onclick', 'delegate("' + id + '")');
-	header.appendChild(delegate);
+	var _delegate = document.createElement('a');
+	_delegate.className = 'delegate';
+	_delegate.textContent = '+';
+	_delegate.title = _('delegate to anonymous');
+	_delegate.addEventListener('click', function() {
+		delegate(id);
+	});
+	header.appendChild(_delegate);
 
 	var expand = document.createElement('a');
 	expand.className = 'expand';
 	expand.title = _('expand');
-	expand.setAttribute('onclick', 'toggleExpand(this)');
+	expand.addEventListener('click', function(event) {
+		toggleExpand(event.currentTarget);
+	});
 	header.appendChild(expand);
 
 	var name = document.createElement('div');
@@ -439,10 +443,4 @@ function _post(action, v1, v2) {
 
 
 /*** onDOMReady ***/
-window.onDOMReady = function(fn) {
-	document.addEventListener("DOMContentLoaded", fn, false);
-};
-
-window.onDOMReady(function() {
-	build();
-});
+document.addEventListener("DOMContentLoaded", build, false);
