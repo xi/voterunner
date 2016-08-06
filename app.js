@@ -6,23 +6,25 @@
  * url: http://voterunner.herokuapp.com/
  */
 
-var express = require('express')
-  , app = express.createServer()
-  , io = require('socket.io').listen(app)
-  , pg = require('pg')
-  , fs = require('fs')
-  , log = io.log // nicer log
-  , conString = process.env.DATABASE_URL
-  , port = process.env.PORT || 5000;
+var express = require('express');
+var app = express.createServer();
+var io = require('socket.io').listen(app);
+var pg = require('pg');
+var fs = require('fs');
 
-app.listen(port, function() {
-	log.info("Listening on " + port);
-});
+var DATABSE_URL = process.env.DATABASE_URL;
+var PORT = process.env.PORT || 5000;
+
+var log = io.log; // nicer log
+
 app.use(express.static('static'));
+app.listen(PORT, function() {
+	log.info("Listening on " + PORT);
+});
 
 // helpers
 function query(sql, params, fn) {
-	pg.connect(conString, function(err, db) {
+	pg.connect(DATABSE_URL, function(err, db) {
 		if (err) {
 			log.warn("error on db connect", err.toString());
 			if (fn) fn(err);
@@ -64,7 +66,7 @@ function tpl(file, data, res) {
 			} else {
 				return '';
 			}
-			
+
 		});
 
 		res.send(html);
