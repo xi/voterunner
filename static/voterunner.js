@@ -350,20 +350,20 @@ function rm() {
 function setCookie(key, value, days) {
 	if (days) {
 		var date = new Date();
-		date.setTime(date.getTime()+(days*24*60*60*1000));
-		var expires = "; expires="+date.toGMTString();
+		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+		var expires = "; expires=" + date.toGMTString();
 	} else {
 		var expires = '';
 	}
-	document.cookie = key+"="+value+expires;
+	document.cookie = key + "=" + value + expires;
 }
 
 function getCookie(key) {
 	var keyEQ = key + "=";
 	var ca = document.cookie.split(';');
-	for(var i=0; i<ca.length; i++) {
+	for (var i = 0; i < ca.length; i++) {
 		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1, c.length);
+		while (c.charAt(0) == ' ') c = c.substring(1, c.length);
 		if (c.indexOf(keyEQ) == 0) return c.substring(keyEQ.length, c.length);
 	}
 	return null;
@@ -391,12 +391,12 @@ function build() {
 }
 
 function buildNodes(data) {
-	for (var i=0; i<data.length; i++) {
+	for (var i = 0; i < data.length; i++) {
 		createNode(data[i].id);
 		if (!!data[i].name) setNodeName(data[i].id, data[i].name);
 		if (!!data[i].comment) setNodeComment(data[i].id, data[i].comment);
 	}
-	for (var i=0; i<data.length; i++) {
+	for (var i = 0; i < data.length; i++) {
 		if (data[i].delegate) {
 			setDelegate(data[i].id, data[i].delegate);
 		}
