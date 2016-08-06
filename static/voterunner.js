@@ -28,8 +28,7 @@ function _(s) {
 }
 
 function _root() {
-	var root = document.getElementById('tree');
-	return root.getElementsByTagName('ul')[0];
+	return document.querySelector('#tree ul');
 }
 
 function _rmParentVotes(o, votes) {
@@ -84,53 +83,49 @@ function escapeHTML(unsafe) {
 
 /*** user ***/
 function userSetName(name) {
-	document.getElementById('name').getElementsByTagName('input')[0].value = name;
+	document.querySelector('#name input').value = name;
 }
 
 function userGetName() {
-	var name = document.getElementById('name');
-	name = name.getElementsByTagName('input')[0];
-	return name.value;
+	return document.querySelector('#name input').value;
 }
 
 function userSetComment(comment) {
-	document.getElementById('comment').getElementsByTagName('textarea')[0].value = comment;
+	document.querySelector('#comment textarea').value = comment;
 }
 
 function userGetComment() {
-	var comment = document.getElementById('comment');
-	comment = comment.getElementsByTagName('textarea')[0];
-	return comment.value;
+	return document.querySelector('#comment textarea').value;
 }
 
 function userSetVotes() {
-	var node = document.getElementById('node'+ID);
+	var node = document.querySelector('node' + ID);
 	if (node) {
-		var votes = node.getElementsByClassName('votes')[0].textContent;
-		document.getElementById('user').getElementsByClassName('votes')[0].innerText = votes;
+		var votes = node.querySelector('.votes').textContent;
+		document.querySelector('#user .votes').innerText = votes;
 	}
 }
 
 function userSetDelegate(id) {
-	var delegate = document.getElementById('user').getElementsByClassName('delegate')[0];
+	var delegate = document.querySelector('#user .delegate');
 	delegate.setAttribute('data-id', id);
 	userUpdateDelegate();
 }
 
 function userRemoveDelegate() {
-	var delegate = document.getElementById('user').getElementsByClassName('delegate')[0];
+	var delegate = document.querySelector('#user .delegate');
 	delegate.removeAttribute('data-id');
 	userUpdateDelegate();
 }
 
 function userUpdateDelegate() {
-	var delegate = document.getElementById('user').getElementsByClassName('delegate')[0];
+	var delegate = document.querySelector('#user .delegate');
 	var id = delegate.getAttribute('data-id');
 	if (id) {
-		var node = document.getElementById('node'+id);
+		var node = document.querySelector('#node' + id);
 		if (node) {
-			var name = node.getElementsByClassName('name')[0].textContent;
-			var comment = node.getElementsByClassName('comment')[0].textContent;
+			var name = node.querySelector('.name').textContent;
+			var comment = node.querySelector('.comment').textContent;
 			delegate.textContent = name;
 			delegate.title = comment;
 			return;
@@ -143,10 +138,9 @@ function userUpdateDelegate() {
 
 /*** API ***/
 function createNode(id) {
-	if (!!document.getElementById('node'+id)) return;
+	if (!!document.querySelector('#node' + id)) return;
 
-	var root = document.getElementById('tree');
-	root = root.getElementsByTagName('ul')[0];
+	var root = document.querySelector('#tree ul');
 
 	var node = document.createElement('li');
 	node.className = 'node';
@@ -202,14 +196,14 @@ function createNode(id) {
 }
 
 function rmNode(id) {
-	var node = document.getElementById('node'+id);
+	var node = document.querySelector('#node' + id);
 	if (!node) return;
 	var old = node.parentElement.parentElement;
 
 	// mv followers to root
 	var root = _root();
-	var children = node.getElementsByClassName('followers')[0].children;
-	for (var i=0; i<children.length; i++) {
+	var children = node.querySelector('.followers').children;
+	for (var i = 0; i < children.length; i++) {
 		root.appendChild(children[i]);
 	}
 
@@ -223,25 +217,25 @@ function rmNode(id) {
 
 function setNodeName(id, name) {
 	name = name || 'anonymous';
-	var node = document.getElementById('node'+id);
+	var node = document.querySelector('#node' + id);
 	if (!node) return;
-	node.getElementsByClassName('name')[0].textContent = name;
-	node.getElementsByClassName('delegate')[0].title = _("delegate to ") + name;
+	node.querySelector('.name').textContent = name;
+	node.querySelector('.delegate').title = _("delegate to ") + name;
 
 	if (id === ID) userSetName(name);
 	userUpdateDelegate();
 }
 
 function setNodeComment(id, comment) {
-	var node = document.getElementById('node'+id);
+	var node = document.querySelector('#node' + id);
 	if (!node) return;
-	var o = node.getElementsByClassName('comment')[0]
+	var o = node.querySelector('.comment');
 
 	if (window.Showdown) {
 		o.innerHTML = new Showdown.converter().makeHtml(escapeHTML(comment));
 		o.setAttribute('data-type', 'markdown');
 	} else {
-		node.getElementsByClassName('comment')[0].textContent = comment;
+		node.querySelector('.comment').textContent = comment;
 		o.setAttribute('data-type', 'pre');
 	}
 
@@ -250,10 +244,10 @@ function setNodeComment(id, comment) {
 }
 
 function setDelegate(id, new_id) {
-	var node = document.getElementById('node'+id);
+	var node = document.querySelector('#node' + id);
 	if (!node) return;
 
-	var n = document.getElementById('node'+new_id);
+	var n = document.querySelector('#node' + new_id);
 	if (!n) return rmDelegate(id);
 
 	// substract own votes from parents
@@ -261,7 +255,7 @@ function setDelegate(id, new_id) {
 	if (id === ID) _rmParentHighlight(node);
 
 	// move in DOM
-	n.getElementsByTagName('ul')[0].appendChild(node);
+	n.querySelector('ul').appendChild(node);
 
 	// add own votes to parents
 	_addParentVotes(node);
@@ -274,7 +268,7 @@ function setDelegate(id, new_id) {
 }
 
 function rmDelegate(id) {
-	var node = document.getElementById('node'+id);
+	var node = document.querySelector('#node' + id);
 	if (!node) return;
 	var root = _root();
 
@@ -298,7 +292,7 @@ function rmDelegate(id) {
 /*** actions ***/
 function create(fn) {
 	// ensures that node exists when executing fn
-	var node = document.getElementById('node'+ID);
+	var node = document.querySelector('#node' + ID);
 	if (node) {
 		fn(node);
 	} else {
@@ -390,7 +384,7 @@ function uid() {
 function build() {
 	var jsonNodes;
 
-	if (jsonNodes = document.getElementById('json-nodes')) {
+	if (jsonNodes = document.querySelector('#json-nodes')) {
 		buildNodes(JSON.parse(jsonNodes.getAttribute('data-value')));
 		jsonNodes.parentElement.removeChild(jsonNodes);
 	}
