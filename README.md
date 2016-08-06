@@ -91,7 +91,7 @@ lines will bring it up:
     $ cd voterunner
     $ npm install
     $ export PORT=5000
-    $ export DATABASE_URL=<postgresql database>
+    $ export DATABASE_URL='postgresql://user:password@host/database'
     $ node app.js
         info  - socket.io started
         info  - Listening on 5000
