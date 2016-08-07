@@ -21,7 +21,7 @@ var PORT = process.env.PORT || 5000;
 var log = log4js.getLogger();
 
 app.use(express.static('static'));
-app.listen(PORT, function() {
+server.listen(PORT, function() {
 	log.info("Listening on " + PORT);
 });
 
