@@ -7,15 +7,18 @@
  */
 
 var express = require('express');
-var app = express.createServer();
-var io = require('socket.io').listen(app);
+var http = require('http');
+var app = express();
+var server = http.Server(app);
+var io = require('socket.io').listen(server);
 var pg = require('pg');
 var fs = require('fs');
+var log4js = require('log4js');
 
 var DATABSE_URL = process.env.DATABASE_URL;
 var PORT = process.env.PORT || 5000;
 
-var log = io.log; // nicer log
+var log = log4js.getLogger();
 
 app.use(express.static('static'));
 app.listen(PORT, function() {
