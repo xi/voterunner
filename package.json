@@ -7,6 +7,9 @@
 		"pg": "0.6.15"
 	},
 	"devDependencies": {
+		"markdown-it": "^7.0.0",
+		"socket.io-browserify": "^0.9.6",
+		"virtual-dom": "^2.1.1"
 	},
 	"engines": {
 		"node": "0.8.x",

@@ -12,8 +12,6 @@
 
 	<link rel="payment" href="https://flattr.com/submit/auto?url=http://voterunner.herokuapp.com&user_id=ximusic&category=software"/>
 
-	<script type="text/javascript" src="http://raw.github.com/coreyti/showdown/master/src/showdown.js"></script>
-	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="/voterunner.js"></script>
 
 	<meta name="robots" content="noindex" />
@@ -33,21 +31,19 @@
 				<div class="statusbar">
 					<div class="delegate">(no delegation)</div>
 					<span class="votes" title="number of votes of you and all your followers">1</span>
-					<a class="undelegate" title="revoke delegation" onclick="undelegate()"></a>
+					<a class="undelegate" title="revoke delegation"></a>
 				</div>
 				<div id="name">
-					<input type="text" placeholder="<enter your name>" onchange="setName()"/>
+					<input type="text" placeholder="<enter your name>" />
 				</div>
-				<a id="rm" title="remove your opinion" onclick="rm()"></a>
+				<a id="rm" title="remove your opinion"></a>
 				<div id="comment">
-					<textarea onchange="setComment()"></textarea>
+					<textarea></textarea>
 				</div>
 			</div>
 		</div>
 
-		<div id="tree">
-			<ul></ul>
-		</div>
+		<div id="tree"></div>
 	</div></div>
 
 </body>
