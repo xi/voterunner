@@ -12,10 +12,6 @@
 		"socket.io-client": "^1.4.8",
 		"virtual-dom": "^2.1.1"
 	},
-	"engines": {
-		"node": "0.8.x",
-		"npm": "1.2.x"
-	},
 	"author": "Tobias Bengfort",
 	"license": "AGPL-3+"
 }
