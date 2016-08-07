@@ -262,12 +262,4 @@ io.sockets.on('connection', function (socket) {
 		var sql = "UPDATE nodes SET delegate = null WHERE topic = $1 AND id = $2";
 		handleMsg('rmDelegate', sql);
 	});
-
-	socket.on('testClear', function() {
-		socket.get('topic', function(err, topic) {
-			if (topic.substr(0,4) === 'test') {
-				query("DELETE FROM nodes WHERE topic = $1", [topic]);
-			}
-		});
-	});
 });
