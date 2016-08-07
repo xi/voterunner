@@ -25,20 +25,27 @@ server.listen(PORT, function() {
 	log.info("Listening on " + PORT);
 });
 
+var db = null;
+
+pg.connect(DATABSE_URL, function(err, _db) {
+	if (err) {
+		log.warn("error on db connect", err.toString());
+		if (fn) fn(err);
+	} else {
+		db = _db;
+	}
+
+	// setup table
+	query("CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
+});
+
 // helpers
 function query(sql, params, fn) {
-	pg.connect(DATABSE_URL, function(err, db) {
+	db.query(sql, params, function(err, result) {
 		if (err) {
-			log.warn("error on db connect", err.toString());
-			if (fn) fn(err);
-		} else {
-			db.query(sql, params, function(err, result) {
-				if (err) {
-					log.warn("db error:", err.toString(), sql, params);
-				}
-				if (fn) fn(err, result.rows);
-			});
+			log.warn("db error:", err.toString(), sql, params);
 		}
+		if (fn) fn(err, result.rows);
 	});
 }
 
@@ -82,9 +89,6 @@ function markdown(file, res) {
 	});
 }
 
-
-// setup table
-query("CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
 
 // welcome view
 app.get('/', function (req, res) {
