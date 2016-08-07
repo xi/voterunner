@@ -191,43 +191,41 @@ app.get('/:topic/:id?', function (req, res) {
 
 // socket.io
 io.sockets.on('connection', function (socket) {
+	var topic;
+	var id;
+
 	function handleMsg(action, sql, v1, v2) {
-		socket.get('topic', function(err, topic) {
-			socket.get('id', function(err, id) {
-				log.debug("Handeling:", action, topic, id, v1, v2);
+		log.debug("Handeling:", action, topic, id, v1, v2);
+		io.to(topic).emit(action, id, v1, v2);
 
-				socket.broadcast.to(topic).emit(action, id, v1, v2);
+		if (typeof(sql) === 'string') sql = [sql];
+		for (var i=0; i<sql.length; i++) {
+			var params = [topic, id];
+			var n = sql[i].match(/\$/g).length;
+			if (n >= 3) params.push(v1);
+			if (n >= 4) params.push(v2);
 
-				if (typeof(sql) === 'string') sql = [sql];
-				for (var i=0; i<sql.length; i++) {
-					var params = [topic, id];
-					var n = sql[i].match(/\$/g).length;
-					if (n >= 3) params.push(v1);
-					if (n >= 4) params.push(v2);
-
-					query(sql[i], params);
-				}
-			});
-		});
+			query(sql[i], params);
+		}
 	}
 
-	socket.on('register', function(topic, id) {
-		log.debug("Registration:", topic, id);
+	socket.on('register', function(_topic, _id) {
+		log.debug("Registration:", _topic, _id);
 
-		socket.set('topic', topic);
-		socket.set('id', id);
-		socket.join(topic);
+		topic = _topic;
+		id = _id;
+		socket.join(topic, function(err) {
+			if (err) {
+				log.error(err);
+			}
+		});
 	});
 
 	socket.on('createNode', function(fn) {
 		var sql = "INSERT INTO nodes (topic, id) VALUES ($1, $2)";
-		socket.get('topic', function(err, topic) {
-			socket.get('id', function(err, id) {
-				log.debug("Handeling:", 'createNode', topic, id);
-				socket.broadcast.to(topic).emit('createNode', id);
-				query(sql, [topic, id], fn); // not possible with handleMsg()
-			});
-		});
+		log.debug("Handeling:", 'createNode', topic, id);
+		io.to(topic).emit('createNode', id);
+		query(sql, [topic, id], fn); // not possible with handleMsg()
 	});
 	socket.on('rmNode', function() {
 		var sql = [
