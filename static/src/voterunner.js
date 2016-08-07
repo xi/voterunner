@@ -1,7 +1,7 @@
 var virtualDom = require('virtual-dom');
 var h = require('virtual-dom/h');
 var markdown = require('markdown-it');
-var io = require('socket.io-browserify');
+var io = require('socket.io-client');
 
 
 var _ = function(s) {
@@ -41,8 +41,8 @@ var tplNode = function(nodes, node) {
 	]);
 };
 
-var template = function(state) {
-	return h('ul', tplFollowers(state.nodes, null));
+var template = function(nodes) {
+	return h('ul', tplFollowers(nodes, null));
 };
 
 var uid = function() {
@@ -51,24 +51,11 @@ var uid = function() {
 	return Math.floor(a).toString(36);
 }
 var setCookie = function(key, value, days) {
-	if (days) {
-		var date = new Date();
-		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-		var expires = "; expires=" + date.toGMTString();
-	} else {
-		var expires = '';
-	}
-	document.cookie = key + "=" + value + expires;
+	localStorage[key] = value;
 };
 
 var getCookie = function(key) {
-	var keyEQ = key + "=";
-	var ca = document.cookie.split(';');
-	for (var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-		if (c.indexOf(keyEQ) == 0) return c.substring(keyEQ.length, c.length);
-	}
+	return localStorage[key];
 };
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -77,25 +64,30 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (!ID) ID = uid();
 	setCookie('id', ID, 100);
 
-	var json = document.querySelector('#json-nodes').dataset.value;
-	var nodes = JSON.parse(json);
-	var state = {
-		nodes: nodes,
-		user: {},
-	};
+	var nodes = JSON.parse(document.querySelector('#json-nodes').dataset.value);
 
 	var wrapper = document.querySelector('#tree');
-	var tree = template(state);
+	var tree = template(nodes);
 	var element = virtualDom.create(tree);
 	wrapper.innerHTML = '';
 	wrapper.appendChild(element);
 
 	var update = function() {
-		var newTree = template(state);
+		var newTree = template(nodes);
 		var patches = virtualDom.diff(tree, newTree);
 		virtualDom.patch(element, patches);
 		tree = newTree;
 	};
+
+	var user = nodes.find(function(node) {
+		return node.id === ID;
+	});
+	if (user) {
+		document.querySelector('#name input').value = user.name;
+		document.querySelector('#comment textarea').value = user.comment;
+		// TODO votes
+		// TODO delegation
+	}
 
 	var socket = io.connect('/');
 	socket.emit('register', TOPIC, ID);
@@ -103,6 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelector('#rm').addEventListener('click', function(event) {
 		if (confirm(_("Do you really want to delete this opinion?"))) {
 			socket.emit('rmNode');
+			document.querySelector('#name input').value = '';
+			document.querySelector('#comment textarea').value = '';
+			// TODO votes
+			// TODO delegation
 		}
 	});
 
@@ -111,9 +107,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	document.querySelector('.undelegate').addEventListener('click', function(event) {
+		socket.emit('rmDelegate');
 	});
 
 	document.querySelector('#comment textarea').addEventListener('change', function(event) {
+		socket.emit('setNodeComment', event.target.value);
 	});
 
 	document.querySelectorAll('.expand').forEach(function(element) {
@@ -126,19 +124,40 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
+	var getNode = function(id) {
+		var node = nodes.find(function(node) {
+			return node.id === id;
+		});
+		if (!node) {
+			node = {
+				id: id,
+				delegate: null,
+			};
+			nodes.push(node);
+		}
+		return node;
+	};
+
 	socket.on('rmNode', function(id) {
-		rmNode(id);
+		nodes = nodes.filter(function(node) {
+			return node.id !== id;
+		});
+		update();
 	});
 	socket.on('setNodeName', function(id, name) {
-		setNodeName(id, name);
+		getNode(id).name = name;
+		update();
 	});
 	socket.on('setNodeComment', function(id, comment) {
-		setNodeComment(id, comment);
+		getNode(id).comment = comment;
+		update();
 	});
 	socket.on('setDelegate', function(id, delegate) {
-		setDelegate(id, delegate);
+		getNode(id).delegate = delegate;
+		update();
 	});
 	socket.on('rmDelegate', function(id) {
-		rmDelegate(id);
+		getNode(id).delegate = null;
+		update();
 	});
 });
