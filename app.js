@@ -194,19 +194,31 @@ io.sockets.on('connection', function (socket) {
 	var topic;
 	var id;
 
+	var ensureNode = function(fn) {
+		query('SELECT id FROM nodes WHERE topic = $1 AND id = $2', [topic, id], function(err, results) {
+			if (results.length) {
+				fn();
+			} else {
+				query("INSERT INTO nodes (topic, id) VALUES ($1, $2)", [topic, id], fn);
+			}
+		});
+	};
+
 	function handleMsg(action, sql, v1, v2) {
-		log.debug("Handeling:", action, topic, id, v1, v2);
-		io.to(topic).emit(action, id, v1, v2);
+		ensureNode(function() {
+			log.debug("Handeling:", action, topic, id, v1, v2);
+			io.to(topic).emit(action, id, v1, v2);
 
-		if (typeof(sql) === 'string') sql = [sql];
-		for (var i=0; i<sql.length; i++) {
-			var params = [topic, id];
-			var n = sql[i].match(/\$/g).length;
-			if (n >= 3) params.push(v1);
-			if (n >= 4) params.push(v2);
+			if (typeof(sql) === 'string') sql = [sql];
+			for (var i=0; i<sql.length; i++) {
+				var params = [topic, id];
+				var n = sql[i].match(/\$/g).length;
+				if (n >= 3) params.push(v1);
+				if (n >= 4) params.push(v2);
 
-			query(sql[i], params);
-		}
+				query(sql[i], params);
+			}
+		});
 	}
 
 	socket.on('register', function(_topic, _id) {
