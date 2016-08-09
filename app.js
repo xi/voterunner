@@ -106,14 +106,6 @@ app.get('/:topic/json/', function(req, res) {
 app.get('/:topic/:id?', function(req, res) {
 	var topic = req.params.topic;
 
-	if (req.params.id) {
-		if (req.params.id === 'clear') {
-			res.clearCookie('id');
-		} else {
-			res.cookie('id', req.params.id);
-		}
-	}
-
 	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
 	db.query(sql, [topic], function(err, result) {
 		if (err) return res.status(500).send(err.toString());
