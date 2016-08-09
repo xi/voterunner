@@ -45,7 +45,7 @@ function query(sql, params, fn) {
 		if (err) {
 			log.warn("db error:", err.toString(), sql, params);
 		}
-		if (fn) fn(err, result.rows);
+		if (fn) fn(err, (result || {}).rows);
 	});
 }
 
