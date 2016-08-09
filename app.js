@@ -126,14 +126,9 @@ io.sockets.on('connection', function(socket) {
 	var topic;
 	var id;
 
-	var ensureNode = function(fn) {
-		// fn will be called with an err objects as first parameter if this node
-		// already exists
-		db.query('INSERT INTO nodes (topic, id) VALUES ($1, $2)', [topic, id], fn);
-	};
-
 	var handleMsg = function(action, sql, v1, v2) {
-		ensureNode(function() {
+		// make sure that node exists, ignore error
+		db.query('INSERT INTO nodes (topic, id) VALUES ($1, $2)', [topic, id], function() {
 			log.debug('Handeling:', action, topic, id, v1, v2);
 			io.to(topic).emit(action, id, v1, v2);
 
