@@ -121,7 +121,7 @@ server:
 ### change the Graph
 
 These messages will be broadcasted to all sockets which are registered
-to the same topic as the one emitting in. The emitting socket must obmit
+to the same topic as the one emitting in. The emitting socket must omit
 the id because it was already set when registering.
 
 `createNode([id], [fn])`
