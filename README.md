@@ -122,17 +122,8 @@ server:
 
 These messages will be broadcasted to all sockets which are registered
 to the same topic as the one emitting in. The emitting socket must omit
-the id because it was already set when registering.
-
-`createNode([id], [fn])`
-:   add node `id` to the graph.
-    if the function `fn` is provided, it will be executed 
-    when this action has completed.
-
-        socket.emit('createNode', function() {
-          // node exists
-          socket.emit('setNodeName', '<username>');
-        });
+the id because it was already set when registering. If an action is performed
+on a node that does not exist in the local copy, it must be created.
 
 `rmNode([id])`
 :   remove node `id` from the graph.

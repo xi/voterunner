@@ -159,12 +159,6 @@ io.sockets.on('connection', function(socket) {
 		});
 	});
 
-	socket.on('createNode', function(fn) {
-		var sql = 'INSERT INTO nodes (topic, id) VALUES ($1, $2)';
-		log.debug('Handeling:', 'createNode', topic, id);
-		io.to(topic).emit('createNode', id);
-		db.query(sql, [topic, id], fn); // not possible with handleMsg()
-	});
 	socket.on('rmNode', function() {
 		var sql = [
 			'UPDATE nodes SET delegate = null WHERE topic = $1 AND delegate = $2',
