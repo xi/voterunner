@@ -195,13 +195,9 @@ io.sockets.on('connection', function (socket) {
 	var id;
 
 	var ensureNode = function(fn) {
-		query('SELECT id FROM nodes WHERE topic = $1 AND id = $2', [topic, id], function(err, results) {
-			if (results.length) {
-				fn();
-			} else {
-				query("INSERT INTO nodes (topic, id) VALUES ($1, $2)", [topic, id], fn);
-			}
-		});
+		// fn will be called with an err objects as first parameter if this node
+		// already exists
+		query("INSERT INTO nodes (topic, id) VALUES ($1, $2)", [topic, id], fn);
 	};
 
 	function handleMsg(action, sql, v1, v2) {
