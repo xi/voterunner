@@ -11,22 +11,11 @@
 	<meta name="keywords" content="liquid democracy vote discussion" />
 
 	<link rel="payment" href="https://flattr.com/submit/auto?url=http://voterunner.herokuapp.com&user_id=ximusic&category=software"/>
-
-	<script type="text/javascript" src="http://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=sunburst"></script>
-	<script type="text/javascript" src="http://raw.github.com/coreyti/showdown/master/src/showdown.js"></script>
-	<script type="text/javascript" src="http://raw.github.com/coreyti/showdown/master/src/extensions/prettify.js"></script>
 </head>
 
 <body>
 	<pre id="markdown"><= markdown =></pre>
-
-	<script type="text/javascript">
-		var conv = new Showdown.converter({extensions: ['prettify']});
-		var html = document.getElementById('markdown').textContent;
-		document.body.innerHTML = conv.makeHtml(html);
-
-		// prettyPrint() is called automatically
-	</script>
+	<script type="text/javascript" src="/markdown.js"></script>
 </body>
 
 </html>
