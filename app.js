@@ -24,7 +24,7 @@ var log = log4js.getLogger();
 
 app.use(express.static('static'));
 server.listen(PORT, function() {
-	log.info("Listening on " + PORT);
+	log.info('Listening on ' + PORT);
 });
 
 var parseDatabaseUrl = function(databaseUrl) {
@@ -38,30 +38,30 @@ var parseDatabaseUrl = function(databaseUrl) {
 		port: params.port,
 		database: params.pathname.split('/')[1],
 	};
-}
+};
 
 var db = new pg.Pool(parseDatabaseUrl(DATABASE_URL));
 
 var throwErr = function(err) {
 	if (err) throw err;
-}
+};
 
 // setup table
-db.query("CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))", throwErr);
+db.query('CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))', throwErr);
 
-function escapeHTML(unsafe) {
+var escapeHTML = function(unsafe) {
 	return unsafe
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;")
-		.replace(/'/g, "&#039;");
-}
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#039;');
+};
 
-function tpl(file, data, res) {
+var tpl = function(file, data, res) {
 	// `<% key %>` in template `file` will be replaced by `data.key` as json
 	// `<= key =>` in template `file` will be replaced by `data.key` as string
-	fs.readFile('tpl/'+file, 'utf8', function(err, html) {
+	fs.readFile('tpl/' + file, 'utf8', function(err, html) {
 		html = html.replace(/<% ([^>]*) %>/g, function(match, key) {
 			if (data.hasOwnProperty(key)) {
 				return '<div id="json-' + key + '" data-value="' + escapeHTML(JSON.stringify(data[key])) + '"></div>';
@@ -81,9 +81,9 @@ function tpl(file, data, res) {
 
 		res.send(html);
 	});
-}
+};
 
-function markdown(file, res) {
+var markdown = function(file, res) {
 	fs.readFile(file, 'utf8', function(err, markdown) {
 		tpl('markdown.html', {'markdown': markdown}, res);
 	});
@@ -91,14 +91,14 @@ function markdown(file, res) {
 
 
 // welcome view
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
 	markdown('README.md', res);
 });
 
 // json state
 app.get('/:topic/json/', function(req, res) {
 	var topic = req.params.topic;
-	var sql = "SELECT id, name, comment, delegate FROM nodes WHERE topic = $1";
+	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
 
 	db.query(sql, [topic], function(err, result) {
 		if (err) return res.status(500).send(err.toString());
@@ -109,46 +109,46 @@ app.get('/:topic/json/', function(req, res) {
 // opml state
 app.get('/:topic/opml/', function(req, res) {
 	var topic = req.params.topic;
-	var sql = "SELECT id, name, comment, delegate FROM nodes WHERE topic = $1";
+	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
 
 	db.query(sql, [topic], function(err, result) {
 		if (err) return res.status(500).send(err.toString());
 
 		var tree = result.rows;
 
-		for (var i=0; i<tree.length; i++) {
+		for (var i = 0; i < tree.length; i++) {
 			tree[i].followers = [];
 		}
 
-		function insert(tree, node) {
-			for (var i=0; i<tree.length; i++) {
-				if (tree[i].id === node.id) continue;
-				if (tree[i].id === node.delegate) {
+		var insert = function(tree, node) {
+			for (var i = 0; i < tree.length; i++) {
+				if (tree[i].id === node.id) {
+					continue;
+				} else if (tree[i].id === node.delegate) {
 					tree[i].followers.push(node);
 					return true;
-				}
-				if (insert(tree[i].followers, node)) {
+				} else if (insert(tree[i].followers, node)) {
 					return true;
 				}
 			}
 		}
 
 		var n = tree.length;
-		for (var i=0; i<n; i++) {
+		for (var i = 0; i < n; i++) {
 			var node = tree.shift();
 			if (!insert(tree, node)) {
 				tree.push(node);
 			}
 		}
 
-		function opml(tree, indent) {
+		var opml = function(tree, indent) {
 			var s = '';
 			if (!indent) {
-				s += '<?xml version="1.0" encoding="UTF-8"?>\n';
-				s += '<opml version="1.0">\n';
+				s += '<?xml version='1.0' encoding='UTF-8'?>\n';
+				s += '<opml version='1.0'>\n';
 				s += '  <head>\n';
 				s += '    <title>voterunner - ' + escapeHTML(topic) + '</title>\n';
-				s += '    <dateCreated>' + escapeHTML(new Date().toString()) + '</dateCreated>\n'
+				s += '    <dateCreated>' + escapeHTML(new Date().toString()) + '</dateCreated>\n';
 				s += '  </head>\n';
 				s += '  <body>\n';
 				s += opml(tree, '    ');
@@ -157,10 +157,10 @@ app.get('/:topic/opml/', function(req, res) {
 			} else {
 				for (var i=0; i<tree.length; i++) {
 					s += indent + '<outline';
-					s += tree[i].id ? ' id="' + escapeHTML(tree[i].id) + '"' : '';
-					s += tree[i].name ? ' name="' + escapeHTML(tree[i].name) + '"' : '';
-					s += tree[i].comment ? ' text="' + escapeHTML(tree[i].comment) + '"' : '';
-					s += '>\n'
+					s += tree[i].id ? ' id='' + escapeHTML(tree[i].id) + ''' : '';
+					s += tree[i].name ? ' name='' + escapeHTML(tree[i].name) + ''' : '';
+					s += tree[i].comment ? ' text='' + escapeHTML(tree[i].comment) + ''' : '';
+					s += '>\n';
 					s += opml(tree[i].followers, indent + '  ');
 					s += indent + '</outline>\n';
 				}
@@ -173,7 +173,7 @@ app.get('/:topic/opml/', function(req, res) {
 });
 
 // app view
-app.get('/:topic/:id?', function (req, res) {
+app.get('/:topic/:id?', function(req, res) {
 	var topic = req.params.topic;
 
 	if (req.params.id) {
@@ -192,23 +192,26 @@ app.get('/:topic/:id?', function (req, res) {
 });
 
 // socket.io
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function(socket) {
 	var topic;
 	var id;
 
 	var ensureNode = function(fn) {
 		// fn will be called with an err objects as first parameter if this node
 		// already exists
-		db.query("INSERT INTO nodes (topic, id) VALUES ($1, $2)", [topic, id], fn);
+		db.query('INSERT INTO nodes (topic, id) VALUES ($1, $2)', [topic, id], fn);
 	};
 
-	function handleMsg(action, sql, v1, v2) {
+	var handleMsg = function(action, sql, v1, v2) {
 		ensureNode(function() {
-			log.debug("Handeling:", action, topic, id, v1, v2);
+			log.debug('Handeling:', action, topic, id, v1, v2);
 			io.to(topic).emit(action, id, v1, v2);
 
-			if (typeof(sql) === 'string') sql = [sql];
-			for (var i=0; i<sql.length; i++) {
+			if (typeof(sql) === 'string') {
+				sql = [sql];
+			}
+
+			for (var i = 0; i < sql.length; i++) {
 				var params = [topic, id];
 				var n = sql[i].match(/\$/g).length;
 				if (n >= 3) params.push(v1);
@@ -217,10 +220,10 @@ io.sockets.on('connection', function (socket) {
 				db.query(sql[i], params, throwErr);
 			}
 		});
-	}
+	};
 
 	socket.on('register', function(_topic, _id) {
-		log.debug("Registration:", _topic, _id);
+		log.debug('Registration:', _topic, _id);
 
 		topic = _topic;
 		id = _id;
@@ -232,32 +235,32 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('createNode', function(fn) {
-		var sql = "INSERT INTO nodes (topic, id) VALUES ($1, $2)";
-		log.debug("Handeling:", 'createNode', topic, id);
+		var sql = 'INSERT INTO nodes (topic, id) VALUES ($1, $2)';
+		log.debug('Handeling:', 'createNode', topic, id);
 		io.to(topic).emit('createNode', id);
 		db.query(sql, [topic, id], fn); // not possible with handleMsg()
 	});
 	socket.on('rmNode', function() {
 		var sql = [
-			"UPDATE nodes SET delegate = null WHERE topic = $1 AND delegate = $2",
-			"DELETE FROM nodes WHERE topic = $1 AND id = $2"
+			'UPDATE nodes SET delegate = null WHERE topic = $1 AND delegate = $2',
+			'DELETE FROM nodes WHERE topic = $1 AND id = $2',
 		];
 		handleMsg('rmNode', sql);
 	});
 	socket.on('setNodeName', function(name) {
-		var sql = "UPDATE nodes SET name = $3 WHERE topic = $1 AND id = $2";
+		var sql = 'UPDATE nodes SET name = $3 WHERE topic = $1 AND id = $2';
 		handleMsg('setNodeName', sql, name);
 	});
 	socket.on('setNodeComment', function(comment) {
-		var sql = "UPDATE nodes SET comment = $3 WHERE topic = $1 AND id = $2";
+		var sql = 'UPDATE nodes SET comment = $3 WHERE topic = $1 AND id = $2';
 		handleMsg('setNodeComment', sql, comment);
 	});
 	socket.on('setDelegate', function(delegate) {
-		var sql = "UPDATE nodes SET delegate = $3 WHERE topic = $1 AND id = $2";
+		var sql = 'UPDATE nodes SET delegate = $3 WHERE topic = $1 AND id = $2';
 		handleMsg('setDelegate', sql, delegate);
 	});
 	socket.on('rmDelegate', function() {
-		var sql = "UPDATE nodes SET delegate = null WHERE topic = $1 AND id = $2";
+		var sql = 'UPDATE nodes SET delegate = null WHERE topic = $1 AND id = $2';
 		handleMsg('rmDelegate', sql);
 	});
 });
