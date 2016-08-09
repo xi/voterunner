@@ -6,6 +6,8 @@
  * url: http://voterunner.herokuapp.com/
  */
 
+var url = require('url');
+
 var express = require('express');
 var http = require('http');
 var app = express();
@@ -15,7 +17,7 @@ var pg = require('pg');
 var fs = require('fs');
 var log4js = require('log4js');
 
-var DATABSE_URL = process.env.DATABASE_URL;
+var DATABASE_URL = process.env.DATABASE_URL;
 var PORT = process.env.PORT || 5000;
 
 var log = log4js.getLogger();
@@ -25,29 +27,27 @@ server.listen(PORT, function() {
 	log.info("Listening on " + PORT);
 });
 
-var db = null;
+var parseDatabaseUrl = function(databaseUrl) {
+	var params = url.parse(databaseUrl);
+	var auth = params.auth.split(':');
 
-pg.connect(DATABSE_URL, function(err, _db) {
-	if (err) {
-		log.warn("error on db connect", err.toString());
-		if (fn) fn(err);
-	} else {
-		db = _db;
-	}
-
-	// setup table
-	query("CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))");
-});
-
-// helpers
-function query(sql, params, fn) {
-	db.query(sql, params, function(err, result) {
-		if (err) {
-			log.warn("db error:", err.toString(), sql, params);
-		}
-		if (fn) fn(err, (result || {}).rows);
-	});
+	return {
+		user: auth[0],
+		password: auth[1],
+		host: params.hostname,
+		port: params.port,
+		database: params.pathname.split('/')[1],
+	};
 }
+
+var db = new pg.Pool(parseDatabaseUrl(DATABASE_URL));
+
+var throwErr = function(err) {
+	if (err) throw err;
+}
+
+// setup table
+db.query("CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))", throwErr);
 
 function escapeHTML(unsafe) {
 	return unsafe
@@ -100,9 +100,9 @@ app.get('/:topic/json/', function(req, res) {
 	var topic = req.params.topic;
 	var sql = "SELECT id, name, comment, delegate FROM nodes WHERE topic = $1";
 
-	query(sql, [topic], function(err, tree) {
+	db.query(sql, [topic], function(err, result) {
 		if (err) return res.status(500).send(err.toString());
-		res.json(tree);
+		res.json(result.rows);
 	});
 });
 
@@ -111,8 +111,10 @@ app.get('/:topic/opml/', function(req, res) {
 	var topic = req.params.topic;
 	var sql = "SELECT id, name, comment, delegate FROM nodes WHERE topic = $1";
 
-	query(sql, [topic], function(err, tree) {
+	db.query(sql, [topic], function(err, result) {
 		if (err) return res.status(500).send(err.toString());
+
+		var tree = result.rows;
 
 		for (var i=0; i<tree.length; i++) {
 			tree[i].followers = [];
@@ -183,9 +185,9 @@ app.get('/:topic/:id?', function (req, res) {
 	}
 
 	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
-	query(sql, [topic], function(err, nodes) {
+	db.query(sql, [topic], function(err, result) {
 		if (err) return res.status(500).send(err.toString());
-		tpl('app.html', {'nodes': nodes, 'topic': topic}, res);
+		tpl('app.html', {'nodes': result.rows, 'topic': topic}, res);
 	});
 });
 
@@ -197,7 +199,7 @@ io.sockets.on('connection', function (socket) {
 	var ensureNode = function(fn) {
 		// fn will be called with an err objects as first parameter if this node
 		// already exists
-		query("INSERT INTO nodes (topic, id) VALUES ($1, $2)", [topic, id], fn);
+		db.query("INSERT INTO nodes (topic, id) VALUES ($1, $2)", [topic, id], fn);
 	};
 
 	function handleMsg(action, sql, v1, v2) {
@@ -212,7 +214,7 @@ io.sockets.on('connection', function (socket) {
 				if (n >= 3) params.push(v1);
 				if (n >= 4) params.push(v2);
 
-				query(sql[i], params);
+				db.query(sql[i], params, throwErr);
 			}
 		});
 	}
@@ -233,7 +235,7 @@ io.sockets.on('connection', function (socket) {
 		var sql = "INSERT INTO nodes (topic, id) VALUES ($1, $2)";
 		log.debug("Handeling:", 'createNode', topic, id);
 		io.to(topic).emit('createNode', id);
-		query(sql, [topic, id], fn); // not possible with handleMsg()
+		db.query(sql, [topic, id], fn); // not possible with handleMsg()
 	});
 	socket.on('rmNode', function() {
 		var sql = [
