@@ -83,16 +83,12 @@ var tpl = function(file, data, res) {
 	});
 };
 
-var markdown = function(file, res) {
-	fs.readFile(file, 'utf8', function(err, markdown) {
-		tpl('markdown.html', {'markdown': markdown}, res);
-	});
-}
-
 
 // welcome view
 app.get('/', function(req, res) {
-	markdown('README.md', res);
+	fs.readFile(file, 'utf8', function(err, markdown) {
+		tpl('markdown.html', {'markdown': markdown}, res);
+	});
 });
 
 // json state
