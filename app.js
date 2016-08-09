@@ -136,14 +136,14 @@ io.sockets.on('connection', function(socket) {
 				sql = [sql];
 			}
 
-			for (var i = 0; i < sql.length; i++) {
+			return Promise.all(sql.map(function(s) {
 				var params = [topic, id];
-				var n = sql[i].match(/\$/g).length;
+				var n = s.match(/\$/g).length;
 				if (n >= 3) params.push(v1);
 				if (n >= 4) params.push(v2);
 
-				db.query(sql[i], params, throwErr);
-			}
+				return db.query(s, params, throwErr);
+			}));
 		});
 	};
 
