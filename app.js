@@ -92,7 +92,7 @@ app.get('/', function(req, res) {
 });
 
 // json state
-app.get('/:topic/json/', function(req, res) {
+app.get('/:topic.json', function(req, res) {
 	var topic = req.params.topic;
 	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
 
