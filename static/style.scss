@@ -1,8 +1,8 @@
-@bg: #eee;
-@h1: #336DBE;
-@h2: #ABC3E3;
-@h3: #D9E7F9;
-@ll: lightgray;
+$bg: #eee;
+$h1: #336DBE;
+$h2: #ABC3E3;
+$h3: #D9E7F9;
+$ll: lightgray;
 
 * {
 	box-sizing: border-box;
@@ -28,26 +28,26 @@ textarea {
 }
 
 .bar-item {
-	.padding;
+	@extend .padding;
 	white-space: nowrap;
 	overflow: hidden;
 	display: inline-block;
 }
 .bar-button {
-	.bar-item;
+	@extend .bar-item;
 	&[onclick]:hover {
 		background-color: rgba(255,255,255,0.2);
 	}
 }
 .bar-button-left {
-	.bar-button;
+	@extend .bar-button;
 	float: left;
-	border-right: 1px solid @ll;
+	border-right: 1px solid $ll;
 }
 .bar-button-right {
-	.bar-button;
+	@extend .bar-button;
 	float: right;
-	border-left: 1px solid @ll;
+	border-left: 1px solid $ll;
 }
 
 html {
@@ -76,7 +76,7 @@ body {
 }
 
 header {
-	background: @h1;
+	background: $h1;
 	text-align: center;
 	border-radius: 0 0 0.4em 0.4em;
 	margin: 0;
@@ -86,15 +86,15 @@ header {
 	h1 {
 		margin: 0;
 		font-size: 2em;
-		color: @h3;
+		color: $h3;
 		span {
-			color: @h2;
+			color: $h2;
 		}
 	}
 }
 
 #tree, #user, #chat, #tree li .body {
-	border: 1px solid @ll;
+	border: 1px solid $ll;
 	border-radius: 0.2em 0.2em 0 0;
 }
 
@@ -107,7 +107,7 @@ header {
 	margin-right: 1em;
 	overflow: auto;
 	background: white;
-	.padding;
+	@extend .padding;
 	ul {
 		padding: 0;
 		margin: 0;
@@ -117,18 +117,18 @@ header {
 			.body {
 				background: white;
 				.header {
-					background: @h2;
+					background: $h2;
 					.expand {
-						.bar-button-left;
+						@extend .bar-button-left;
 					}
 					.name {
-						.bar-item;
+						@extend .bar-item;
 					}
 					.votes, .delegate {
-						.bar-button-right;
+						@extend .bar-button-right;
 					}
 					.online {
-						.bar-button-right;
+						@extend .bar-button-right;
 						display: none;
 						&:before {
 							content: "o";
@@ -137,7 +137,7 @@ header {
 				}
 				.comment {
 					margin: 0;
-					.padding;
+					@extend .padding;
 					&[data-type="pre"] {
 						white-space: pre-wrap;
 					}
@@ -177,29 +177,29 @@ header {
 	padding-top: 22em; /* 21 + 1 */
 
 	#user {
-		background: @h3;
+		background: $h3;
 		height: 21em;
 		width: 100%;
 		position: absolute;
 		top: 0;
 		> .statusbar {
 			width: 100%;
-			border-bottom: 1px solid @ll;
+			border-bottom: 1px solid $ll;
 			.delegate {
-				.bar-item;
+				@extend .bar-item;
 			}
 			.votes {
-				.bar-button-right;
+				@extend .bar-button-right;
 			}
 			.undelegate {
-				.bar-button-right;
+				@extend .bar-button-right;
 				&:before {
 					content: "‒";
 				}
 			}
 		}
 		#name {
-			.bar-item;
+			@extend .bar-item;
 			max-width: 80%; // TODO: prevent linebreak
 			input {
 				font-size: 1.2em;
@@ -207,11 +207,11 @@ header {
 			}
 		}
 		#rm {
-			.bar-button-right;
+			@extend .bar-button-right;
 			&:before {
 				content: "X";
 				font-size: 1.2em;
-				.padding;
+				@extend .padding;
 				line-height: 1.6em;
 			}
 		}
@@ -222,7 +222,7 @@ header {
 				height: 15em;
 				border: none;
 				resize: none;
-				.padding;
+				@extend .padding;
 			}
 		}
 	}
@@ -230,17 +230,17 @@ header {
 		height: 100%;
 		position: relative;
 		padding-bottom: 2.5em;
-		background: @h3;
+		background: $h3;
 		ul {
 			display: block;
 			width: 100%;
 			height: 100%;
 			margin: 0;
 			list-style: none;
-			.padding;
+			@extend .padding;
 			overflow-y: scroll;
 			li {
-				border-top: 1px solid @ll;
+				border-top: 1px solid $ll;
 				padding: 0.5em 0.2em;
 			}
 			background: white;
@@ -250,7 +250,7 @@ header {
 			width: 100%;
 			position: absolute;
 			bottom: 0;
-			border-top: 1px solid @ll;
+			border-top: 1px solid $ll;
 			padding: 0 0.2em;
 			text-align: center;
 			label input {
