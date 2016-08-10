@@ -10,7 +10,8 @@ $ll: lightgray;
 	max-width: 100%;
 }
 
-input[type="text"], textarea {
+input[type="text"],
+textarea {
 	background: white;
 }
 
@@ -33,17 +34,21 @@ textarea {
 	overflow: hidden;
 	display: inline-block;
 }
+
 %bar-button {
 	@extend %bar-item;
+
 	&[onclick]:hover {
 		background-color: rgba(255,255,255,0.2);
 	}
 }
+
 %bar-button-left {
 	@extend %bar-button;
 	float: left;
 	border-right: 1px solid $ll;
 }
+
 %bar-button-right {
 	@extend %bar-button;
 	float: right;
@@ -63,10 +68,12 @@ body {
 	width: 88%;
 	margin: 0 auto;
 	position: relative;
+
 	> div {
 		padding: 3em 0 1em;
 		height: 100%;
-		min-height: 37em; // 33 + padding
+		min-height: 37em;  // 33 + padding
+
 		> div {
 			position: relative;
 			height: 100%;
@@ -83,10 +90,12 @@ header {
 	width: 100%;
 	position: absolute;
 	top: 0;
+
 	h1 {
 		margin: 0;
 		font-size: 2em;
 		color: $h3;
+
 		span {
 			color: $h2;
 		}
@@ -108,16 +117,21 @@ header {
 	overflow: auto;
 	background: white;
 	@extend %padding;
+
 	ul {
 		padding: 0;
 		margin: 0;
 		list-style: none;
+
 		li {
 			margin: 0.5em 0;
+
 			.body {
 				background: white;
+
 				.header {
 					background: $h2;
+
 					.expand {
 						@extend %bar-button-left;
 					}
@@ -130,37 +144,47 @@ header {
 					.online {
 						@extend %bar-button-right;
 						display: none;
+
 						&:before {
 							content: "o";
 						}
 					}
 				}
+
 				.comment {
 					margin: 0;
 					@extend %padding;
+
 					&[data-type="pre"] {
 						white-space: pre-wrap;
 					}
 				}
 			}
+
 			ul {
 				margin-left: 2em;
 			}
+
 			&[data-highlight] > .body {
 				font-weight: bold;
 			}
+
 			&[data-self] > .body .header .delegate {
 				display: none;
 			}
+
 			&:not([data-expanded]) > .followers {
 				display: none;
 			}
+
 			&:not([data-expanded]) > .body .header .expand:before {
 				content: ">";
 			}
+
 			&[data-expanded] > .body .header .expand:before {
 				content: "v";
 			}
+
 			&[data-online]:not([data-self]) > .body .header .online {
 				display: block;
 			}
@@ -182,32 +206,41 @@ header {
 		width: 100%;
 		position: absolute;
 		top: 0;
+
 		> .statusbar {
 			width: 100%;
 			border-bottom: 1px solid $ll;
+
 			.delegate {
 				@extend %bar-item;
 			}
+
 			.votes {
 				@extend %bar-button-right;
 			}
+
 			.undelegate {
 				@extend %bar-button-right;
+
 				&:before {
 					content: "‒";
 				}
 			}
 		}
+
 		#name {
 			@extend %bar-item;
-			max-width: 80%; // TODO: prevent linebreak
+			max-width: 80%;  // TODO: prevent linebreak
+
 			input {
 				font-size: 1.2em;
 				height: 1.6em;
 			}
 		}
+
 		#rm {
 			@extend %bar-button-right;
+
 			&:before {
 				content: "X";
 				font-size: 1.2em;
@@ -215,6 +248,7 @@ header {
 				line-height: 1.6em;
 			}
 		}
+
 		#comment {
 			textarea {
 				width: 100%;
