@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		virtualDom.patch(element, patches);
 		tree = newTree;
 		registerEvents();
+		document.querySelector('#user .votes').textContent = getVotes(nodes, ID);
 	};
 
 	var user = nodes.find(function(node) {
@@ -157,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.querySelector('#name input').value = '';
 			document.querySelector('#comment textarea').value = '';
 			document.querySelector('#user .delegate').textContent = _('(no delegation)');
-			document.querySelector('#user .vots').textContent = '1';
 		}
 	});
 
