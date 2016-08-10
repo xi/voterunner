@@ -9,6 +9,30 @@ var _ = function(s) {
 	return s;
 };
 
+var throttle = function(fn, timeout) {
+	var called, blocked;
+
+	var result = function() {
+		if (blocked) {
+			called = true;
+		} else {
+			fn();
+			blocked = true;
+			called = false;
+
+			setTimeout(function() {
+				blocked = false;
+
+				if (called) {
+					result();
+				}
+			}, timeout);
+		}
+	};
+
+	return result;
+};
+
 var getVotes = function(nodes, node) {
 	if (!node.votes) {
 		node.votes = 1 + nodes.filter(function(follower) {
@@ -189,9 +213,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		socket.emit('rmDelegate');
 	});
 
-	document.querySelector('#comment textarea').addEventListener('change', function(event) {
-		socket.emit('setNodeComment', event.target.value);
-	});
+	var pushComment = throttle(function() {
+		var comment = document.querySelector('#comment textarea').value;
+		socket.emit('setNodeComment', comment);
+	}, 1000);
+
+	document.querySelector('#comment textarea').addEventListener('change', pushComment);
+	document.querySelector('#comment textarea').addEventListener('keydown', pushComment);
 
 	socket.on('rmNode', function(id) {
 		nodes = nodes.filter(function(node) {
