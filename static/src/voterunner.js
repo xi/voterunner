@@ -84,6 +84,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (!ID) ID = uid();
 	setCookie('id', ID, 100);
 
+	var socket = io.connect('/');
+	socket.emit('register', TOPIC, ID);
+
 	var nodes = JSON.parse(document.querySelector('#json-nodes').dataset.value);
 
 	var getNode = function(id) {
@@ -106,6 +109,31 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	};
 
+	var user = nodes.find(function(node) {
+		return node.id === ID;
+	});
+	if (user) {
+		document.querySelector('#name input').value = user.name;
+		document.querySelector('#comment textarea').value = user.comment;
+	}
+
+	var updateUser = function() {
+		document.querySelector('#user .votes').textContent = getVotes(nodes, user || {});
+
+		if (user && user.delegate) {
+			var delegatee = getNode(user.delegate);
+			document.querySelector('#user .delegate').textContent = getName(other);
+		} else {
+			document.querySelector('#user .delegate').textContent = _('(no delegation)');
+		}
+	};
+
+	var wrapper = document.querySelector('#tree');
+	var tree = template(nodes);
+	var element = virtualDom.create(tree);
+	wrapper.innerHTML = '';
+	wrapper.appendChild(element);
+
 	var toggleExpand = function(event) {
 		var nodeElement = event.target.parentElement.parentElement.parentElement;
 		var id = nodeElement.id.substr(4);
@@ -120,26 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		socket.emit('setDelegate', id);
 	};
 
-	var user = nodes.find(function(node) {
-		return node.id === ID;
-	});
-	if (user) {
-		document.querySelector('#name input').value = user.name;
-		document.querySelector('#comment textarea').value = user.comment;
-
-		if (user.delegate) {
-			var delegate = getNode(user.delegate);
-			var name = getName(delegate);
-			document.querySelector('#user .delegate').textContent = name;
-		}
-	}
-
-	var wrapper = document.querySelector('#tree');
-	var tree = template(nodes);
-	var element = virtualDom.create(tree);
-	wrapper.innerHTML = '';
-	wrapper.appendChild(element);
-
 	var registerEvents = function() {
 		document.querySelectorAll('.expand').forEach(function(element) {
 			element.addEventListener('click', toggleExpand);
@@ -148,17 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.querySelectorAll('.delegate').forEach(function(element) {
 			element.addEventListener('click', setDelegate);
 		});
-	};
-
-	var updateUser = function() {
-		document.querySelector('#user .votes').textContent = getVotes(nodes, user || {});
-
-		if (user && user.delegate) {
-			var delegatee = getNode(user.delegate);
-			document.querySelector('#user .delegate').textContent = getName(other);
-		} else {
-			document.querySelector('#user .delegate').textContent = _('(no delegation)');
-		}
 	};
 
 	registerEvents();
@@ -172,9 +169,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		registerEvents();
 		updateUser();
 	};
-
-	var socket = io.connect('/');
-	socket.emit('register', TOPIC, ID);
 
 	document.querySelector('#rm').addEventListener('click', function(event) {
 		if (confirm(_("Do you really want to delete this opinion?"))) {
