@@ -86,7 +86,7 @@ var tpl = function(file, data, res) {
 
 // welcome view
 app.get('/', function(req, res) {
-	fs.readFile(file, 'utf8', function(err, markdown) {
+	fs.readFile('README.md', 'utf8', function(err, markdown) {
 		tpl('markdown.html', {'markdown': markdown}, res);
 	});
 });
