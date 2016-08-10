@@ -23,29 +23,29 @@ textarea {
 	cursor: pointer;
 }
 
-.padding {
+%padding {
 	padding: 0.4em;
 }
 
-.bar-item {
-	@extend .padding;
+%bar-item {
+	@extend %padding;
 	white-space: nowrap;
 	overflow: hidden;
 	display: inline-block;
 }
-.bar-button {
-	@extend .bar-item;
+%bar-button {
+	@extend %bar-item;
 	&[onclick]:hover {
 		background-color: rgba(255,255,255,0.2);
 	}
 }
-.bar-button-left {
-	@extend .bar-button;
+%bar-button-left {
+	@extend %bar-button;
 	float: left;
 	border-right: 1px solid $ll;
 }
-.bar-button-right {
-	@extend .bar-button;
+%bar-button-right {
+	@extend %bar-button;
 	float: right;
 	border-left: 1px solid $ll;
 }
@@ -107,7 +107,7 @@ header {
 	margin-right: 1em;
 	overflow: auto;
 	background: white;
-	@extend .padding;
+	@extend %padding;
 	ul {
 		padding: 0;
 		margin: 0;
@@ -119,16 +119,16 @@ header {
 				.header {
 					background: $h2;
 					.expand {
-						@extend .bar-button-left;
+						@extend %bar-button-left;
 					}
 					.name {
-						@extend .bar-item;
+						@extend %bar-item;
 					}
 					.votes, .delegate {
-						@extend .bar-button-right;
+						@extend %bar-button-right;
 					}
 					.online {
-						@extend .bar-button-right;
+						@extend %bar-button-right;
 						display: none;
 						&:before {
 							content: "o";
@@ -137,7 +137,7 @@ header {
 				}
 				.comment {
 					margin: 0;
-					@extend .padding;
+					@extend %padding;
 					&[data-type="pre"] {
 						white-space: pre-wrap;
 					}
@@ -186,20 +186,20 @@ header {
 			width: 100%;
 			border-bottom: 1px solid $ll;
 			.delegate {
-				@extend .bar-item;
+				@extend %bar-item;
 			}
 			.votes {
-				@extend .bar-button-right;
+				@extend %bar-button-right;
 			}
 			.undelegate {
-				@extend .bar-button-right;
+				@extend %bar-button-right;
 				&:before {
 					content: "‒";
 				}
 			}
 		}
 		#name {
-			@extend .bar-item;
+			@extend %bar-item;
 			max-width: 80%; // TODO: prevent linebreak
 			input {
 				font-size: 1.2em;
@@ -207,11 +207,11 @@ header {
 			}
 		}
 		#rm {
-			@extend .bar-button-right;
+			@extend %bar-button-right;
 			&:before {
 				content: "X";
 				font-size: 1.2em;
-				@extend .padding;
+				@extend %padding;
 				line-height: 1.6em;
 			}
 		}
@@ -222,7 +222,7 @@ header {
 				height: 15em;
 				border: none;
 				resize: none;
-				@extend .padding;
+				@extend %padding;
 			}
 		}
 	}
@@ -237,7 +237,7 @@ header {
 			height: 100%;
 			margin: 0;
 			list-style: none;
-			@extend .padding;
+			@extend %padding;
 			overflow-y: scroll;
 			li {
 				border-top: 1px solid $ll;
