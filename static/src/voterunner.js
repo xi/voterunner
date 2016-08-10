@@ -142,11 +142,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.querySelector('#name input').value = user.name;
 		document.querySelector('#comment textarea').value = user.comment;
 
-		var delegate = getNode(user.delegate);
-		var name = delegate.name || _('anonymous');
-		document.querySelector('#user .delegate').textContent = name;
-
-		// TODO votes
+		if (user.delegate) {
+			var delegate = getNode(user.delegate);
+			var name = delegate.name || _('anonymous');
+			document.querySelector('#user .delegate').textContent = name;
+		}
 	}
 
 	var socket = io.connect('/');
