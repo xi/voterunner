@@ -142,14 +142,6 @@ header {
 					.votes, .delegate {
 						@extend %bar-button-right;
 					}
-					.online {
-						@extend %bar-button-right;
-						display: none;
-
-						&:before {
-							content: "o";
-						}
-					}
 				}
 
 				.comment {
@@ -186,9 +178,6 @@ header {
 				content: "v";
 			}
 
-			&[data-online]:not([data-self]) > .body .header .online {
-				display: block;
-			}
 		}
 	}
 }
