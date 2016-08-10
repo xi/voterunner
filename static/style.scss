@@ -7,7 +7,6 @@ $padding: 0.4em;
 
 * {
 	box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	max-width: 100%;
 }
 
@@ -23,10 +22,6 @@ textarea {
 textarea {
 	font-family: inherit;
 	font-size: inherit;
-}
-
-*[onclick]:not(.inactive) {
-	cursor: pointer;
 }
 
 %bar-item {
@@ -58,15 +53,14 @@ textarea {
 
 html {
 	height: 100%;
-	font-family: arial, sans;
+	font-family: sans-serif;
 	font-size: 70%;
 	background: #eee;
 }
 
 body {
 	height: 100%;
-	min-width: 40em;
-	width: 88%;
+	max-width: 90em;
 	margin: 0 auto;
 	position: relative;
 
@@ -114,7 +108,6 @@ header {
 	left: 0;
 	width: 57%;
 	height: 100%;
-	margin-right: 1em;
 	overflow: auto;
 	background: white;
 	padding: $padding;
@@ -149,17 +142,12 @@ header {
 				}
 
 				.comment {
-					margin: 0;
 					padding: $padding;
 
 					&[data-type="pre"] {
 						white-space: pre-wrap;
 					}
 				}
-			}
-
-			ul {
-				margin-left: 2em;
 			}
 
 			&[data-highlight] > .body {
@@ -177,7 +165,10 @@ header {
 			&[data-expanded="true"] > .body .header .expand:before {
 				content: "v";
 			}
+		}
 
+		ul {
+			margin-left: 2em;
 		}
 	}
 }
@@ -188,66 +179,58 @@ header {
 	right: 0;
 	width: 42%;
 	height: 100%;
-	padding-top: 22em; /* 21 + 1 */
+}
 
-	#user {
-		background: $h3;
-		height: 21em;
+#user {
+	background: $h3;
+
+	> .statusbar {
 		width: 100%;
-		position: absolute;
-		top: 0;
+		border-bottom: 1px solid $ll;
 
-		> .statusbar {
-			width: 100%;
-			border-bottom: 1px solid $ll;
-
-			.delegate {
-				@extend %bar-item;
-			}
-
-			.votes {
-				@extend %bar-button-right;
-			}
-
-			.undelegate {
-				@extend %bar-button-right;
-
-				&:before {
-					content: "‒";
-				}
-			}
-		}
-
-		#name {
+		.delegate {
 			@extend %bar-item;
-			max-width: 80%;  // TODO: prevent linebreak
-
-			input {
-				font-size: 1.2em;
-				height: 1.6em;
-			}
 		}
 
-		#rm {
+		.votes {
+			@extend %bar-button-right;
+		}
+
+		.undelegate {
 			@extend %bar-button-right;
 
 			&:before {
-				content: "X";
-				font-size: 1.2em;
-				padding: $padding;
-				line-height: 1.6em;
+				content: "‒";
 			}
 		}
+	}
 
-		#comment {
-			textarea {
-				width: 100%;
-				max-width: 100%;
-				height: 15em;
-				border: none;
-				resize: none;
-				padding: $padding;
-			}
+	#name {
+		@extend %bar-item;
+		max-width: 80%;  // TODO: prevent linebreak
+
+		input {
+			font-size: 120%;
+			height: 1.6em;
 		}
+	}
+
+	#rm {
+		@extend %bar-button-right;
+
+		&:before {
+			content: "X";
+			font-size: 120%;
+			padding: $padding;
+			line-height: 1.6;
+		}
+	}
+
+	#comment textarea {
+		width: 100%;
+		min-height: 15em;
+		border: none;
+		resize: vertical;
+		padding: $padding;
 	}
 }
