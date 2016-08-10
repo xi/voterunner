@@ -65,6 +65,22 @@ var template = function(nodes) {
 	return h('ul', tplFollowers(nodes, null));
 };
 
+var initVDom = function(wrapper, state, afterRender) {
+	var tree = template(state);
+	var element = virtualDom.create(tree);
+	wrapper.innerHTML = '';
+	wrapper.appendChild(element);
+	afterRender();
+
+	return function(newState) {
+		var newTree = template(newState);
+		var patches = virtualDom.diff(tree, newTree);
+		virtualDom.patch(element, patches);
+		tree = newTree;
+		afterRender();
+	};
+};
+
 var uid = function() {
 	// just enough uniqueness
 	var a = Math.random() * Date.now() * 0x1000;
@@ -128,18 +144,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	};
 
-	var wrapper = document.querySelector('#tree');
-	var tree = template(nodes);
-	var element = virtualDom.create(tree);
-	wrapper.innerHTML = '';
-	wrapper.appendChild(element);
-
 	var toggleExpand = function(event) {
 		var nodeElement = event.target.parentElement.parentElement.parentElement;
 		var id = nodeElement.id.substr(4);
 		var node = getNode(id);
 		node.expanded = !node.expanded;
-		update();
+		update(nodes);
 	};
 
 	var setDelegate = function(event) {
@@ -148,7 +158,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		socket.emit('setDelegate', id);
 	};
 
-	var registerEvents = function() {
+	var update = initVDom(document.querySelector('#tree'), nodes, function() {
+		updateUser();
+
 		document.querySelectorAll('.expand').forEach(function(element) {
 			element.addEventListener('click', toggleExpand);
 		});
@@ -156,19 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.querySelectorAll('.delegate').forEach(function(element) {
 			element.addEventListener('click', setDelegate);
 		});
-	};
-
-	registerEvents();
-	updateUser();
-
-	var update = function() {
-		var newTree = template(nodes);
-		var patches = virtualDom.diff(tree, newTree);
-		virtualDom.patch(element, patches);
-		tree = newTree;
-		registerEvents();
-		updateUser();
-	};
+	});
 
 	document.querySelector('#rm').addEventListener('click', function(event) {
 		if (confirm(_("Do you really want to delete this opinion?"))) {
@@ -195,24 +195,24 @@ document.addEventListener('DOMContentLoaded', function() {
 			return node.id !== id;
 		});
 		invalidateVotes();
-		update();
+		update(nodes);
 	});
 	socket.on('setNodeName', function(id, name) {
 		getNode(id).name = name;
-		update();
+		update(nodes);
 	});
 	socket.on('setNodeComment', function(id, comment) {
 		getNode(id).comment = comment;
-		update();
+		update(nodes);
 	});
 	socket.on('setDelegate', function(id, delegate) {
 		getNode(id).delegate = delegate;
 		invalidateVotes();
-		update();
+		update(nodes);
 	});
 	socket.on('rmDelegate', function(id) {
 		getNode(id).delegate = null;
 		invalidateVotes();
-		update();
+		update(nodes);
 	});
 });
