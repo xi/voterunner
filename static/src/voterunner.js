@@ -1,8 +1,9 @@
 var virtualDom = require('virtual-dom');
 var h = require('virtual-dom/h');
-var markdown = require('markdown-it');
+var MarkdownIt = require('markdown-it');
 var io = require('socket.io-client');
 
+var md = new MarkdownIt();
 
 var _ = function(s) {
 	return s;
@@ -55,7 +56,9 @@ var tplNode = function(nodes, node) {
 				}),
 				h('div.name', getName(node)),
 			]),
-			h('div.comment', node.comment),
+			h('div.comment', {
+				innerHTML: md.render(node.comment || ''),
+			}),
 		]),
 		h('ul.followers', tplFollowers(nodes, node.id)),
 	]);
