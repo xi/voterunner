@@ -135,6 +135,10 @@ header {
 
 					.expand {
 						@extend %bar-button-left;
+
+						&:before {
+							content: ">";
+						}
 					}
 					.name {
 						@extend %bar-item;
@@ -166,15 +170,11 @@ header {
 				display: none;
 			}
 
-			&:not([data-expanded]) > .followers {
+			&:not([data-expanded="true"]) > .followers {
 				display: none;
 			}
 
-			&:not([data-expanded]) > .body .header .expand:before {
-				content: ">";
-			}
-
-			&[data-expanded] > .body .header .expand:before {
+			&[data-expanded="true"] > .body .header .expand:before {
 				content: "v";
 			}
 
