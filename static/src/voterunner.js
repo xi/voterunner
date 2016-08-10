@@ -8,6 +8,16 @@ var _ = function(s) {
 	return s;
 };
 
+var getVotes = function(nodes, id) {
+	return 1 + nodes.filter(function(node) {
+		return node.delegate === id;
+	}).map(function(node) {
+		return getVotes(nodes, node.id);
+	}).reduce(function(a, b) {
+		return a + b;
+	}, 0);
+};
+
 var tplFollowers = function(nodes, id) {
 	var _tplNode = function(node) {
 		return tplNode(nodes, node);
@@ -30,7 +40,7 @@ var tplNode = function(nodes, node) {
 	}, [
 		h('div.body', [
 			h('div.header', [
-				h('div.votes', node.votes || '1'),
+				h('div.votes', '' + getVotes(nodes, node.id)),
 				h('a.delegate', {
 					title: _('delegate to') + ' ' + name,
 				}, '+'),
@@ -146,8 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			socket.emit('rmNode');
 			document.querySelector('#name input').value = '';
 			document.querySelector('#comment textarea').value = '';
-			// TODO votes
 			document.querySelector('#user .delegate').textContent = _('(no delegation)');
+			document.querySelector('#user .vots').textContent = '1';
 		}
 	});
 
