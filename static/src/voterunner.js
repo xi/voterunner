@@ -140,13 +140,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		update();
 	};
 
+	var setDelegate = function(event) {
+		var nodeElement = event.target.parentElement.parentElement.parentElement;
+		var id = nodeElement.id.substr(4);
+		socket.emit('setDelegate', id);
+	};
+
 	document.querySelectorAll('.expand').forEach(function(element) {
 		element.addEventListener('click', toggleExpand);
 	});
 
 	document.querySelectorAll('.delegate').forEach(function(element) {
-		element.addEventListener('click', function(event) {
-		});
+		element.addEventListener('click', setDelegate);
 	});
 
 	socket.on('rmNode', function(id) {
