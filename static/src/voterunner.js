@@ -8,14 +8,18 @@ var _ = function(s) {
 	return s;
 };
 
-var getVotes = function(nodes, id) {
-	return 1 + nodes.filter(function(node) {
-		return node.delegate === id;
-	}).map(function(node) {
-		return getVotes(nodes, node.id);
-	}).reduce(function(a, b) {
-		return a + b;
-	}, 0);
+var getVotes = function(nodes, node) {
+	if (!node.votes) {
+		node.votes = 1 + nodes.filter(function(follower) {
+			return follower.delegate === node.id;
+		}).map(function(follower) {
+			return getVotes(nodes, follower);
+		}).reduce(function(a, b) {
+			return a + b;
+		}, 0);
+	}
+
+	return node.votes;
 };
 
 var tplFollowers = function(nodes, id) {
@@ -40,7 +44,7 @@ var tplNode = function(nodes, node) {
 	}, [
 		h('div.body', [
 			h('div.header', [
-				h('div.votes', '' + getVotes(nodes, node.id)),
+				h('div.votes', '' + getVotes(nodes, node)),
 				h('a.delegate', {
 					title: _('delegate to') + ' ' + name,
 				}, '+'),
@@ -94,6 +98,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		return node;
 	};
 
+	var invalidateVotes = function() {
+		nodes.forEach(function(node) {
+			node.votes = null;
+		});
+	};
+
 	var toggleExpand = function(event) {
 		var nodeElement = event.target.parentElement.parentElement.parentElement;
 		var id = nodeElement.id.substr(4);
@@ -107,6 +117,20 @@ document.addEventListener('DOMContentLoaded', function() {
 		var id = nodeElement.id.substr(4);
 		socket.emit('setDelegate', id);
 	};
+
+	var user = nodes.find(function(node) {
+		return node.id === ID;
+	});
+	if (user) {
+		document.querySelector('#name input').value = user.name;
+		document.querySelector('#comment textarea').value = user.comment;
+
+		if (user.delegate) {
+			var delegate = getNode(user.delegate);
+			var name = delegate.name || _('anonymous');
+			document.querySelector('#user .delegate').textContent = name;
+		}
+	}
 
 	var wrapper = document.querySelector('#tree');
 	var tree = template(nodes);
@@ -132,22 +156,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		virtualDom.patch(element, patches);
 		tree = newTree;
 		registerEvents();
-		document.querySelector('#user .votes').textContent = getVotes(nodes, ID);
+
+		document.querySelector('#user .votes').textContent = getVotes(nodes, user || {});
 	};
-
-	var user = nodes.find(function(node) {
-		return node.id === ID;
-	});
-	if (user) {
-		document.querySelector('#name input').value = user.name;
-		document.querySelector('#comment textarea').value = user.comment;
-
-		if (user.delegate) {
-			var delegate = getNode(user.delegate);
-			var name = delegate.name || _('anonymous');
-			document.querySelector('#user .delegate').textContent = name;
-		}
-	}
 
 	var socket = io.connect('/');
 	socket.emit('register', TOPIC, ID);
@@ -177,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		nodes = nodes.filter(function(node) {
 			return node.id !== id;
 		});
+		invalidateVotes();
 		update();
 	});
 	socket.on('setNodeName', function(id, name) {
@@ -196,6 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.querySelector('#user .delegate').textContent = name;
 		}
 
+		invalidateVotes();
 		update();
 	});
 	socket.on('rmDelegate', function(id) {
@@ -206,6 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.querySelector('#user .delegate').textContent = _('(no delegation)');
 		}
 
+		invalidateVotes();
 		update();
 	});
 });
