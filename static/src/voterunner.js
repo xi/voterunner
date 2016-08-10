@@ -130,8 +130,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (user) {
 		document.querySelector('#name input').value = user.name;
 		document.querySelector('#comment textarea').value = user.comment;
+
+		var delegate = getNode(user.delegate);
+		var name = delegate.name || _('anonymous');
+		document.querySelector('#user .delegate').textContent = name;
+
 		// TODO votes
-		// TODO delegation
 	}
 
 	var socket = io.connect('/');
@@ -143,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.querySelector('#name input').value = '';
 			document.querySelector('#comment textarea').value = '';
 			// TODO votes
-			// TODO delegation
+			document.querySelector('#user .delegate').textContent = _('(no delegation)');
 		}
 	});
 
@@ -175,10 +179,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	socket.on('setDelegate', function(id, delegate) {
 		getNode(id).delegate = delegate;
+
+		if (id === ID) {
+			var other = getNode(delegate);
+			var name = other.name || _('anonymous');
+			document.querySelector('#user .delegate').textContent = name;
+		}
+
 		update();
 	});
 	socket.on('rmDelegate', function(id) {
 		getNode(id).delegate = null;
+
+		if (id === ID) {
+			var other = getNode(delegate);
+			document.querySelector('#user .delegate').textContent = _('(no delegation)');
+		}
+
 		update();
 	});
 });
