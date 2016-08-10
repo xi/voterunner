@@ -22,6 +22,10 @@ var getVotes = function(nodes, node) {
 	return node.votes;
 };
 
+var getName = function(node) {
+	return node.name || _('anonymous');
+};
+
 var tplFollowers = function(nodes, id) {
 	var _tplNode = function(node) {
 		return tplNode(nodes, node);
@@ -32,8 +36,6 @@ var tplFollowers = function(nodes, id) {
 };
 
 var tplNode = function(nodes, node) {
-	var name = node.name || _('anonymous');
-
 	var dataset = {};
 	if (node.expanded) {
 		dataset.expanded = true;
@@ -46,12 +48,12 @@ var tplNode = function(nodes, node) {
 			h('div.header', [
 				h('div.votes', '' + getVotes(nodes, node)),
 				h('a.delegate', {
-					title: _('delegate to') + ' ' + name,
+					title: _('delegate to') + getName(node),
 				}, '+'),
 				h('a.expand', {
 					title: _('expand'),
 				}),
-				h('div.name', name),
+				h('div.name', getName(node)),
 			]),
 			h('div.comment', node.comment),
 		]),
@@ -127,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		if (user.delegate) {
 			var delegate = getNode(user.delegate);
-			var name = delegate.name || _('anonymous');
+			var name = getName(delegate);
 			document.querySelector('#user .delegate').textContent = name;
 		}
 	}
