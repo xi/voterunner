@@ -150,7 +150,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	};
 
+	var updateUser = function() {
+		document.querySelector('#user .votes').textContent = getVotes(nodes, user || {});
+
+		if (user && user.delegate) {
+			var delegatee = getNode(user.delegate);
+			document.querySelector('#user .delegate').textContent = getName(other);
+		} else {
+			document.querySelector('#user .delegate').textContent = _('(no delegation)');
+		}
+	};
+
 	registerEvents();
+	updateUser();
 
 	var update = function() {
 		var newTree = template(nodes);
@@ -158,8 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		virtualDom.patch(element, patches);
 		tree = newTree;
 		registerEvents();
-
-		document.querySelector('#user .votes').textContent = getVotes(nodes, user || {});
+		updateUser();
 	};
 
 	var socket = io.connect('/');
@@ -170,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			socket.emit('rmNode');
 			document.querySelector('#name input').value = '';
 			document.querySelector('#comment textarea').value = '';
-			document.querySelector('#user .delegate').textContent = _('(no delegation)');
 		}
 	});
 
@@ -203,24 +213,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	socket.on('setDelegate', function(id, delegate) {
 		getNode(id).delegate = delegate;
-
-		if (id === ID) {
-			var other = getNode(delegate);
-			var name = other.name || _('anonymous');
-			document.querySelector('#user .delegate').textContent = name;
-		}
-
 		invalidateVotes();
 		update();
 	});
 	socket.on('rmDelegate', function(id) {
 		getNode(id).delegate = null;
-
-		if (id === ID) {
-			var other = getNode(delegate);
-			document.querySelector('#user .delegate').textContent = _('(no delegation)');
-		}
-
 		invalidateVotes();
 		update();
 	});
