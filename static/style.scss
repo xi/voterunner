@@ -3,6 +3,7 @@ $h1: #336DBE;
 $h2: #ABC3E3;
 $h3: #D9E7F9;
 $ll: lightgray;
+$padding: 0.4em;
 
 * {
 	box-sizing: border-box;
@@ -28,12 +29,8 @@ textarea {
 	cursor: pointer;
 }
 
-%padding {
-	padding: 0.4em;
-}
-
 %bar-item {
-	@extend %padding;
+	padding: $padding;
 	white-space: nowrap;
 	overflow: hidden;
 	display: inline-block;
@@ -120,7 +117,7 @@ header {
 	margin-right: 1em;
 	overflow: auto;
 	background: white;
-	@extend %padding;
+	padding: $padding;
 
 	ul {
 		padding: 0;
@@ -157,7 +154,7 @@ header {
 
 				.comment {
 					margin: 0;
-					@extend %padding;
+					padding: $padding;
 
 					&[data-type="pre"] {
 						white-space: pre-wrap;
@@ -248,7 +245,7 @@ header {
 			&:before {
 				content: "X";
 				font-size: 1.2em;
-				@extend %padding;
+				padding: $padding;
 				line-height: 1.6em;
 			}
 		}
@@ -260,7 +257,7 @@ header {
 				height: 15em;
 				border: none;
 				resize: none;
-				@extend %padding;
+				padding: $padding;
 			}
 		}
 	}
