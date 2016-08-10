@@ -19,10 +19,14 @@ var tplFollowers = function(nodes, id) {
 
 var tplNode = function(nodes, node) {
 	var name = node.name || _('anonymous');
+
+	var dataset = {};
+	if (node.expanded) {
+		dataset.expanded = true;
+	}
+
 	return h('li.node#node' + node.id, {
-		dataset: {
-			expanded: node.expanded,
-		},
+		dataset: dataset,
 	}, [
 		h('div.body', [
 			h('div.header', [
@@ -89,6 +93,20 @@ document.addEventListener('DOMContentLoaded', function() {
 		// TODO delegation
 	}
 
+	var getNode = function(id) {
+		var node = nodes.find(function(node) {
+			return node.id === id;
+		});
+		if (!node) {
+			node = {
+				id: id,
+				delegate: null,
+			};
+			nodes.push(node);
+		}
+		return node;
+	};
+
 	var socket = io.connect('/');
 	socket.emit('register', TOPIC, ID);
 
@@ -114,29 +132,22 @@ document.addEventListener('DOMContentLoaded', function() {
 		socket.emit('setNodeComment', event.target.value);
 	});
 
+	var toggleExpand = function(event) {
+		var nodeElement = event.target.parentElement.parentElement.parentElement;
+		var id = nodeElement.id.substr(4);
+		var node = getNode(id);
+		node.expanded = !node.expanded;
+		update();
+	};
+
 	document.querySelectorAll('.expand').forEach(function(element) {
-		element.addEventListener('click', function(event) {
-		});
+		element.addEventListener('click', toggleExpand);
 	});
 
 	document.querySelectorAll('.delegate').forEach(function(element) {
 		element.addEventListener('click', function(event) {
 		});
 	});
-
-	var getNode = function(id) {
-		var node = nodes.find(function(node) {
-			return node.id === id;
-		});
-		if (!node) {
-			node = {
-				id: id,
-				delegate: null,
-			};
-			nodes.push(node);
-		}
-		return node;
-	};
 
 	socket.on('rmNode', function(id) {
 		nodes = nodes.filter(function(node) {
