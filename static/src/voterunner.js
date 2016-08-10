@@ -70,29 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var nodes = JSON.parse(document.querySelector('#json-nodes').dataset.value);
 
-	var wrapper = document.querySelector('#tree');
-	var tree = template(nodes);
-	var element = virtualDom.create(tree);
-	wrapper.innerHTML = '';
-	wrapper.appendChild(element);
-
-	var update = function() {
-		var newTree = template(nodes);
-		var patches = virtualDom.diff(tree, newTree);
-		virtualDom.patch(element, patches);
-		tree = newTree;
-	};
-
-	var user = nodes.find(function(node) {
-		return node.id === ID;
-	});
-	if (user) {
-		document.querySelector('#name input').value = user.name;
-		document.querySelector('#comment textarea').value = user.comment;
-		// TODO votes
-		// TODO delegation
-	}
-
 	var getNode = function(id) {
 		var node = nodes.find(function(node) {
 			return node.id === id;
@@ -106,6 +83,56 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		return node;
 	};
+
+	var toggleExpand = function(event) {
+		var nodeElement = event.target.parentElement.parentElement.parentElement;
+		var id = nodeElement.id.substr(4);
+		var node = getNode(id);
+		node.expanded = !node.expanded;
+		update();
+	};
+
+	var setDelegate = function(event) {
+		var nodeElement = event.target.parentElement.parentElement.parentElement;
+		var id = nodeElement.id.substr(4);
+		socket.emit('setDelegate', id);
+	};
+
+	var wrapper = document.querySelector('#tree');
+	var tree = template(nodes);
+	var element = virtualDom.create(tree);
+	wrapper.innerHTML = '';
+	wrapper.appendChild(element);
+
+	var registerEvents = function() {
+		document.querySelectorAll('.expand').forEach(function(element) {
+			element.addEventListener('click', toggleExpand);
+		});
+
+		document.querySelectorAll('.delegate').forEach(function(element) {
+			element.addEventListener('click', setDelegate);
+		});
+	};
+
+	registerEvents();
+
+	var update = function() {
+		var newTree = template(nodes);
+		var patches = virtualDom.diff(tree, newTree);
+		virtualDom.patch(element, patches);
+		tree = newTree;
+		registerEvents();
+	};
+
+	var user = nodes.find(function(node) {
+		return node.id === ID;
+	});
+	if (user) {
+		document.querySelector('#name input').value = user.name;
+		document.querySelector('#comment textarea').value = user.comment;
+		// TODO votes
+		// TODO delegation
+	}
 
 	var socket = io.connect('/');
 	socket.emit('register', TOPIC, ID);
@@ -130,28 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	document.querySelector('#comment textarea').addEventListener('change', function(event) {
 		socket.emit('setNodeComment', event.target.value);
-	});
-
-	var toggleExpand = function(event) {
-		var nodeElement = event.target.parentElement.parentElement.parentElement;
-		var id = nodeElement.id.substr(4);
-		var node = getNode(id);
-		node.expanded = !node.expanded;
-		update();
-	};
-
-	var setDelegate = function(event) {
-		var nodeElement = event.target.parentElement.parentElement.parentElement;
-		var id = nodeElement.id.substr(4);
-		socket.emit('setDelegate', id);
-	};
-
-	document.querySelectorAll('.expand').forEach(function(element) {
-		element.addEventListener('click', toggleExpand);
-	});
-
-	document.querySelectorAll('.delegate').forEach(function(element) {
-		element.addEventListener('click', setDelegate);
 	});
 
 	socket.on('rmNode', function(id) {
