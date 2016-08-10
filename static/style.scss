@@ -10,6 +10,10 @@ $ll: lightgray;
 	max-width: 100%;
 }
 
+[id^="json-"] {
+	display: none;
+}
+
 input[type="text"],
 textarea {
 	background: white;
