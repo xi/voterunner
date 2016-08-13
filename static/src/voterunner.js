@@ -152,12 +152,21 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	};
 
+	var ensureVisible = function(node) {
+		if (node && node.delegate) {
+			var delegatee = getNode(node.delegate);
+			delegatee.expanded = true;
+			ensureVisible(delegatee);
+		}
+	};
+
 	var user = nodes.find(function(node) {
 		return node.id === ID;
 	});
 	if (user) {
 		document.querySelector('#name input').value = user.name;
 		document.querySelector('#comment textarea').value = user.comment;
+		ensureVisible(user);
 	}
 
 	var updateUser = function() {
@@ -239,6 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	socket.on('setDelegate', function(id, delegate) {
 		getNode(id).delegate = delegate;
 		invalidateVotes();
+		ensureVisible(user);
 		update(nodes);
 	});
 	socket.on('rmDelegate', function(id) {
