@@ -57,6 +57,8 @@ var tplFollowers = function(nodes, id) {
 	};
 	return nodes.filter(function(node) {
 		return node.delegate === id;
+	}).sort(function(a, b) {
+		return getVotes(nodes, b) - getVotes(nodes, a);
 	}).map(_tplNode);
 };
 
