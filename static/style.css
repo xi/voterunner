@@ -1,82 +1,56 @@
+@charset "UTF-8";
 * {
   box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  max-width: 100%;
-}
+  max-width: 100%; }
+
+[id^="json-"] {
+  display: none; }
+
 input[type="text"],
 textarea {
-  background: white;
-}
+  background: white; }
+
 textarea {
   font-family: inherit;
-  font-size: inherit;
-}
-*[onclick]:not(.inactive) {
-  cursor: pointer;
-}
-.padding {
-  padding: 0.4em;
-}
-.bar-item {
+  font-size: inherit; }
+
+#tree ul li .body .header .expand, #tree ul li .body .header .votes, #tree ul li .body .header .delegate, #user > .statusbar .votes, #user > .statusbar .undelegate, #user #rm, #tree ul li .body .header .name, #user > .statusbar .delegate, #user #name {
   padding: 0.4em;
   white-space: nowrap;
   overflow: hidden;
-  display: inline-block;
-}
-.bar-button {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-}
-.bar-button[onclick]:hover {
-  background-color: rgba(255,255,255,0.2);
-}
-.bar-button-left {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
+  display: inline-block; }
+
+#tree ul li .body .header [onclick].expand:hover, #tree ul li .body .header [onclick].votes:hover, #tree ul li .body .header [onclick].delegate:hover, #user > .statusbar [onclick].votes:hover, #user > .statusbar [onclick].undelegate:hover, #user [onclick]#rm:hover {
+  background-color: rgba(255, 255, 255, 0.2); }
+
+#tree ul li .body .header .expand {
   float: left;
-  border-right: 1px solid lightgray;
-}
-.bar-button-left[onclick]:hover {
-  background-color: rgba(255,255,255,0.2);
-}
-.bar-button-right {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
+  border-right: 1px solid lightgray; }
+
+#tree ul li .body .header .votes, #tree ul li .body .header .delegate, #user > .statusbar .votes, #user > .statusbar .undelegate, #user #rm {
   float: right;
-  border-left: 1px solid lightgray;
-}
-.bar-button-right[onclick]:hover {
-  background-color: rgba(255,255,255,0.2);
-}
+  border-left: 1px solid lightgray; }
+
 html {
   height: 100%;
-  font-family: arial, sans;
+  font-family: sans-serif;
   font-size: 70%;
-  background: #eee;
-}
+  background: #eee; }
+
 body {
   height: 100%;
-  min-width: 40em;
-  width: 88%;
+  max-width: 90em;
   margin: 0 auto;
-  position: relative;
-}
-body > div {
-  padding: 3em 0 1em;
-  height: 100%;
-  min-height: 37em;
-}
-body > div > div {
-  position: relative;
-  height: 100%;
-  min-height: 33em;
-}
+  position: relative; }
+  body > div {
+    padding: 3em 0 1em;
+    height: 100%;
+    min-height: 37em; }
+    body > div > div {
+      position: relative;
+      height: 100%;
+      min-height: 33em; }
+
 header {
   background: #336DBE;
   text-align: center;
@@ -84,236 +58,82 @@ header {
   margin: 0;
   width: 100%;
   position: absolute;
-  top: 0;
-}
-header h1 {
-  margin: 0;
-  font-size: 2em;
-  color: #D9E7F9;
-}
-header h1 span {
-  color: #ABC3E3;
-}
-#tree,
-#user,
-#chat,
-#tree li .body {
+  top: 0; }
+  header h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #D9E7F9; }
+    header h1 span {
+      color: #ABC3E3; }
+
+#tree, #user, #tree li .body {
   border: 1px solid lightgray;
-  border-radius: 0.2em 0.2em 0 0;
-}
+  border-radius: 0.2em 0.2em 0 0; }
+
 #tree {
   position: absolute;
   top: 0;
   left: 0;
   width: 57%;
   height: 100%;
-  margin-right: 1em;
   overflow: auto;
   background: white;
-  padding: 0.4em;
-}
-#tree ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-#tree ul li {
-  margin: 0.5em 0;
-}
-#tree ul li .body {
-  background: white;
-}
-#tree ul li .body .header {
-  background: #ABC3E3;
-}
-#tree ul li .body .header .expand {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-  float: left;
-  border-right: 1px solid lightgray;
-}
-#tree ul li .body .header .expand[onclick]:hover {
-  background-color: rgba(255,255,255,0.2);
-}
-#tree ul li .body .header .name {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-}
-#tree ul li .body .header .votes,
-#tree ul li .body .header .delegate {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-  float: right;
-  border-left: 1px solid lightgray;
-}
-#tree ul li .body .header .votes[onclick]:hover,
-#tree ul li .body .header .delegate[onclick]:hover {
-  background-color: rgba(255,255,255,0.2);
-}
-#tree ul li .body .header .online {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-  float: right;
-  border-left: 1px solid lightgray;
-  display: none;
-}
-#tree ul li .body .header .online[onclick]:hover {
-  background-color: rgba(255,255,255,0.2);
-}
-#tree ul li .body .header .online:before {
-  content: "o";
-}
-#tree ul li .body .comment {
-  margin: 0;
-  padding: 0.4em;
-}
-#tree ul li .body .comment[data-type="pre"] {
-  white-space: pre-wrap;
-}
-#tree ul li ul {
-  margin-left: 2em;
-}
-#tree ul li[data-highlight] > .body {
-  font-weight: bold;
-}
-#tree ul li[data-self] > .body .header .delegate {
-  display: none;
-}
-#tree ul li:not([data-expanded]) > .followers {
-  display: none;
-}
-#tree ul li:not([data-expanded]) > .body .header .expand:before {
-  content: ">";
-}
-#tree ul li[data-expanded] > .body .header .expand:before {
-  content: "v";
-}
-#tree ul li[data-online]:not([data-self]) > .body .header .online {
-  display: block;
-}
+  padding: 0.4em; }
+  #tree ul {
+    padding: 0;
+    margin: 0;
+    list-style: none; }
+    #tree ul li {
+      margin: 0.5em 0; }
+      #tree ul li .body {
+        background: white; }
+        #tree ul li .body .header {
+          background: #ABC3E3; }
+          #tree ul li .body .header .expand:before {
+            content: ">"; }
+        #tree ul li .body .comment {
+          padding: 0.4em; }
+          #tree ul li .body .comment[data-type="pre"] {
+            white-space: pre-wrap; }
+      #tree ul li[data-highlight] > .body {
+        font-weight: bold; }
+      #tree ul li[data-self] > .body .header .delegate {
+        display: none; }
+      #tree ul li:not([data-expanded="true"]) > .followers {
+        display: none; }
+      #tree ul li[data-expanded="true"] > .body .header .expand:before {
+        content: "v"; }
+    #tree ul ul {
+      margin-left: 2em; }
+
 #sidebar {
   position: absolute;
   top: 0;
   right: 0;
   width: 42%;
-  height: 100%;
-  padding-top: 22em;
-}
-#sidebar #user {
-  background: #D9E7F9;
-  height: 21em;
-  width: 100%;
-  position: absolute;
-  top: 0;
-}
-#sidebar #user > .statusbar {
-  width: 100%;
-  border-bottom: 1px solid lightgray;
-}
-#sidebar #user > .statusbar .delegate {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-}
-#sidebar #user > .statusbar .votes {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-  float: right;
-  border-left: 1px solid lightgray;
-}
-#sidebar #user > .statusbar .votes[onclick]:hover {
-  background-color: rgba(255,255,255,0.2);
-}
-#sidebar #user > .statusbar .undelegate {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-  float: right;
-  border-left: 1px solid lightgray;
-}
-#sidebar #user > .statusbar .undelegate[onclick]:hover {
-  background-color: rgba(255,255,255,0.2);
-}
-#sidebar #user > .statusbar .undelegate:before {
-  content: "‒";
-}
-#sidebar #user #name {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-  max-width: 80%;
-}
-#sidebar #user #name input {
-  font-size: 1.2em;
-  height: 1.6em;
-}
-#sidebar #user #rm {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-  float: right;
-  border-left: 1px solid lightgray;
-}
-#sidebar #user #rm[onclick]:hover {
-  background-color: rgba(255,255,255,0.2);
-}
-#sidebar #user #rm:before {
-  content: "X";
-  font-size: 1.2em;
-  padding: 0.4em;
-  line-height: 1.6em;
-}
-#sidebar #user #comment textarea {
-  width: 100%;
-  max-width: 100%;
-  height: 15em;
-  border: none;
-  resize: none;
-  padding: 0.4em;
-}
-#sidebar #chat {
-  height: 100%;
-  position: relative;
-  padding-bottom: 2.5em;
-  background: #D9E7F9;
-}
-#sidebar #chat ul {
-  display: block;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  list-style: none;
-  padding: 0.4em;
-  overflow-y: scroll;
-  background: white;
-}
-#sidebar #chat ul li {
-  border-top: 1px solid lightgray;
-  padding: 0.5em 0.2em;
-}
-#sidebar #chat form {
-  display: block;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  border-top: 1px solid lightgray;
-  padding: 0 0.2em;
-  text-align: center;
-}
-#sidebar #chat form label input {
-  width: 80%;
-}
+  height: 100%; }
+
+#user {
+  background: #D9E7F9; }
+  #user > .statusbar {
+    width: 100%;
+    border-bottom: 1px solid lightgray; }
+    #user > .statusbar .undelegate:before {
+      content: "‒"; }
+  #user #name {
+    max-width: 80%; }
+    #user #name input {
+      font-size: 120%;
+      height: 1.6em; }
+  #user #rm:before {
+    content: "X";
+    font-size: 120%;
+    padding: 0.4em;
+    line-height: 1.6; }
+  #user #comment textarea {
+    width: 100%;
+    min-height: 15em;
+    border: none;
+    resize: vertical;
+    padding: 0.4em; }
+
