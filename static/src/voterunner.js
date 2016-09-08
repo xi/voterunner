@@ -47,6 +47,22 @@ var getVotes = function(nodes, node) {
 	return node.votes;
 };
 
+var getDelegationChain = function(nodes, node) {
+	if (!node.delegationChain) {
+		if (node.delegate) {
+			var delegate = nodes.find(function(n) {
+				return n.id === node.delegate;
+			});
+			var delegationChain = getDelegationChain(nodes, delegate);
+			node.delegationChain = [node.delegate].concat(delegationChain);
+		} else {
+			node.delegationChain = [];
+		}
+	}
+
+	return node.delegationChain;
+};
+
 var getName = function(node) {
 	return node.name || _('anonymous');
 };
@@ -68,6 +84,11 @@ var tplNode = function(nodes, node, ID) {
 		dataset.expanded = true;
 	}
 
+	var attrs = {};
+	if (node.id === ID || getDelegationChain(nodes, node).indexOf(ID) !== -1) {
+		attrs.disabled = true;
+	}
+
 	return h('li.node#node' + node.id, {
 		dataset: dataset,
 	}, [
@@ -76,6 +97,7 @@ var tplNode = function(nodes, node, ID) {
 				h('div.votes', '' + getVotes(nodes, node)),
 				h('button.delegate', {
 					title: _('delegate to ') + getName(node),
+					attributes: attrs,
 				}, '+'),
 				h('a.expand', {
 					title: _('expand'),
@@ -151,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var invalidateVotes = function() {
 		nodes.forEach(function(node) {
 			node.votes = null;
+			node.delegationChain = null;
 		});
 	};
 
