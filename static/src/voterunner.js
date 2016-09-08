@@ -74,7 +74,7 @@ var tplNode = function(nodes, node) {
 		h('div.body', [
 			h('div.header', [
 				h('div.votes', '' + getVotes(nodes, node)),
-				h('a.delegate', {
+				h('button.delegate', {
 					title: _('delegate to ') + getName(node),
 				}, '+'),
 				h('a.expand', {
