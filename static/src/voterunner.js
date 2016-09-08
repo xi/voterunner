@@ -91,7 +91,7 @@ var tplNode = function(nodes, node) {
 };
 
 var template = function(nodes) {
-	return h('ul', tplFollowers(nodes, null));
+	return h('ul.tree', tplFollowers(nodes, null));
 };
 
 var initVDom = function(wrapper, state, afterRender) {

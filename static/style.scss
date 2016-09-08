@@ -112,12 +112,13 @@ header {
 	background: white;
 	padding: $padding;
 
-	ul {
+	.tree,
+	.followers {
 		padding: 0;
 		margin: 0;
 		list-style: none;
 
-		li {
+		> li {
 			margin: 0.5em 0;
 
 			.body {
@@ -166,10 +167,10 @@ header {
 				content: "v";
 			}
 		}
+	}
 
-		ul {
-			margin-left: 2em;
-		}
+	.followers {
+		margin-left: 2em;
 	}
 }
 
