@@ -51,9 +51,9 @@ var getName = function(node) {
 	return node.name || _('anonymous');
 };
 
-var tplFollowers = function(nodes, id) {
+var tplFollowers = function(nodes, id, ID) {
 	var _tplNode = function(node) {
-		return tplNode(nodes, node);
+		return tplNode(nodes, node, ID);
 	};
 	return nodes.filter(function(node) {
 		return node.delegate === id;
@@ -62,7 +62,7 @@ var tplFollowers = function(nodes, id) {
 	}).map(_tplNode);
 };
 
-var tplNode = function(nodes, node) {
+var tplNode = function(nodes, node, ID) {
 	var dataset = {};
 	if (node.expanded) {
 		dataset.expanded = true;
@@ -86,23 +86,23 @@ var tplNode = function(nodes, node) {
 				innerHTML: md.render(node.comment || ''),
 			}),
 		]),
-		h('ul.followers', tplFollowers(nodes, node.id)),
+		h('ul.followers', tplFollowers(nodes, node.id, ID)),
 	]);
 };
 
-var template = function(nodes) {
-	return h('ul.tree', tplFollowers(nodes, null));
+var template = function(nodes, ID) {
+	return h('ul.tree', tplFollowers(nodes, null, ID));
 };
 
-var initVDom = function(wrapper, state, afterRender) {
-	var tree = template(state);
+var initVDom = function(wrapper, nodes, ID, afterRender) {
+	var tree = template(nodes, ID);
 	var element = virtualDom.create(tree);
 	wrapper.innerHTML = '';
 	wrapper.appendChild(element);
 	afterRender();
 
 	return function(newState) {
-		var newTree = template(newState);
+		var newTree = template(nodes, ID);
 		var patches = virtualDom.diff(tree, newTree);
 		virtualDom.patch(element, patches);
 		tree = newTree;
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		socket.emit('setDelegate', id);
 	};
 
-	var update = initVDom(document.querySelector('#tree'), nodes, function() {
+	var update = initVDom(document.querySelector('#tree'), nodes, ID, function() {
 		updateUser();
 
 		document.querySelectorAll('.expand').forEach(function(element) {
