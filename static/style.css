@@ -14,20 +14,39 @@ textarea {
   font-family: inherit;
   font-size: inherit; }
 
-#tree ul li .body .header .expand, #tree ul li .body .header .votes, #tree ul li .body .header .delegate, #user > .statusbar .votes, #user > .statusbar .undelegate, #user #rm, #tree ul li .body .header .name, #user > .statusbar .delegate, #user #name {
+#tree .tree > li .body .header .expand,
+#tree .followers > li .body .header .expand, #tree .tree > li .body .header .delegate,
+#tree .followers > li .body .header .delegate, #user > .statusbar .undelegate, #user #rm {
+  appearance: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: center; }
+  #tree .tree > li .body .header .expand:hover,
+  #tree .followers > li .body .header .expand:hover, #tree .tree > li .body .header .delegate:hover,
+  #tree .followers > li .body .header .delegate:hover, #user > .statusbar .undelegate:hover, #user #rm:hover {
+    background-color: rgba(255, 255, 255, 0.2); }
+
+#tree .tree > li .body .header .expand,
+#tree .followers > li .body .header .expand, #tree .tree > li .body .header .delegate,
+#tree .followers > li .body .header .delegate, #tree .tree > li .body .header .votes,
+#tree .followers > li .body .header .votes, #user > .statusbar .votes, #user > .statusbar .undelegate, #user #rm, #tree .tree > li .body .header .name,
+#tree .followers > li .body .header .name, #user > .statusbar .delegate, #user #name {
   padding: 0.4em;
   white-space: nowrap;
   overflow: hidden;
   display: inline-block; }
 
-#tree ul li .body .header [onclick].expand:hover, #tree ul li .body .header [onclick].votes:hover, #tree ul li .body .header [onclick].delegate:hover, #user > .statusbar [onclick].votes:hover, #user > .statusbar [onclick].undelegate:hover, #user [onclick]#rm:hover {
-  background-color: rgba(255, 255, 255, 0.2); }
-
-#tree ul li .body .header .expand {
+#tree .tree > li .body .header .expand,
+#tree .followers > li .body .header .expand {
   float: left;
   border-right: 1px solid lightgray; }
 
-#tree ul li .body .header .votes, #tree ul li .body .header .delegate, #user > .statusbar .votes, #user > .statusbar .undelegate, #user #rm {
+#tree .tree > li .body .header .delegate,
+#tree .followers > li .body .header .delegate, #tree .tree > li .body .header .votes,
+#tree .followers > li .body .header .votes, #user > .statusbar .votes, #user > .statusbar .undelegate, #user #rm {
   float: right;
   border-left: 1px solid lightgray; }
 
@@ -79,32 +98,43 @@ header {
   overflow: auto;
   background: white;
   padding: 0.4em; }
-  #tree ul {
+  #tree .tree,
+  #tree .followers {
     padding: 0;
     margin: 0;
     list-style: none; }
-    #tree ul li {
+    #tree .tree > li,
+    #tree .followers > li {
       margin: 0.5em 0; }
-      #tree ul li .body {
+      #tree .tree > li .body,
+      #tree .followers > li .body {
         background: white; }
-        #tree ul li .body .header {
+        #tree .tree > li .body .header,
+        #tree .followers > li .body .header {
           background: #ABC3E3; }
-          #tree ul li .body .header .expand:before {
+          #tree .tree > li .body .header .expand:before,
+          #tree .followers > li .body .header .expand:before {
             content: ">"; }
-        #tree ul li .body .comment {
+        #tree .tree > li .body .comment,
+        #tree .followers > li .body .comment {
           padding: 0.4em; }
-          #tree ul li .body .comment[data-type="pre"] {
+          #tree .tree > li .body .comment[data-type="pre"],
+          #tree .followers > li .body .comment[data-type="pre"] {
             white-space: pre-wrap; }
-      #tree ul li[data-highlight] > .body {
+      #tree .tree > li[data-highlight] > .body,
+      #tree .followers > li[data-highlight] > .body {
         font-weight: bold; }
-      #tree ul li[data-self] > .body .header .delegate {
+      #tree .tree > li[data-self] > .body .header .delegate,
+      #tree .followers > li[data-self] > .body .header .delegate {
         display: none; }
-      #tree ul li:not([data-expanded="true"]) > .followers {
+      #tree .tree > li:not([data-expanded="true"]) > .followers,
+      #tree .followers > li:not([data-expanded="true"]) > .followers {
         display: none; }
-      #tree ul li[data-expanded="true"] > .body .header .expand:before {
+      #tree .tree > li[data-expanded="true"] > .body .header .expand:before,
+      #tree .followers > li[data-expanded="true"] > .body .header .expand:before {
         content: "v"; }
-    #tree ul ul {
-      margin-left: 2em; }
+  #tree .followers {
+    margin-left: 2em; }
 
 #sidebar {
   position: absolute;
@@ -125,11 +155,13 @@ header {
     #user #name input {
       font-size: 120%;
       height: 1.6em; }
-  #user #rm:before {
-    content: "X";
+  #user #rm {
     font-size: 120%;
     padding: 0.4em;
-    line-height: 1.6; }
+    line-height: 1.6;
+    min-width: 2em; }
+    #user #rm:before {
+      content: "X"; }
   #user #comment textarea {
     width: 100%;
     min-height: 15em;
