@@ -24,6 +24,20 @@ textarea {
 	font-size: inherit;
 }
 
+%bar-button {
+	appearance: none;
+	background: none;
+	border: 0;
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+	text-align: center;
+
+	&:hover {
+		background-color: rgba(255,255,255,0.2);
+	}
+}
+
 %bar-item {
 	padding: $padding;
 	white-space: nowrap;
@@ -31,22 +45,14 @@ textarea {
 	display: inline-block;
 }
 
-%bar-button {
+%bar-item-left {
 	@extend %bar-item;
-
-	&[onclick]:hover {
-		background-color: rgba(255,255,255,0.2);
-	}
-}
-
-%bar-button-left {
-	@extend %bar-button;
 	float: left;
 	border-right: 1px solid $ll;
 }
 
-%bar-button-right {
-	@extend %bar-button;
+%bar-item-right {
+	@extend %bar-item;
 	float: right;
 	border-left: 1px solid $ll;
 }
@@ -128,7 +134,8 @@ header {
 					background: $h2;
 
 					.expand {
-						@extend %bar-button-left;
+						@extend %bar-item-left;
+						@extend %bar-button;
 
 						&:before {
 							content: ">";
@@ -137,8 +144,12 @@ header {
 					.name {
 						@extend %bar-item;
 					}
-					.votes, .delegate {
-						@extend %bar-button-right;
+					.delegate {
+						@extend %bar-item-right;
+						@extend %bar-button;
+					}
+					.votes {
+						@extend %bar-item-right;
 					}
 				}
 
@@ -194,11 +205,12 @@ header {
 		}
 
 		.votes {
-			@extend %bar-button-right;
+			@extend %bar-item-right;
 		}
 
 		.undelegate {
-			@extend %bar-button-right;
+			@extend %bar-item-right;
+			@extend %bar-button;
 
 			&:before {
 				content: "‒";
@@ -217,13 +229,16 @@ header {
 	}
 
 	#rm {
-		@extend %bar-button-right;
+		@extend %bar-item-right;
+		@extend %bar-button;
+
+		font-size: 120%;
+		padding: $padding;
+		line-height: 1.6;
+		min-width: 2em;
 
 		&:before {
 			content: "X";
-			font-size: 120%;
-			padding: $padding;
-			line-height: 1.6;
 		}
 	}
 
