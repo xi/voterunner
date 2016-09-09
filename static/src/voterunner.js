@@ -102,7 +102,7 @@ var tplNode = function(nodes, node, ID) {
 					title: _('delegate to ') + getName(node),
 					attributes: delegateAttrs,
 				}, '+'),
-				h('a.expand', {
+				h('button.expand', {
 					title: _('expand'),
 				}),
 				h('div.name', getName(node)),
