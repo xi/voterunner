@@ -98,7 +98,7 @@ var tplNode = function(nodes, node, ID) {
 		h('article.body', [
 			h('header.header', [
 				h('button.expand', {
-					title: _('expand'),
+					title: _(node.expanded ? 'collapse' : 'expand'),
 				}),
 				h('div.votes', '' + getVotes(nodes, node)),
 				h('button.delegate', {
