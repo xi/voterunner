@@ -39,7 +39,7 @@ describe("load", function() {
 	});
 
 	it("should work without error", function() {
-		expect(browser.contentDocument.getElementById('name')).to.exist;
+		expect(browser.contentDocument.querySelector('#name')).to.exist;
 	});
 	it("should set the page title", function() {
 		var title = browser.contentDocument.title;
@@ -58,7 +58,7 @@ describe("setName", function() {
 			browser = b;
 			d = browser.contentDocument;
 
-			userName = d.getElementById('name').getElementsByTagName('input')[0];
+			userName = d.querySelector('#name input');
 			userName.value = name
 			userName.dispatchEvent(new Event('change'));
 
@@ -81,18 +81,18 @@ describe("setName", function() {
 
 	it("should set node name", function() {
 		node = d.getElementById('node'+'testID');
-		nodeName = node.getElementsByClassName('body')[0].getElementsByClassName('name')[0].textContent;
+		nodeName = node.querySelector('.body .name').textContent;
 		expect(nodeName).to.equal(name);
 	});
 
 	it("should be permanent", function(done) {
 		browser.reload(function() {
 			d = browser.contentDocument;
-			userName = d.getElementById('name').getElementsByTagName('input')[0].value;
+			userName = d.querySelector('#name input').value;
 			expect(userName).to.equal(name);
 
 			node = d.getElementById('node'+'testID');
-			nodeName = node.getElementsByClassName('body')[0].getElementsByClassName('name')[0].textContent;
+			nodeName = node.querySelector('.body .name').textContent;
 			expect(nodeName).to.equal(name);
 
 			done();
@@ -111,7 +111,7 @@ describe("setComment", function() {
 			browser = b;
 			d = browser.contentDocument;
 
-			userComment = d.getElementById('comment').getElementsByTagName('textarea')[0];
+			userComment = d.querySelector('#comment textarea');
 			userComment.value = comment;
 			userComment.dispatchEvent(new Event('change'));
 
@@ -134,18 +134,18 @@ describe("setComment", function() {
 
 	it("should set node comment", function() {
 		node = d.getElementById('node'+'testID');
-		nodeComment = node.getElementsByClassName('body')[0].getElementsByClassName('comment')[0].textContent.trim();
+		nodeComment = node.querySelector('.body .comment').textContent.trim();
 		expect(nodeComment).to.equal(comment);
 	});
 
 	it("should be permanent", function(done) {
 		browser.reload(function() {
 			d = browser.contentDocument;
-			userComment = d.getElementById('comment').getElementsByTagName('textarea')[0].value;
+			userComment = d.querySelector('#comment textarea').value;
 			expect(userComment).to.equal(comment);
 
 			node = d.getElementById('node'+'testID');
-			nodeComment = node.getElementsByClassName('body')[0].getElementsByClassName('comment')[0].textContent.trim();
+			nodeComment = node.querySelector('.body .comment').textContent.trim();
 			expect(nodeComment).to.equal(comment);
 
 			done();
@@ -174,14 +174,14 @@ describe("remove", function() {
 			browser.contentWindow.confirm = function() {return true};
 
 			// create something to delete
-			userName = d.getElementById('name').getElementsByTagName('input')[0];
+			userName = d.querySelector('#name input');
 			userName.value = 'testName';
 			userName.dispatchEvent(new Event('change'));
-			userComment = d.getElementById('comment').getElementsByTagName('textarea')[0];
+			userComment = d.querySelector('#comment textarea');
 			userComment.value = 'testComment';
 			userComment.dispatchEvent(new Event('change'));
 
-			userRemove = d.getElementById('rm');
+			userRemove = d.querySelector('#rm');
 			userRemove.dispatchEvent(new Event('click'));
 
 			setTimeout(function() {done()}, 200);
@@ -198,12 +198,12 @@ describe("remove", function() {
 	});
 
 	it("should clear user name", function() {
-		userName = d.getElementById('name').getElementsByTagName('input')[0].value;
+		userName = d.querySelector('#name input').value;
 		expect(userName).to.equal('');
 	});
 
 	it("should clear user comment", function() {
-		userComment = d.getElementById('comment').getElementsByTagName('textarea')[0].value;
+		userComment = d.querySelector('#comment textarea').value;
 		expect(userComment).to.equal('');
 	});
 
