@@ -42,7 +42,7 @@ textarea {
 	padding: $padding;
 	white-space: nowrap;
 	overflow: hidden;
-	display: inline-block;
+	text-overflow: ellipsis;
 }
 
 %bar-item-left {
@@ -193,13 +193,9 @@ header {
 #user {
 	background: $h3;
 
-	> .statusbar {
-		width: 100%;
-		border-bottom: 1px solid $ll;
-	}
-
 	.delegate {
 		@extend %bar-item;
+		float: left;
 	}
 
 	.votes {
@@ -216,8 +212,15 @@ header {
 	}
 }
 
+.statusbar {
+	width: 100%;
+	border-bottom: 1px solid $ll;
+	overflow: hidden;
+}
+
 #name {
 	@extend %bar-item;
+	float: left;
 	max-width: 80%;  // TODO: prevent linebreak
 
 	input {
