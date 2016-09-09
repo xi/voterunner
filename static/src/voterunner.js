@@ -95,8 +95,8 @@ var tplNode = function(nodes, node, ID) {
 	return h('li.node#node' + node.id, {
 		className: classList.join(' '),
 	}, [
-		h('div.body', [
-			h('div.header', [
+		h('article.body', [
+			h('header.header', [
 				h('button.expand', {
 					title: _('expand'),
 				}),

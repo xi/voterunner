@@ -22,7 +22,7 @@ body {
 	}
 }
 
-header {
+body > header {
 	background: $h1;
 	text-align: center;
 	border-radius: 0 0 0.4em 0.4em;
