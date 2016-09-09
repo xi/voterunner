@@ -163,8 +163,14 @@ header {
 		padding: $padding;
 	}
 
-	&.m-self > .body .delegate {
-		display: none;
+	&.m-self > .body {
+		.delegate {
+			display: none;
+		}
+		.header {
+			background: $h1;
+			color: white;
+		}
 	}
 
 	&:not(.is-expanded) > .tree {
