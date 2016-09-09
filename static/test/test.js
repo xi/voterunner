@@ -10,20 +10,20 @@ setUp = function(url, fn) {
 			self.parentNode.removeChild(self);
 			done();
 		});
-	}
+	};
 
 	iframe.reload = function(fn) {
 		this.onload = function() {
 			this.onload = fn;
 			this.src = this.url;
-		}
+		};
 		this.src = '';
-	}
+	};
 
 	document.getElementById('testarea').appendChild(iframe);
-}
+};
 
-describe("load", function() {
+describe('load', function() {
 	var test = 'load';
 	var browser;
 
@@ -38,18 +38,18 @@ describe("load", function() {
 		browser.tearDown(done);
 	});
 
-	it("should work without error", function() {
+	it('should work without error', function() {
 		expect(browser.contentDocument.querySelector('#name')).to.exist;
 	});
-	it("should set the page title", function() {
+	it('should set the page title', function() {
 		var title = browser.contentDocument.title;
 		expect(title).to.equal('voterunner - test' + test);
 	});
 });
 
-describe("setName", function() {
-	var test = 'setName'
-	  , name = 'testName';
+describe('setName', function() {
+	var test = 'setName';
+	var name = 'testName';
 	var browser;
 	var d, userName, node, nodeName;
 
@@ -59,10 +59,10 @@ describe("setName", function() {
 			d = browser.contentDocument;
 
 			userName = d.querySelector('#name input');
-			userName.value = name
+			userName.value = name;
 			userName.dispatchEvent(new Event('change'));
 
-			setTimeout(function() {done()}, 200);
+			setTimeout(done, 200);
 		});
 	});
 
@@ -70,28 +70,28 @@ describe("setName", function() {
 		browser.tearDown(done);
 	});
 
-	it("should set user name", function() {
+	it('should set user name', function() {
 		expect(userName.value).to.equal(name);
 	});
 
-	it("node sould exists", function() {
-		node = d.getElementById('node'+'testID');
+	it('node sould exists', function() {
+		node = d.getElementById('node' + 'testID');
 		expect(node).to.exist;
 	});
 
-	it("should set node name", function() {
-		node = d.getElementById('node'+'testID');
+	it('should set node name', function() {
+		node = d.getElementById('node' + 'testID');
 		nodeName = node.querySelector('.body .name').textContent;
 		expect(nodeName).to.equal(name);
 	});
 
-	it("should be permanent", function(done) {
+	it('should be permanent', function(done) {
 		browser.reload(function() {
 			d = browser.contentDocument;
 			userName = d.querySelector('#name input').value;
 			expect(userName).to.equal(name);
 
-			node = d.getElementById('node'+'testID');
+			node = d.getElementById('node' + 'testID');
 			nodeName = node.querySelector('.body .name').textContent;
 			expect(nodeName).to.equal(name);
 
@@ -100,9 +100,9 @@ describe("setName", function() {
 	});
 });
 
-describe("setComment", function() {
-	var test = 'setComment'
-	  , comment = 'testComment';
+describe('setComment', function() {
+	var test = 'setComment';
+	var comment = 'testComment';
 	var browser;
 	var d, userComment, node, nodeComment;
 
@@ -115,7 +115,7 @@ describe("setComment", function() {
 			userComment.value = comment;
 			userComment.dispatchEvent(new Event('change'));
 
-			setTimeout(function() {done()}, 200);
+			setTimeout(done, 200);
 		});
 	});
 
@@ -123,28 +123,28 @@ describe("setComment", function() {
 		browser.tearDown(done);
 	});
 
-	it("should set user comment", function() {
+	it('should set user comment', function() {
 		expect(userComment.value).to.equal(comment);
 	});
 
-	it("node sould exists", function() {
-		node = d.getElementById('node'+'testID');
+	it('node sould exists', function() {
+		node = d.getElementById('node' + 'testID');
 		expect(node).to.exist;
 	});
 
-	it("should set node comment", function() {
-		node = d.getElementById('node'+'testID');
+	it('should set node comment', function() {
+		node = d.getElementById('node' + 'testID');
 		nodeComment = node.querySelector('.body .comment').textContent.trim();
 		expect(nodeComment).to.equal(comment);
 	});
 
-	it("should be permanent", function(done) {
+	it('should be permanent', function(done) {
 		browser.reload(function() {
 			d = browser.contentDocument;
 			userComment = d.querySelector('#comment textarea').value;
 			expect(userComment).to.equal(comment);
 
-			node = d.getElementById('node'+'testID');
+			node = d.getElementById('node' + 'testID');
 			nodeComment = node.querySelector('.body .comment').textContent.trim();
 			expect(nodeComment).to.equal(comment);
 
@@ -153,17 +153,17 @@ describe("setComment", function() {
 	});
 });
 
-describe("setDelegate", function() {
+describe('setDelegate', function() {
 	// TODO
 });
 
-describe("removeDelegate", function() {
+describe('removeDelegate', function() {
 	// TODO
 });
 
-describe("remove", function() {
-	var test = 'remove'
-	  , comment = 'testComment';
+describe('remove', function() {
+	var test = 'remove';
+	var comment = 'testComment';
 	var browser;
 	var d, userName, userComment, userRemove;
 
@@ -184,7 +184,7 @@ describe("remove", function() {
 			userRemove = d.querySelector('#rm');
 			userRemove.dispatchEvent(new Event('click'));
 
-			setTimeout(function() {done()}, 200);
+			setTimeout(done, 200);
 		});
 	});
 
@@ -192,26 +192,26 @@ describe("remove", function() {
 		browser.tearDown(done);
 	});
 
-	it("should remove node", function() {
-		var node = d.getElementById('node'+'testID');
+	it('should remove node', function() {
+		var node = d.getElementById('node' + 'testID');
 		expect(node).to.not.exist;
 	});
 
-	it("should clear user name", function() {
+	it('should clear user name', function() {
 		userName = d.querySelector('#name input').value;
 		expect(userName).to.equal('');
 	});
 
-	it("should clear user comment", function() {
+	it('should clear user comment', function() {
 		userComment = d.querySelector('#comment textarea').value;
 		expect(userComment).to.equal('');
 	});
 
-	it("should be permanent", function(done) {
+	it('should be permanent', function(done) {
 		browser.reload(function() {
 			d = browser.contentDocument;
 
-			var node = d.getElementById('node'+'testID');
+			var node = d.getElementById('node' + 'testID');
 			expect(node).to.not.exist;
 
 			done();
