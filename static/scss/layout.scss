@@ -6,6 +6,7 @@ html {
 body {
 	max-width: 90em;
 	margin: 0 auto;
+	padding: 0 $padding;
 	position: relative;
 
 	> div {
@@ -26,9 +27,10 @@ header {
 	text-align: center;
 	border-radius: 0 0 0.4em 0.4em;
 	margin: 0;
-	width: 100%;
 	position: absolute;
 	top: 0;
+	left: $padding;
+	right: $padding;
 
 	h1 {
 		margin: 0;
@@ -49,20 +51,26 @@ header {
 }
 
 #tree {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 57%;
-	height: 100%;
-	overflow: auto;
 	background: white;
 	padding: $padding;
+	margin-top: $padding;
 }
 
-#sidebar {
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 42%;
-	height: 100%;
+@media (min-width: 40em) {
+	#tree {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 57%;
+		height: 100%;
+		overflow: auto;
+		margin-top: 0;
+	}
+
+	#sidebar {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 42%;
+	}
 }
