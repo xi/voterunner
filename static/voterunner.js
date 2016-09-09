@@ -16699,36 +16699,39 @@ var tplFollowers = function(nodes, id, ID) {
 };
 
 var tplNode = function(nodes, node, ID) {
-	var dataset = {};
+	var classList = [];
 	if (node.expanded) {
-		dataset.expanded = true;
+		classList.push('is-expanded');
+	}
+	if (node.id === ID) {
+		classList.push('m-self');
 	}
 
-	var attrs = {};
+	var delegateAttrs = {};
 	if (node.id === ID || getDelegationChain(nodes, node).indexOf(ID) !== -1) {
-		attrs.disabled = true;
+		delegateAttrs.disabled = true;
 	}
 
 	return h('li.node#node' + node.id, {
-		dataset: dataset,
+		className: classList.join(' '),
 	}, [
-		h('div.body', [
-			h('div.header', [
+		h('article.body', [
+			h('header.header', [
+				h('button.expand', {
+					title: _(node.expanded ? 'collapse' : 'expand'),
+				}),
 				h('div.votes', '' + getVotes(nodes, node)),
 				h('button.delegate', {
 					title: _('delegate to ') + getName(node),
-					attributes: attrs,
+					attributes: delegateAttrs,
 				}, '+'),
-				h('a.expand', {
-					title: _('expand'),
-				}),
 				h('div.name', getName(node)),
 			]),
 			h('div.comment', {
 				innerHTML: md.render(node.comment || ''),
 			}),
 		]),
-		h('ul.followers', tplFollowers(nodes, node.id, ID)),
+		h('ul.tree', tplFollowers(nodes, node.id, ID)),
 	]);
 };
 
@@ -16744,7 +16747,7 @@ var initVDom = function(wrapper, nodes, ID, afterRender) {
 	afterRender();
 
 	return function(newState) {
-		var newTree = template(nodes, ID);
+		var newTree = template(newState, ID);
 		var patches = virtualDom.diff(tree, newTree);
 		virtualDom.patch(element, patches);
 		tree = newTree;
@@ -16767,11 +16770,13 @@ var getCookie = function(key) {
 
 document.addEventListener('DOMContentLoaded', function() {
 	var TOPIC = document.URL.split('/')[3];
-	var ID = getCookie('id');
+	var ID = document.URL.split('/')[4];
+	if (!ID) ID = getCookie('id');
 	if (!ID) ID = uid();
 	setCookie('id', ID, 100);
 
 	var socket = io.connect('/');
+	window.socket = socket;  // make available for tests
 	socket.emit('register', TOPIC, ID);
 
 	var nodes = JSON.parse(document.querySelector('#json-nodes').dataset.value);
@@ -16869,7 +16874,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var pushComment = throttle(function() {
 		var comment = document.querySelector('#comment textarea').value;
-		socket.emit('setNodeComment', comment);
+		var node = nodes.find(function(n) {
+			return n.id === ID;
+		});
+		// Do not create a new node if the comment is empty.
+		// This can happen e.g. on a keydown event from the ctrl or shift keys.
+		if (node || comment) {
+			socket.emit('setNodeComment', comment);
+		}
 	}, 1000);
 
 	document.querySelector('#comment textarea').addEventListener('change', pushComment);

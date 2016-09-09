@@ -14,52 +14,19 @@ textarea {
   font-family: inherit;
   font-size: inherit; }
 
-#tree .tree > li .body .header .expand,
-#tree .followers > li .body .header .expand, #tree .tree > li .body .header .delegate,
-#tree .followers > li .body .header .delegate, #user > .statusbar .undelegate, #user #rm {
-  appearance: none;
-  background: none;
-  border: 0;
-  cursor: pointer;
-  font: inherit;
-  color: inherit;
-  text-align: center; }
-  #tree .tree > li .body .header .expand:hover,
-  #tree .followers > li .body .header .expand:hover, #tree .tree > li .body .header .delegate:hover,
-  #tree .followers > li .body .header .delegate:hover, #user > .statusbar .undelegate:hover, #user #rm:hover {
-    background-color: rgba(255, 255, 255, 0.2); }
-
-#tree .tree > li .body .header .expand,
-#tree .followers > li .body .header .expand, #tree .tree > li .body .header .delegate,
-#tree .followers > li .body .header .delegate, #tree .tree > li .body .header .votes,
-#tree .followers > li .body .header .votes, #user > .statusbar .votes, #user > .statusbar .undelegate, #user #rm, #tree .tree > li .body .header .name,
-#tree .followers > li .body .header .name, #user > .statusbar .delegate, #user #name {
-  padding: 0.4em;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block; }
-
-#tree .tree > li .body .header .expand,
-#tree .followers > li .body .header .expand {
-  float: left;
-  border-right: 1px solid lightgray; }
-
-#tree .tree > li .body .header .delegate,
-#tree .followers > li .body .header .delegate, #tree .tree > li .body .header .votes,
-#tree .followers > li .body .header .votes, #user > .statusbar .votes, #user > .statusbar .undelegate, #user #rm {
-  float: right;
-  border-left: 1px solid lightgray; }
-
 html {
-  height: 100%;
   font-family: sans-serif;
   font-size: 70%;
   background: #eee; }
 
+body,
+html {
+  height: 100%; }
+
 body {
-  height: 100%;
   max-width: 90em;
   margin: 0 auto;
+  padding: 0 0.4em;
   position: relative; }
   body > div {
     padding: 3em 0 1em;
@@ -70,102 +37,131 @@ body {
       height: 100%;
       min-height: 33em; }
 
-header {
+body > header {
   background: #336DBE;
   text-align: center;
   border-radius: 0 0 0.4em 0.4em;
   margin: 0;
-  width: 100%;
   position: absolute;
-  top: 0; }
-  header h1 {
+  top: 0;
+  left: 0.4em;
+  right: 0.4em; }
+  body > header h1 {
     margin: 0;
     font-size: 2em;
     color: #D9E7F9; }
-    header h1 span {
+    body > header h1 span {
       color: #ABC3E3; }
 
-#tree, #user, #tree li .body {
+#tree,
+#user,
+#tree .node .body {
   border: 1px solid lightgray;
   border-radius: 0.2em 0.2em 0 0; }
 
 #tree {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 57%;
-  height: 100%;
-  overflow: auto;
   background: white;
-  padding: 0.4em; }
-  #tree .tree,
-  #tree .followers {
-    padding: 0;
-    margin: 0;
-    list-style: none; }
-    #tree .tree > li,
-    #tree .followers > li {
-      margin: 0.5em 0; }
-      #tree .tree > li .body,
-      #tree .followers > li .body {
-        background: white; }
-        #tree .tree > li .body .header,
-        #tree .followers > li .body .header {
-          background: #ABC3E3; }
-          #tree .tree > li .body .header .expand:before,
-          #tree .followers > li .body .header .expand:before {
-            content: ">"; }
-        #tree .tree > li .body .comment,
-        #tree .followers > li .body .comment {
-          padding: 0.4em; }
-          #tree .tree > li .body .comment[data-type="pre"],
-          #tree .followers > li .body .comment[data-type="pre"] {
-            white-space: pre-wrap; }
-      #tree .tree > li[data-highlight] > .body,
-      #tree .followers > li[data-highlight] > .body {
-        font-weight: bold; }
-      #tree .tree > li[data-self] > .body .header .delegate,
-      #tree .followers > li[data-self] > .body .header .delegate {
-        display: none; }
-      #tree .tree > li:not([data-expanded="true"]) > .followers,
-      #tree .followers > li:not([data-expanded="true"]) > .followers {
-        display: none; }
-      #tree .tree > li[data-expanded="true"] > .body .header .expand:before,
-      #tree .followers > li[data-expanded="true"] > .body .header .expand:before {
-        content: "v"; }
-  #tree .followers {
+  padding: 0.4em;
+  margin-top: 0.4em; }
+
+@media (min-width: 40em) {
+  #tree {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 57%;
+    height: 100%;
+    overflow: auto;
+    margin-top: 0; }
+  #sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 42%; } }
+
+.node .expand, .node .delegate, #user .undelegate, #rm {
+  appearance: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: center; }
+  .node .expand:hover, .node .delegate:hover, #user .undelegate:hover, #rm:hover {
+    background-color: rgba(255, 255, 255, 0.2); }
+
+.node .expand, .node .delegate, .node .votes, #user .votes, #user .undelegate, #rm, .node .name, #user .delegate, #name {
+  padding: 0.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.node .expand {
+  float: left;
+  border-right: 1px solid lightgray; }
+
+.node .delegate, .node .votes, #user .votes, #user .undelegate, #rm {
+  float: right;
+  border-left: 1px solid lightgray; }
+
+.tree {
+  padding: 0;
+  margin: 0;
+  list-style: none; }
+  .tree .tree {
     margin-left: 2em; }
 
-#sidebar {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 42%;
-  height: 100%; }
+.node {
+  margin: 0.5em 0; }
+  .node .body {
+    background: white; }
+  .node .header {
+    background: #ABC3E3; }
+  .node .expand:before {
+    content: ">"; }
+  .node .comment {
+    padding: 0.4em; }
+  .node.m-self > .body .delegate {
+    display: none; }
+  .node.m-self > .body .header {
+    background: #336DBE;
+    color: white; }
+  .node:not(.is-expanded) > .tree {
+    display: none; }
+  .node.is-expanded > .body .expand:before {
+    content: "v"; }
 
 #user {
   background: #D9E7F9; }
-  #user > .statusbar {
-    width: 100%;
-    border-bottom: 1px solid lightgray; }
-    #user > .statusbar .undelegate:before {
-      content: "‒"; }
-  #user #name {
-    max-width: 80%; }
-    #user #name input {
-      font-size: 120%;
-      height: 1.6em; }
-  #user #rm {
+  #user .delegate {
+    float: left; }
+  #user .undelegate:before {
+    content: "‒"; }
+
+.statusbar {
+  width: 100%;
+  border-bottom: 1px solid lightgray;
+  overflow: hidden; }
+
+#name {
+  float: left;
+  max-width: 80%; }
+  #name input {
     font-size: 120%;
-    padding: 0.4em;
-    line-height: 1.6;
-    min-width: 2em; }
-    #user #rm:before {
-      content: "X"; }
-  #user #comment textarea {
-    width: 100%;
-    min-height: 15em;
-    border: none;
-    resize: vertical;
-    padding: 0.4em; }
+    height: 1.6em; }
+
+#rm {
+  font-size: 120%;
+  padding: 0.4em;
+  line-height: 1.6;
+  min-width: 2em; }
+  #rm:before {
+    content: "X"; }
+
+#comment textarea {
+  width: 100%;
+  min-height: 15em;
+  border: none;
+  resize: vertical;
+  padding: 0.4em; }
 
