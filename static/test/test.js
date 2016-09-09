@@ -1,4 +1,4 @@
-var TIMEOUT = 200;
+var TIMEOUT = 400;
 var ID = 'testID'
 
 setUp = function(url, fn) {
