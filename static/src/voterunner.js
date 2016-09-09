@@ -153,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	setCookie('id', ID, 100);
 
 	var socket = io.connect('/');
+	window.socket = socket;  // make available for tests
 	socket.emit('register', TOPIC, ID);
 
 	var nodes = JSON.parse(document.querySelector('#json-nodes').dataset.value);

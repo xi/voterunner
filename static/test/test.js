@@ -4,9 +4,12 @@ setUp = function(url, fn) {
 	iframe.url = url;
 	iframe.src = url;
 
-	iframe.tearDown = function() {
-		this.contentWindow.socket.emit('testClear');
-		this.parentNode.removeChild(this);
+	iframe.tearDown = function(done) {
+		var self = this;
+		self.contentWindow.socket.emit('testClear', function() {
+			self.parentNode.removeChild(self);
+			done();
+		});
 	}
 
 	iframe.reload = function(fn) {
@@ -32,8 +35,7 @@ describe("load", function() {
 	});
 
 	after(function(done) {
-		browser.tearDown();
-		done();
+		browser.tearDown(done);
 	});
 
 	it("should work without error", function() {
@@ -58,15 +60,14 @@ describe("setName", function() {
 
 			userName = d.getElementById('name').getElementsByTagName('input')[0];
 			userName.value = name
-			userName.onchange();
+			userName.dispatchEvent(new Event('change'));
 
 			setTimeout(function() {done()}, 200);
 		});
 	});
 
 	after(function(done) {
-		browser.tearDown();
-		done();
+		browser.tearDown(done);
 	});
 
 	it("should set user name", function() {
@@ -112,15 +113,14 @@ describe("setComment", function() {
 
 			userComment = d.getElementById('comment').getElementsByTagName('textarea')[0];
 			userComment.value = comment;
-			userComment.onchange();
+			userComment.dispatchEvent(new Event('change'));
 
 			setTimeout(function() {done()}, 200);
 		});
 	});
 
 	after(function(done) {
-		browser.tearDown();
-		done();
+		browser.tearDown(done);
 	});
 
 	it("should set user comment", function() {
@@ -134,7 +134,7 @@ describe("setComment", function() {
 
 	it("should set node comment", function() {
 		node = d.getElementById('node'+'testID');
-		nodeComment = node.getElementsByClassName('body')[0].getElementsByClassName('comment')[0].textContent;
+		nodeComment = node.getElementsByClassName('body')[0].getElementsByClassName('comment')[0].textContent.trim();
 		expect(nodeComment).to.equal(comment);
 	});
 
@@ -145,7 +145,7 @@ describe("setComment", function() {
 			expect(userComment).to.equal(comment);
 
 			node = d.getElementById('node'+'testID');
-			nodeComment = node.getElementsByClassName('body')[0].getElementsByClassName('comment')[0].textContent;
+			nodeComment = node.getElementsByClassName('body')[0].getElementsByClassName('comment')[0].textContent.trim();
 			expect(nodeComment).to.equal(comment);
 
 			done();
@@ -176,21 +176,20 @@ describe("remove", function() {
 			// create something to delete
 			userName = d.getElementById('name').getElementsByTagName('input')[0];
 			userName.value = 'testName';
-			userName.onchange();
+			userName.dispatchEvent(new Event('change'));
 			userComment = d.getElementById('comment').getElementsByTagName('textarea')[0];
 			userComment.value = 'testComment';
-			userComment.onchange();
+			userComment.dispatchEvent(new Event('change'));
 
 			userRemove = d.getElementById('rm');
-			userRemove.onclick();
+			userRemove.dispatchEvent(new Event('click'));
 
 			setTimeout(function() {done()}, 200);
 		});
 	});
 
 	after(function(done) {
-		browser.tearDown();
-		done();
+		browser.tearDown(done);
 	});
 
 	it("should remove node", function() {
