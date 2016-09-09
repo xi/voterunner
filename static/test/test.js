@@ -1,3 +1,6 @@
+var TIMEOUT = 200;
+var ID = 'testID'
+
 setUp = function(url, fn) {
 	var iframe = document.createElement('iframe');
 	iframe.onload = function() {fn(iframe)};
@@ -54,7 +57,7 @@ describe('setName', function() {
 	var d, userName, node, nodeName;
 
 	before(function(done) {
-		setUp('/test' + test + '/testID', function(b) {
+		setUp('/test' + test + '/' + ID, function(b) {
 			browser = b;
 			d = browser.contentDocument;
 
@@ -62,7 +65,7 @@ describe('setName', function() {
 			userName.value = name;
 			userName.dispatchEvent(new Event('change'));
 
-			setTimeout(done, 200);
+			setTimeout(done, TIMEOUT);
 		});
 	});
 
@@ -75,12 +78,12 @@ describe('setName', function() {
 	});
 
 	it('node sould exists', function() {
-		node = d.getElementById('node' + 'testID');
+		node = d.getElementById('node' + ID);
 		expect(node).to.exist;
 	});
 
 	it('should set node name', function() {
-		node = d.getElementById('node' + 'testID');
+		node = d.getElementById('node' + ID);
 		nodeName = node.querySelector('.body .name').textContent;
 		expect(nodeName).to.equal(name);
 	});
@@ -91,7 +94,7 @@ describe('setName', function() {
 			userName = d.querySelector('#name input').value;
 			expect(userName).to.equal(name);
 
-			node = d.getElementById('node' + 'testID');
+			node = d.getElementById('node' + ID);
 			nodeName = node.querySelector('.body .name').textContent;
 			expect(nodeName).to.equal(name);
 
@@ -107,7 +110,7 @@ describe('setComment', function() {
 	var d, userComment, node, nodeComment;
 
 	before(function(done) {
-		setUp('/test' + test + '/testID', function(b) {
+		setUp('/test' + test + '/' + ID, function(b) {
 			browser = b;
 			d = browser.contentDocument;
 
@@ -115,7 +118,7 @@ describe('setComment', function() {
 			userComment.value = comment;
 			userComment.dispatchEvent(new Event('change'));
 
-			setTimeout(done, 200);
+			setTimeout(done, TIMEOUT);
 		});
 	});
 
@@ -128,12 +131,12 @@ describe('setComment', function() {
 	});
 
 	it('node sould exists', function() {
-		node = d.getElementById('node' + 'testID');
+		node = d.getElementById('node' + ID);
 		expect(node).to.exist;
 	});
 
 	it('should set node comment', function() {
-		node = d.getElementById('node' + 'testID');
+		node = d.getElementById('node' + ID);
 		nodeComment = node.querySelector('.body .comment').textContent.trim();
 		expect(nodeComment).to.equal(comment);
 	});
@@ -144,7 +147,7 @@ describe('setComment', function() {
 			userComment = d.querySelector('#comment textarea').value;
 			expect(userComment).to.equal(comment);
 
-			node = d.getElementById('node' + 'testID');
+			node = d.getElementById('node' + ID);
 			nodeComment = node.querySelector('.body .comment').textContent.trim();
 			expect(nodeComment).to.equal(comment);
 
@@ -168,7 +171,7 @@ describe('remove', function() {
 	var d, userName, userComment, userRemove;
 
 	before(function(done) {
-		setUp('/test' + test + '/testID', function(b) {
+		setUp('/test' + test + '/' + ID, function(b) {
 			browser = b;
 			d = browser.contentDocument;
 			browser.contentWindow.confirm = function() {return true};
@@ -184,7 +187,7 @@ describe('remove', function() {
 			userRemove = d.querySelector('#rm');
 			userRemove.dispatchEvent(new Event('click'));
 
-			setTimeout(done, 200);
+			setTimeout(done, TIMEOUT);
 		});
 	});
 
@@ -193,7 +196,7 @@ describe('remove', function() {
 	});
 
 	it('should remove node', function() {
-		var node = d.getElementById('node' + 'testID');
+		var node = d.getElementById('node' + ID);
 		expect(node).to.not.exist;
 	});
 
@@ -211,7 +214,7 @@ describe('remove', function() {
 		browser.reload(function() {
 			d = browser.contentDocument;
 
-			var node = d.getElementById('node' + 'testID');
+			var node = d.getElementById('node' + ID);
 			expect(node).to.not.exist;
 
 			done();
