@@ -254,7 +254,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var pushComment = throttle(function() {
 		var comment = document.querySelector('#comment textarea').value;
-		socket.emit('setNodeComment', comment);
+		var node = nodes.find(function(n) {
+			return n.id === ID;
+		});
+		// Do not create a new node if the comment is empty.
+		// This can happen e.g. on a keydown event from the ctrl or shift keys.
+		if (node || comment) {
+			socket.emit('setNodeComment', comment);
+		}
 	}, 1000);
 
 	document.querySelector('#comment textarea').addEventListener('change', pushComment);
