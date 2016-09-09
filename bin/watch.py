@@ -25,7 +25,7 @@ def watch(file_set, shell_command=None, delay=None):
 def show(file_set):
     map(print, file_set)
 
-show(NODE_APP_FILES)
+# show(NODE_APP_FILES)
 
 watch(JS_APP_FILES, shell('echo FIXME: how does the combining work? dependency missing?'), delay='forever')
 watch(COMBINED_JS_APP_FILES)
@@ -47,5 +47,6 @@ watch(NODE_APP_FILES, NODE_COMMAND, delay=1)
 
 server.serve(liveport=35729)
 
+# Killing happens automatically
 # shell('pg_ctl stop -D data/postgres')()
 # shell('killall node')()
