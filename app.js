@@ -78,7 +78,6 @@ var tpl = function(file, data, res) {
 			}
 
 		});
-
 		res.send(html);
 	});
 };
