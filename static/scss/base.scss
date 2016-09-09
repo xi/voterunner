@@ -1,0 +1,25 @@
+* {
+	box-sizing: border-box;
+	max-width: 100%;
+}
+
+[id^="json-"] {
+	display: none;
+}
+
+input[type="text"],
+textarea {
+	background: white;
+}
+
+textarea {
+	font-family: inherit;
+	font-size: inherit;
+}
+
+
+html {
+	font-family: sans-serif;
+	font-size: 70%;
+	background: #eee;
+}

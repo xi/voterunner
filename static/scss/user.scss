@@ -1,0 +1,60 @@
+#user {
+	background: $h3;
+
+	.delegate {
+		@extend %bar-item;
+		float: left;
+	}
+
+	.votes {
+		@extend %bar-item-right;
+	}
+
+	.undelegate {
+		@extend %bar-item-right;
+		@extend %bar-button;
+
+		&:before {
+			content: "‒";
+		}
+	}
+}
+
+.statusbar {
+	width: 100%;
+	border-bottom: 1px solid $ll;
+	overflow: hidden;
+}
+
+#name {
+	@extend %bar-item;
+	float: left;
+	max-width: 80%;  // TODO: prevent linebreak
+
+	input {
+		font-size: 120%;
+		height: 1.6em;
+	}
+}
+
+#rm {
+	@extend %bar-item-right;
+	@extend %bar-button;
+
+	font-size: 120%;
+	padding: $padding;
+	line-height: 1.6;
+	min-width: 2em;
+
+	&:before {
+		content: "X";
+	}
+}
+
+#comment textarea {
+	width: 100%;
+	min-height: 15em;
+	border: none;
+	resize: vertical;
+	padding: $padding;
+}

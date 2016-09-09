@@ -1,0 +1,62 @@
+.tree {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+
+	.tree {
+		margin-left: 2em;
+	}
+}
+
+.node {
+	margin: 0.5em 0;
+
+	.body {
+		background: white;
+	}
+
+	.header {
+		background: $h2;
+	}
+
+	.expand {
+		@extend %bar-item-left;
+		@extend %bar-button;
+
+		&:before {
+			content: ">";
+		}
+	}
+	.name {
+		@extend %bar-item;
+	}
+	.delegate {
+		@extend %bar-item-right;
+		@extend %bar-button;
+	}
+	.votes {
+		@extend %bar-item-right;
+	}
+
+	.comment {
+		padding: $padding;
+	}
+
+	&.m-self > .body {
+		.delegate {
+			display: none;
+		}
+		.header {
+			background: $h1;
+			color: white;
+		}
+	}
+
+	&:not(.is-expanded) > .tree {
+		display: none;
+	}
+
+	&.is-expanded > .body .expand:before {
+		content: "v";
+	}
+}
