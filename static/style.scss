@@ -167,15 +167,15 @@ header {
 		}
 	}
 
-	&[data-self] > .body .delegate {
+	&.m-self > .body .delegate {
 		display: none;
 	}
 
-	&:not([data-expanded="true"]) > .tree {
+	&:not(.is-expanded) > .tree {
 		display: none;
 	}
 
-	&[data-expanded="true"] > .body .expand:before {
+	&.is-expanded > .body .expand:before {
 		content: "v";
 	}
 }

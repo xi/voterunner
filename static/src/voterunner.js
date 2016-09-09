@@ -79,25 +79,28 @@ var tplFollowers = function(nodes, id, ID) {
 };
 
 var tplNode = function(nodes, node, ID) {
-	var dataset = {};
+	var classList = [];
 	if (node.expanded) {
-		dataset.expanded = true;
+		classList.push('is-expanded');
+	}
+	if (node.id === ID) {
+		classList.push('m-self');
 	}
 
-	var attrs = {};
+	var delegateAttrs = {};
 	if (node.id === ID || getDelegationChain(nodes, node).indexOf(ID) !== -1) {
-		attrs.disabled = true;
+		delegateAttrs.disabled = true;
 	}
 
 	return h('li.node#node' + node.id, {
-		dataset: dataset,
+		className: classList.join(' '),
 	}, [
 		h('div.body', [
 			h('div.header', [
 				h('div.votes', '' + getVotes(nodes, node)),
 				h('button.delegate', {
 					title: _('delegate to ') + getName(node),
-					attributes: attrs,
+					attributes: delegateAttrs,
 				}, '+'),
 				h('a.expand', {
 					title: _('expand'),
