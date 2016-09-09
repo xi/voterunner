@@ -147,7 +147,8 @@ var getCookie = function(key) {
 
 document.addEventListener('DOMContentLoaded', function() {
 	var TOPIC = document.URL.split('/')[3];
-	var ID = getCookie('id');
+	var ID = document.URL.split('/')[4];
+	if (!ID) ID = getCookie('id');
 	if (!ID) ID = uid();
 	setCookie('id', ID, 100);
 
