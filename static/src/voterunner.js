@@ -124,7 +124,7 @@ var initVDom = function(wrapper, nodes, ID, afterRender) {
 	afterRender();
 
 	return function(newState) {
-		var newTree = template(nodes, ID);
+		var newTree = template(newState, ID);
 		var patches = virtualDom.diff(tree, newTree);
 		virtualDom.patch(element, patches);
 		tree = newTree;
