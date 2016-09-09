@@ -108,7 +108,7 @@ var tplNode = function(nodes, node, ID) {
 				innerHTML: md.render(node.comment || ''),
 			}),
 		]),
-		h('ul.followers', tplFollowers(nodes, node.id, ID)),
+		h('ul.tree', tplFollowers(nodes, node.id, ID)),
 	]);
 };
 

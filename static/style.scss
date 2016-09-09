@@ -117,71 +117,66 @@ header {
 	overflow: auto;
 	background: white;
 	padding: $padding;
+}
 
-	.tree,
-	.followers {
-		padding: 0;
-		margin: 0;
-		list-style: none;
+.tree {
+	padding: 0;
+	margin: 0;
+	list-style: none;
 
-		> li {
-			margin: 0.5em 0;
+	.tree {
+		margin-left: 2em;
+	}
+}
 
-			.body {
-				background: white;
+.node {
+	margin: 0.5em 0;
 
-				.header {
-					background: $h2;
+	.body {
+		background: white;
+	}
 
-					.expand {
-						@extend %bar-item-left;
-						@extend %bar-button;
+	.header {
+		background: $h2;
+	}
 
-						&:before {
-							content: ">";
-						}
-					}
-					.name {
-						@extend %bar-item;
-					}
-					.delegate {
-						@extend %bar-item-right;
-						@extend %bar-button;
-					}
-					.votes {
-						@extend %bar-item-right;
-					}
-				}
+	.expand {
+		@extend %bar-item-left;
+		@extend %bar-button;
 
-				.comment {
-					padding: $padding;
+		&:before {
+			content: ">";
+		}
+	}
+	.name {
+		@extend %bar-item;
+	}
+	.delegate {
+		@extend %bar-item-right;
+		@extend %bar-button;
+	}
+	.votes {
+		@extend %bar-item-right;
+	}
 
-					&[data-type="pre"] {
-						white-space: pre-wrap;
-					}
-				}
-			}
+	.comment {
+		padding: $padding;
 
-			&[data-highlight] > .body {
-				font-weight: bold;
-			}
-
-			&[data-self] > .body .header .delegate {
-				display: none;
-			}
-
-			&:not([data-expanded="true"]) > .followers {
-				display: none;
-			}
-
-			&[data-expanded="true"] > .body .header .expand:before {
-				content: "v";
-			}
+		&[data-type="pre"] {
+			white-space: pre-wrap;
 		}
 	}
 
-	.followers {
-		margin-left: 2em;
+	&[data-self] > .body .delegate {
+		display: none;
+	}
+
+	&:not([data-expanded="true"]) > .tree {
+		display: none;
+	}
+
+	&[data-expanded="true"] > .body .expand:before {
+		content: "v";
 	}
 }
 
@@ -199,54 +194,54 @@ header {
 	> .statusbar {
 		width: 100%;
 		border-bottom: 1px solid $ll;
-
-		.delegate {
-			@extend %bar-item;
-		}
-
-		.votes {
-			@extend %bar-item-right;
-		}
-
-		.undelegate {
-			@extend %bar-item-right;
-			@extend %bar-button;
-
-			&:before {
-				content: "‒";
-			}
-		}
 	}
 
-	#name {
+	.delegate {
 		@extend %bar-item;
-		max-width: 80%;  // TODO: prevent linebreak
-
-		input {
-			font-size: 120%;
-			height: 1.6em;
-		}
 	}
 
-	#rm {
+	.votes {
+		@extend %bar-item-right;
+	}
+
+	.undelegate {
 		@extend %bar-item-right;
 		@extend %bar-button;
 
-		font-size: 120%;
-		padding: $padding;
-		line-height: 1.6;
-		min-width: 2em;
-
 		&:before {
-			content: "X";
+			content: "‒";
 		}
 	}
+}
 
-	#comment textarea {
-		width: 100%;
-		min-height: 15em;
-		border: none;
-		resize: vertical;
-		padding: $padding;
+#name {
+	@extend %bar-item;
+	max-width: 80%;  // TODO: prevent linebreak
+
+	input {
+		font-size: 120%;
+		height: 1.6em;
 	}
+}
+
+#rm {
+	@extend %bar-item-right;
+	@extend %bar-button;
+
+	font-size: 120%;
+	padding: $padding;
+	line-height: 1.6;
+	min-width: 2em;
+
+	&:before {
+		content: "X";
+	}
+}
+
+#comment textarea {
+	width: 100%;
+	min-height: 15em;
+	border: none;
+	resize: vertical;
+	padding: $padding;
 }
