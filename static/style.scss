@@ -161,10 +161,6 @@ header {
 
 	.comment {
 		padding: $padding;
-
-		&[data-type="pre"] {
-			white-space: pre-wrap;
-		}
 	}
 
 	&.m-self > .body .delegate {
