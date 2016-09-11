@@ -23,7 +23,7 @@ body {
 }
 
 body > header {
-	background: $h1;
+	background: $color-link;
 	text-align: center;
 	border-radius: 0 0 0.4em 0.4em;
 	margin: 0;
@@ -35,10 +35,10 @@ body > header {
 	h1 {
 		margin: 0;
 		font-size: 2em;
-		color: $h3;
+		color: $color-bg;
 
 		span {
-			color: $h2;
+			color: $color-bg-tint;
 		}
 	}
 }
@@ -46,12 +46,12 @@ body > header {
 #tree,
 #user,
 #tree .node .body {
-	border: 1px solid $ll;
+	border: 1px solid $color-border;
 	border-radius: 0.2em 0.2em 0 0;
 }
 
 #tree {
-	background: white;
+	background: $color-bg;
 	padding: $padding;
 	margin-top: $padding;
 }

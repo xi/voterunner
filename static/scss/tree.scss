@@ -12,11 +12,11 @@
 	margin: 0.5em 0;
 
 	.body {
-		background: white;
+		background: $color-bg;
 	}
 
 	.header {
-		background: $h2;
+		background: $color-bg-tint;
 	}
 
 	.expand {
@@ -47,8 +47,8 @@
 			display: none;
 		}
 		.header {
-			background: $h1;
-			color: white;
+			background: $color-link;
+			color: $color-bg;
 		}
 	}
 

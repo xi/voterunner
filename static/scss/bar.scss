@@ -22,11 +22,11 @@
 %bar-item-left {
 	@extend %bar-item;
 	float: left;
-	border-right: 1px solid $ll;
+	border-right: 1px solid $color-border;
 }
 
 %bar-item-right {
 	@extend %bar-item;
 	float: right;
-	border-left: 1px solid $ll;
+	border-left: 1px solid $color-border;
 }

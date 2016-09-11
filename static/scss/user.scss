@@ -1,5 +1,5 @@
 #user {
-	background: $h3;
+	background: $color-bg-tint;
 
 	.delegate {
 		@extend %bar-item;
@@ -22,7 +22,7 @@
 
 .statusbar {
 	width: 100%;
-	border-bottom: 1px solid $ll;
+	border-bottom: 1px solid $color-border;
 	overflow: hidden;
 }
 
