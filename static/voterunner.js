@@ -16712,7 +16712,8 @@ var tplNode = function(nodes, node, ID) {
 		delegateAttrs.disabled = true;
 	}
 
-	return h('li.node#node' + node.id, {
+	return h('li.node#node-' + node.id, {
+		key: 'node-' + node.id,
 		className: classList.join(' '),
 	}, [
 		h('article.body', [
@@ -16832,7 +16833,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var toggleExpand = function(event) {
 		var nodeElement = event.target.parentElement.parentElement.parentElement;
-		var id = nodeElement.id.substr(4);
+		var id = nodeElement.id.substr(5);
 		var node = getNode(id);
 		node.expanded = !node.expanded;
 		update(nodes);
@@ -16840,7 +16841,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var setDelegate = function(event) {
 		var nodeElement = event.target.parentElement.parentElement.parentElement;
-		var id = nodeElement.id.substr(4);
+		var id = nodeElement.id.substr(5);
 		socket.emit('setDelegate', id);
 	};
 
