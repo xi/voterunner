@@ -18,6 +18,10 @@
 			content: "‒";
 		}
 	}
+
+	@media print {
+		display: none;
+	}
 }
 
 .statusbar {

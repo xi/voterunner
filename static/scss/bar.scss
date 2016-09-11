@@ -10,6 +10,10 @@
 	&:hover {
 		background-color: rgba($color-bg, 0.2);
 	}
+
+	@media print {
+		display: none;
+	}
 }
 
 %bar-item {

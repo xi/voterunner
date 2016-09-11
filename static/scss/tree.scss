@@ -18,6 +18,11 @@
 
 	.body {
 		background: $color-bg;
+		break-inside: avoid;
+
+		@media print {
+			border: 1px solid;
+		}
 	}
 
 	.header {

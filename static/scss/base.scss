@@ -12,6 +12,8 @@ textarea {
 	font-size: inherit;
 }
 
-html {
-	background: $color-bg-html;
+@media screen {
+	html {
+		background: $color-bg-html;
+	}
 }

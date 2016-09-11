@@ -49,13 +49,19 @@ body > header {
 	border-radius: ($padding / 2) ($padding / 2) 0 0;
 }
 
+@media print {
+	#tree, #user {
+		border: 0;
+	}
+}
+
 #tree {
 	background: $color-bg;
 	padding: $padding;
 	margin-top: $padding;
 }
 
-@media (min-width: 40em) {
+@media screen and (min-width: 40em) {
 	html {
 		overflow: auto;
 	}
