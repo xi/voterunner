@@ -13,7 +13,8 @@ textarea {
 }
 
 @media screen {
-	html {
+	html.voterunner {
 		background: $color-bg-html;
+		font-size: 80%;
 	}
 }

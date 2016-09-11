@@ -4,7 +4,6 @@ html {
 }
 
 body {
-	max-width: 90em;
 	margin: 0 auto;
 	position: relative;
 
@@ -19,6 +18,10 @@ body {
 			min-height: 33em;
 		}
 	}
+}
+
+.voterunner body {
+	max-width: 90em;
 }
 
 body > header {
