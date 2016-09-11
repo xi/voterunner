@@ -35,7 +35,7 @@ a {
   color: #336DBE;
   text-decoration: underline; }
   a:hover, a:focus, a:active {
-    color: #014c8c; }
+    color: #1a375f; }
 
 a:not([href]) {
   color: inherit;
