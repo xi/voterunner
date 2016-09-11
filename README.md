@@ -79,6 +79,16 @@ lines will bring it up:
         info  - Listening on 5000
 
 
+Development
+-----------
+
+The repository contains all necessary compiled files. If you want to edit the
+code yourself you will need to install
+[node-sass](https://www.npmjs.com/package/node-sass) and
+[browserify](https://www.npmjs.com/package/browserify). Once these requirements
+are met, you can simply run `make`.
+
+
 API
 ---
 
