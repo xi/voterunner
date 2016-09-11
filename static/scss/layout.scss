@@ -6,7 +6,6 @@ html {
 body {
 	max-width: 90em;
 	margin: 0 auto;
-	padding: 0 $padding;
 	position: relative;
 
 	> div {
@@ -57,6 +56,10 @@ body > header {
 }
 
 @media (min-width: 40em) {
+	html {
+		overflow: auto;
+	}
+
 	#tree {
 		position: absolute;
 		top: 0;

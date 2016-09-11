@@ -4,7 +4,12 @@ $color-fg: #000;
 $color-link: #336DBE;
 $color-bg-tint: #c2d5ee;
 $color-border: #c0c0c0;
+
 $padding: 0.4em;
+$font-size-max: 70%;
+
+@import 'bower_components/mfbs/sass/variables';
+@import 'bower_components/mfbs/sass/base';
 
 @import 'base';
 @import 'layout';
