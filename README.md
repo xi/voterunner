@@ -65,7 +65,7 @@ to agree on a compromise.
 Install
 -------
 
-Voterunner is a [node.js](http://nodejs.org/) app using 
+Voterunner is a [node.js](http://nodejs.org/) app using
 [PostgreSQL](http://www.postgresql.org/) as a database so the following
 lines will bring it up:
 
