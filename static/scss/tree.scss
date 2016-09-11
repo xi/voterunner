@@ -11,6 +11,11 @@
 .node {
 	margin: $spacer 0;
 
+	&:target > .body {
+		outline: 5px auto $color-link;
+		outline-offset: -2px;
+	}
+
 	.body {
 		background: $color-bg;
 	}
