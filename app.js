@@ -19,12 +19,13 @@ var log4js = require('log4js');
 
 var DATABASE_URL = process.env.DATABASE_URL;
 var PORT = process.env.PORT || 5000;
+var HOST = process.env.HOST || 'localhost';
 
 var log = log4js.getLogger();
 
 app.use(express.static('static'));
-server.listen(PORT, function() {
-	log.info('Listening on ' + PORT);
+server.listen(PORT, HOST, function() {
+	log.info('Listening on ' + HOST + ':' + PORT);
 });
 
 var parseDatabaseUrl = function(databaseUrl) {
