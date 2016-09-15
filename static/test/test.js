@@ -78,12 +78,12 @@ describe('setName', function() {
 	});
 
 	it('node sould exists', function() {
-		node = d.getElementById('node' + ID);
+		node = d.getElementById('node-' + ID);
 		expect(node).to.exist;
 	});
 
 	it('should set node name', function() {
-		node = d.getElementById('node' + ID);
+		node = d.getElementById('node-' + ID);
 		nodeName = node.querySelector('.body .name').textContent;
 		expect(nodeName).to.equal(name);
 	});
@@ -94,7 +94,7 @@ describe('setName', function() {
 			userName = d.querySelector('#name input').value;
 			expect(userName).to.equal(name);
 
-			node = d.getElementById('node' + ID);
+			node = d.getElementById('node-' + ID);
 			nodeName = node.querySelector('.body .name').textContent;
 			expect(nodeName).to.equal(name);
 
@@ -131,12 +131,12 @@ describe('setComment', function() {
 	});
 
 	it('node sould exists', function() {
-		node = d.getElementById('node' + ID);
+		node = d.getElementById('node-' + ID);
 		expect(node).to.exist;
 	});
 
 	it('should set node comment', function() {
-		node = d.getElementById('node' + ID);
+		node = d.getElementById('node-' + ID);
 		nodeComment = node.querySelector('.body .comment').textContent.trim();
 		expect(nodeComment).to.equal(comment);
 	});
@@ -147,7 +147,7 @@ describe('setComment', function() {
 			userComment = d.querySelector('#comment textarea').value;
 			expect(userComment).to.equal(comment);
 
-			node = d.getElementById('node' + ID);
+			node = d.getElementById('node-' + ID);
 			nodeComment = node.querySelector('.body .comment').textContent.trim();
 			expect(nodeComment).to.equal(comment);
 
@@ -196,7 +196,7 @@ describe('remove', function() {
 	});
 
 	it('should remove node', function() {
-		var node = d.getElementById('node' + ID);
+		var node = d.getElementById('node-' + ID);
 		expect(node).to.not.exist;
 	});
 
@@ -214,7 +214,7 @@ describe('remove', function() {
 		browser.reload(function() {
 			d = browser.contentDocument;
 
-			var node = d.getElementById('node' + ID);
+			var node = d.getElementById('node-' + ID);
 			expect(node).to.not.exist;
 
 			done();
