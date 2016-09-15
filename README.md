@@ -69,14 +69,14 @@ Voterunner is a [node.js](http://nodejs.org/) app using
 [PostgreSQL](http://www.postgresql.org/) as a database so the following
 lines will bring it up:
 
-    $ git clone https://git.gitorious.org/electomat/voterunner.git
+    $ git clone https://github.com/xi/voterunner
     $ cd voterunner
     $ npm install
-    $ export PORT=5000
-    $ export DATABASE_URL='postgresql://user:password@host/database'
-    $ node app.js
-        info  - socket.io started
-        info  - Listening on 5000
+    $ pip install -r watch_requirements.txt
+    $ bin/initialize_db.sh
+    $ bin/watch.py
+    $ open http://localhost:5000/ # introduction
+    $ open http://localhost:5000/my-topic/ # discuss on a topic
 
 
 Development
@@ -102,7 +102,7 @@ The communication is done using socket.io sockets.
       ...
     });
 
-### setup
+### Setup
 
 These messages are used to set up the connection between client and
 server:
@@ -110,7 +110,7 @@ server:
 `register(topic, id)`
 :   register for id and topic. needs to be done before anything else.
 
-### change the Graph
+### Change the Graph
 
 These messages will be broadcasted to all sockets which are registered
 to the same topic as the one emitting in. The emitting socket must omit
