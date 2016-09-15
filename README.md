@@ -83,7 +83,7 @@ lines will bring it up:
 For development it may be nice to automatically restart the app and refresh the
 browser whenever you make changes:
 
-    $ pip install --pre -r watch_requirements.txt
+    $ pip install -r watch_requirements.txt
     $ bin/watch.py
 
 
