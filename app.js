@@ -77,7 +77,6 @@ var tpl = function(file, data, res) {
 			} else {
 				return '';
 			}
-
 		});
 
 		res.send(html);
