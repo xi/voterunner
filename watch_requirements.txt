@@ -1,2 +1,1 @@
-formic  # only python2 compatibile
 livereload
