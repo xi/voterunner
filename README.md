@@ -72,11 +72,19 @@ lines will bring it up:
     $ git clone https://github.com/xi/voterunner
     $ cd voterunner
     $ npm install
-    $ pip install -r watch_requirements.txt
-    $ bin/initialize_db.sh
+    $ bin/manage_db.sh init
+    $ bin/manage_db.sh start
+    $ export DATABASE_URL="postgresql://:@localhost/voterunner"
+    $ node app.js
+        ... Listening on localhost:5000
+    $ open http://localhost:5000/  # introduction
+    $ open http://localhost:5000/my-topic/  # discuss on a topic
+
+For development it may be nice to automatically restart the app and refresh the
+browser whenever you make changes:
+
+    $ pip install --pre -r watch_requirements.txt
     $ bin/watch.py
-    $ open http://localhost:5000/ # introduction
-    $ open http://localhost:5000/my-topic/ # discuss on a topic
 
 
 Development
