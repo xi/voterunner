@@ -55,7 +55,7 @@ hr {
 pre, code {
   font-size: 90%;
   font-family: monospace;
-  background-color: #c2d5ee; }
+  background-color: #c2d3ec; }
 
 code {
   padding: 0 0.25em; }
@@ -157,7 +157,7 @@ body > header {
     font-size: 200%;
     color: #fff; }
     body > header h1 span {
-      color: #c2d5ee; }
+      color: #c2d3ec; }
 
 #tree,
 #user,
@@ -238,7 +238,7 @@ body > header {
       .node .body {
         border: 1px solid; } }
   .node .header {
-    background: #c2d5ee; }
+    background: #c2d3ec; }
   .node .expand:before {
     content: ">"; }
   .node .comment {
@@ -258,7 +258,7 @@ body > header {
     content: "v"; }
 
 #user {
-  background: #c2d5ee; }
+  background: #c2d3ec; }
   #user .delegate {
     float: left; }
   #user .undelegate:before {

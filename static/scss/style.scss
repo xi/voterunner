@@ -2,7 +2,7 @@ $color-bg: #fff;
 $color-bg-html: #eee;
 $color-fg: #000;
 $color-link: #336DBE;
-$color-bg-tint: #c2d5ee;
+$color-bg-tint: mix($color-link, $color-bg, 30%);
 $color-border: #c0c0c0;
 
 $padding: 0.4em;
