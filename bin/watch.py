@@ -7,7 +7,7 @@ from __future__ import print_function
 
 from livereload import Server, shell
 
-UNCOMPILED_FILES = ['static/*.js', 'static/*.css', 'README.md']
+UNCOMPILED_FILES = ['static/*.js', 'static/*.css', 'static/test/*', 'README.md']
 JS_SRC_FILES = ['static/src/*.js']
 CSS_SRC_FILES = ['static/scss/*.scss']
 
