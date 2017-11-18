@@ -7,8 +7,9 @@ $color-border: #c0c0c0;
 
 $padding: 0.4em;
 
-@import 'bower_components/mfbs/sass/variables';
-@import 'bower_components/mfbs/sass/base';
+@import '../../node_modules/mfbs/sass/variables';
+@import '../../node_modules/mfbs/sass/base';
+@import '../../node_modules/mfbs/sass/layout';
 
 @import 'base';
 @import 'layout';
