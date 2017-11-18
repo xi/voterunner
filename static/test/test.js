@@ -77,7 +77,7 @@ describe('setName', function() {
 		expect(userName.value).to.equal(name);
 	});
 
-	it('node sould exists', function() {
+	it('node sould exist', function() {
 		node = d.getElementById('node-' + ID);
 		expect(node).to.exist;
 	});
@@ -130,7 +130,7 @@ describe('setComment', function() {
 		expect(userComment.value).to.equal(comment);
 	});
 
-	it('node sould exists', function() {
+	it('node sould exist', function() {
 		node = d.getElementById('node-' + ID);
 		expect(node).to.exist;
 	});
