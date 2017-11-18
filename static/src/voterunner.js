@@ -102,6 +102,8 @@ var tplNode = function(nodes, node, ID) {
 		key: 'node-' + node.id,
 		id: 'node-' + node.id,
 		className: 'node ' + classList.join(' '),
+		role: 'treeitem',
+		'aria-expanded': '' + !!node.expanded,
 	}, [
 		h('article', {
 			className: 'body',
@@ -128,12 +130,18 @@ var tplNode = function(nodes, node, ID) {
 				},
 			}),
 		]),
-		h('ul', {className: 'tree'}, tplFollowers(nodes, node.id, ID)),
+		h('ul', {
+			className: 'tree',
+			role: 'group',
+		}, tplFollowers(nodes, node.id, ID)),
 	]);
 };
 
 var template = function(nodes, ID) {
-	return h('ul', {className: 'tree'}, tplFollowers(nodes, null, ID));
+	return h('ul', {
+		className: 'tree',
+		role: 'tree',
+	}, tplFollowers(nodes, null, ID));
 };
 
 var initVDom = function(wrapper, nodes, ID, afterRender) {
