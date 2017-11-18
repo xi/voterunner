@@ -46,8 +46,8 @@ body > header {
 }
 
 #tree,
-#user,
-#tree .node .body {
+.user,
+.node__body {
 	border: 1px solid $color-border;
 	border-radius: ($padding / 2) ($padding / 2) 0 0;
 }

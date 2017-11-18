@@ -90,7 +90,7 @@ var tplNode = function(nodes, node, ID) {
 		classList.push('is-expanded');
 	}
 	if (node.id === ID) {
-		classList.push('m-self');
+		classList.push('node--self');
 	}
 
 	var delegateAttrs = {};
@@ -106,26 +106,26 @@ var tplNode = function(nodes, node, ID) {
 		'aria-expanded': '' + !!node.expanded,
 	}, [
 		h('article', {
-			className: 'body',
+			className: 'node__body',
 		}, [
 			h('header', {
-				className: 'header',
+				className: 'node__header bar',
 			}, [
 				h('button', {
-					className: 'expand',
+					className: 'node__expand bar__item bar__item--button bar__item--left',
 					title: _(node.expanded ? 'collapse' : 'expand'),
 				}),
-				h('div', {className: 'votes'}, '' + getVotes(nodes, node)),
 				h('button', {
-					className: 'delegate',
+					className: 'node__delegate bar__item bar__item--button bar__item--right',
 					title: _('delegate to ') + getName(node),
 					attributes: delegateAttrs,
 				}, '+'),
-				h('div', {className: 'name'}, getName(node)),
-				!node.expanded && node.comment && h('div', {className: 'preview'}, node.comment.substr(0, 100)),
+				h('div', {className: 'node__votes bar__item bar__item--right'}, '' + getVotes(nodes, node)),
+				h('div', {className: 'node__name bar__item' + (!node.expanded && node.comment ? '' : ' bar__item--grow')}, getName(node)),
+				!node.expanded && node.comment && h('div', {className: 'node__preview bar__item bar__item--grow'}, node.comment.substr(0, 100)),
 			]),
 			node.expanded && h('div', {
-				className: 'comment',
+				className: 'node__comment',
 				dangerouslySetInnerHTML: {
 					__html: md.render(node.comment || '')
 				},
@@ -217,19 +217,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		return node.id === ID;
 	});
 	if (user) {
-		document.querySelector('#name input').value = user.name;
-		document.querySelector('#comment textarea').value = user.comment;
+		document.querySelector('.user__name input').value = user.name;
+		document.querySelector('.user__comment textarea').value = user.comment;
 		ensureVisible(user);
 	}
 
 	var updateUser = function() {
-		document.querySelector('#user .votes').textContent = getVotes(nodes, user || {});
+		document.querySelector('.user__votes').textContent = getVotes(nodes, user || {});
 
 		if (user && user.delegate) {
 			var delegatee = getNode(user.delegate);
-			document.querySelector('#user .delegate').textContent = _('delegated to: ') + getName(delegatee);
+			document.querySelector('.user__delegation').textContent = _('delegated to: ') + getName(delegatee);
 		} else {
-			document.querySelector('#user .delegate').textContent = _('(no delegation)');
+			document.querySelector('.user__delegation').textContent = _('(no delegation)');
 		}
 	};
 
@@ -250,33 +250,33 @@ document.addEventListener('DOMContentLoaded', function() {
 	var update = initVDom(document.querySelector('#tree'), nodes, ID, function() {
 		updateUser();
 
-		forEach(document.querySelectorAll('.expand'), function(element) {
+		forEach(document.querySelectorAll('.node__expand'), function(element) {
 			element.addEventListener('click', toggleExpand);
 		});
 
-		forEach(document.querySelectorAll('.delegate'), function(element) {
+		forEach(document.querySelectorAll('.node__delegate'), function(element) {
 			element.addEventListener('click', setDelegate);
 		});
 	});
 
-	document.querySelector('#rm').addEventListener('click', function(event) {
+	document.querySelector('.user__rm').addEventListener('click', function(event) {
 		if (confirm(_("Do you really want to delete this opinion?"))) {
 			socket.emit('rmNode');
-			document.querySelector('#name input').value = '';
-			document.querySelector('#comment textarea').value = '';
+			document.querySelector('.user__name input').value = '';
+			document.querySelector('.user__comment textarea').value = '';
 		}
 	});
 
-	document.querySelector('#name input').addEventListener('change', function(event) {
+	document.querySelector('.user__name input').addEventListener('change', function(event) {
 		socket.emit('setNodeName', event.target.value);
 	});
 
-	document.querySelector('.undelegate').addEventListener('click', function(event) {
+	document.querySelector('.user__undelegate').addEventListener('click', function(event) {
 		socket.emit('rmDelegate');
 	});
 
 	var pushComment = throttle(function() {
-		var comment = document.querySelector('#comment textarea').value;
+		var comment = document.querySelector('.user__comment textarea').value;
 		var node = nodes.find(function(n) {
 			return n.id === ID;
 		});
@@ -287,8 +287,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}, 1000);
 
-	document.querySelector('#comment textarea').addEventListener('change', pushComment);
-	document.querySelector('#comment textarea').addEventListener('keydown', pushComment);
+	document.querySelector('.user__comment textarea').addEventListener('change', pushComment);
+	document.querySelector('.user__comment textarea').addEventListener('keydown', pushComment);
 
 	socket.on('rmNode', function(id) {
 		nodes = nodes.filter(function(node) {

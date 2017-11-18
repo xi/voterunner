@@ -1,4 +1,16 @@
-%bar-button {
+.bar {
+	display: flex;
+}
+
+.bar__item {
+	padding: $padding;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex: 0 0 auto;
+}
+
+.bar__item--button {
 	appearance: none;
 	background: none;
 	border: 0;
@@ -7,6 +19,7 @@
 	color: inherit;
 	text-align: center;
 
+	&:focus,
 	&:hover {
 		background-color: rgba($color-bg, 0.2);
 	}
@@ -16,21 +29,16 @@
 	}
 }
 
-%bar-item {
-	padding: $padding;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+.bar__item--grow {
+	flex: 1 1 auto;
 }
 
-%bar-item-left {
-	@extend %bar-item;
-	float: left;
+.bar__item--left {
 	border-right: 1px solid $color-border;
+	order: 0;
 }
 
-%bar-item-right {
-	@extend %bar-item;
-	float: right;
+.bar__item--right {
 	border-left: 1px solid $color-border;
+	order: 100;
 }

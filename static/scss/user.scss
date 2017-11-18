@@ -1,22 +1,8 @@
-#user {
+.user {
 	background: $color-bg-tint;
 
-	.delegate {
-		@extend %bar-item;
-		float: left;
-	}
-
-	.votes {
-		@extend %bar-item-right;
-	}
-
-	.undelegate {
-		@extend %bar-item-right;
-		@extend %bar-button;
-
-		&:before {
-			content: "‒";
-		}
+	.bar {
+		border-bottom: 1px solid $color-border;
 	}
 
 	@media print {
@@ -24,27 +10,20 @@
 	}
 }
 
-.statusbar {
-	width: 100%;
-	border-bottom: 1px solid $color-border;
-	overflow: hidden;
+.user__undelegate {
+	&:before {
+		content: "‒";
+	}
 }
 
-#name {
-	@extend %bar-item;
-	float: left;
-	max-width: 80%;  // TODO: prevent linebreak
-
+.user__name {
 	input {
 		font-size: 120%;
 		height: 1.6em;
 	}
 }
 
-#rm {
-	@extend %bar-item-right;
-	@extend %bar-button;
-
+.user__rm {
 	font-size: 120%;
 	padding: $padding;
 	line-height: 1.6;
@@ -55,7 +34,7 @@
 	}
 }
 
-#comment textarea {
+.user__comment textarea {
 	width: 100%;
 	min-height: 15em;
 	border: none;
