@@ -47,6 +47,7 @@
 .node__body {
 	background: $color-bg;
 	break-inside: avoid;
+	overflow: hidden;  // border-radius
 }
 
 .node__header {
