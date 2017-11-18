@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		if (user && user.delegate) {
 			var delegatee = getNode(user.delegate);
-			document.querySelector('#user .delegate').textContent = getName(delegatee);
+			document.querySelector('#user .delegate').textContent = _('delegated to: ') + getName(delegatee);
 		} else {
 			document.querySelector('#user .delegate').textContent = _('(no delegation)');
 		}
