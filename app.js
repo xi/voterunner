@@ -35,6 +35,10 @@ process.on('exit', (code) => {
 });
 
 var queryDB = function(sql, data) {
+	if (DATABASE_URL.match(/^sqlite/)) {
+		sql = sql.replace(/\$/g, '?');
+	}
+
 	return new Promise(function(resolve, reject) {
 		var q = db.query(sql, data, function(err, res) {
 			if (err) {
