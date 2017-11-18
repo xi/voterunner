@@ -7,6 +7,7 @@
  */
 
 var url = require('url');
+var process = require('process');
 
 var express = require('express');
 var http = require('http');
@@ -29,6 +30,9 @@ server.listen(PORT, HOST, function() {
 });
 
 var db = anyDB.createPool(DATABASE_URL);
+process.on('exit', (code) => {
+	db.close();
+});
 
 var throwErr = function(err) {
 	if (err) throw err;
