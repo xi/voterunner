@@ -13,7 +13,7 @@ var http = require('http');
 var app = express();
 var server = http.Server(app);
 var io = require('socket.io').listen(server);
-var pg = require('pg');
+var anyDB = require('any-db');
 var fs = require('fs');
 var log4js = require('log4js');
 
@@ -28,20 +28,7 @@ server.listen(PORT, HOST, function() {
 	log.info('Listening on ' + HOST + ':' + PORT);
 });
 
-var parseDatabaseUrl = function(databaseUrl) {
-	var params = url.parse(databaseUrl);
-	var auth = params.auth.split(':');
-
-	return {
-		user: auth[0],
-		password: auth[1],
-		host: params.hostname,
-		port: params.port,
-		database: params.pathname.split('/')[1],
-	};
-};
-
-var db = new pg.Pool(parseDatabaseUrl(DATABASE_URL));
+var db = anyDB.createPool(DATABASE_URL);
 
 var throwErr = function(err) {
 	if (err) throw err;

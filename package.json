@@ -2,10 +2,12 @@
 	"name": "voterunner",
 	"version": "0.0.1",
 	"dependencies": {
-		"socket.io": "^1.4.8",
+		"any-db": "^2.2.0",
+		"any-db-postgres": "^2.1.5",
+		"any-db-sqlite3": "^2.1.4",
 		"express": "^4.14.0",
 		"log4js": "^0.6.38",
-		"pg": "^6.0.3"
+		"socket.io": "^1.4.8"
 	},
 	"devDependencies": {
 		"markdown-it": "^7.0.0",
