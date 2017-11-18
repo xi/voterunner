@@ -50,7 +50,9 @@
 }
 
 .node__header {
-	background-color: $color-bg-tint;
+	@media screen {
+		background-color: $color-bg-tint;
+	}
 }
 
 .node__expand {
