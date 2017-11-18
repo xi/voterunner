@@ -1,9 +1,6 @@
-all: static/voterunner.js static/markdown.js static/style.css
+all: static/voterunner.js static/style.css
 
 static/voterunner.js: static/src/voterunner.js
-	browserify $< -o $@
-
-static/markdown.js: static/src/markdown.js
 	browserify $< -o $@
 
 static/style.css: static/scss/*.scss

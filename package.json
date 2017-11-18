@@ -7,10 +7,10 @@
 		"any-db-sqlite3": "^2.1.4",
 		"express": "^4.16.2",
 		"log4js": "^0.6.38",
+		"markdown-it": "^7.0.1",
 		"socket.io": "^1.7.4"
 	},
 	"devDependencies": {
-		"markdown-it": "^7.0.1",
 		"socket.io-client": "^1.7.4",
 		"virtual-dom": "^2.1.1"
 	},

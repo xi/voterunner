@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>voterunner - <= topic =></title>
+	<title>voterunner - {{ topic }}</title>
 	<meta name="viewport" content="width=device-width" />
 	<link rel="shortcut icon" href="/favicon.ico"/>
 	<link rel="stylesheet" type="text/css" href="/style.css" />
@@ -50,6 +50,6 @@
 
 </body>
 
-<% nodes %>
+{{ nodes|json }}
 
 </html>

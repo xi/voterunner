@@ -17,12 +17,14 @@ var io = require('socket.io').listen(server);
 var anyDB = require('any-db');
 var fs = require('fs');
 var log4js = require('log4js');
+var MarkdownIt = require('markdown-it');
 
 var DATABASE_URL = process.env.DATABASE_URL;
 var PORT = process.env.PORT || 5000;
 var HOST = process.env.HOST || 'localhost';
 
 var log = log4js.getLogger();
+var md = new MarkdownIt();
 
 app.use(express.static('static'));
 server.listen(PORT, HOST, function() {
@@ -63,18 +65,24 @@ var escapeHTML = function(unsafe) {
 };
 
 var tpl = function(file, data, res) {
-	// `<% key %>` in template `file` will be replaced by `data.key` as json
-	// `<= key =>` in template `file` will be replaced by `data.key` as string
 	fs.readFile('tpl/' + file, 'utf8', function(err, html) {
-		html = html.replace(/<% ([^>]*) %>/g, function(match, key) {
+		html = html.replace(/{{{ ([^}]*)\|markdown }}}/g, function(match, key) {
 			if (data.hasOwnProperty(key)) {
-				return '<div id="json-' + key + '" data-value="' + escapeHTML(JSON.stringify(data[key])) + '"></div>';
+				return md.render(data[key]);
 			} else {
 				return '';
 			}
 		});
 
-		html = html.replace(/<= ([^>]*) =>/g, function(match, key) {
+		html = html.replace(/{{ ([^}]*)\|json }}/g, function(match, key) {
+			if (data.hasOwnProperty(key)) {
+				return '<div id="json-' + escapeHTML(key) + '" data-value="' + escapeHTML(JSON.stringify(data[key])) + '"></div>';
+			} else {
+				return '';
+			}
+		});
+
+		html = html.replace(/{{ ([^}]*) }}/g, function(match, key) {
 			if (data.hasOwnProperty(key)) {
 				return escapeHTML(data[key].toString());
 			} else {
