@@ -122,8 +122,9 @@ var tplNode = function(nodes, node, ID) {
 					attributes: delegateAttrs,
 				}, '+'),
 				h('div', {className: 'name'}, getName(node)),
+				!node.expanded && node.comment && h('div', {className: 'preview'}, node.comment.substr(0, 100)),
 			]),
-			h('div', {
+			node.expanded && h('div', {
 				className: 'comment',
 				dangerouslySetInnerHTML: {
 					__html: md.render(node.comment || '')
