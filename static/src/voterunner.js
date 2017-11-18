@@ -1,5 +1,5 @@
-var virtualDom = require('virtual-dom');
-var h = require('virtual-dom/h');
+var preact = require('preact');
+var h = require('preact').h;
 var MarkdownIt = require('markdown-it');
 var io = require('socket.io-client');
 
@@ -98,46 +98,53 @@ var tplNode = function(nodes, node, ID) {
 		delegateAttrs.disabled = true;
 	}
 
-	return h('li.node#node-' + node.id, {
+	return h('li', {
 		key: 'node-' + node.id,
-		className: classList.join(' '),
+		id: 'node-' + node.id,
+		className: 'node ' + classList.join(' '),
 	}, [
-		h('article.body', [
-			h('header.header', [
-				h('button.expand', {
+		h('article', {
+			className: 'body',
+		}, [
+			h('header', {
+				className: 'header',
+			}, [
+				h('button', {
+					className: 'expand',
 					title: _(node.expanded ? 'collapse' : 'expand'),
 				}),
-				h('div.votes', '' + getVotes(nodes, node)),
-				h('button.delegate', {
+				h('div', {className: 'votes'}, '' + getVotes(nodes, node)),
+				h('button', {
+					className: 'delegate',
 					title: _('delegate to ') + getName(node),
 					attributes: delegateAttrs,
 				}, '+'),
-				h('div.name', getName(node)),
+				h('div', {className: 'name'}, getName(node)),
 			]),
-			h('div.comment', {
-				innerHTML: md.render(node.comment || ''),
+			h('div', {
+				className: 'comment',
+				dangerouslySetInnerHTML: {
+					__html: md.render(node.comment || '')
+				},
 			}),
 		]),
-		h('ul.tree', tplFollowers(nodes, node.id, ID)),
+		h('ul', {className: 'tree'}, tplFollowers(nodes, node.id, ID)),
 	]);
 };
 
 var template = function(nodes, ID) {
-	return h('ul.tree', tplFollowers(nodes, null, ID));
+	return h('ul', {className: 'tree'}, tplFollowers(nodes, null, ID));
 };
 
 var initVDom = function(wrapper, nodes, ID, afterRender) {
-	var tree = template(nodes, ID);
-	var element = virtualDom.create(tree);
 	wrapper.innerHTML = '';
-	wrapper.appendChild(element);
+	var tree = template(nodes, ID);
+	var element = preact.render(tree, wrapper);
 	afterRender();
 
 	return function(newState) {
 		var newTree = template(newState, ID);
-		var patches = virtualDom.diff(tree, newTree);
-		virtualDom.patch(element, patches);
-		tree = newTree;
+		preact.render(newTree, wrapper, element);
 		afterRender();
 	};
 };

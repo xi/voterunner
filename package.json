@@ -12,8 +12,8 @@
 	},
 	"devDependencies": {
 		"mfbs": "^3.1.1",
-		"socket.io-client": "^1.7.4",
-		"virtual-dom": "^2.1.1"
+		"preact": "^8.2.6",
+		"socket.io-client": "^1.7.4"
 	},
 	"author": "Tobias Bengfort",
 	"license": "AGPL-3+"
