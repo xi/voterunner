@@ -283,6 +283,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	socket.on('rmNode', function(id) {
 		nodes = nodes.filter(function(node) {
+			if (node.delegate === id) {
+				node.delegate = null;
+			}
 			return node.id !== id;
 		});
 		invalidateVotes();
