@@ -17,10 +17,6 @@
 	}
 
 	&.node--self > .node__body {
-		.node__delegate {
-			display: none;
-		}
-
 		.node__header {
 			@media screen {
 				background-color: $color-link;
