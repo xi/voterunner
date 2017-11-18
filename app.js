@@ -34,12 +34,20 @@ process.on('exit', (code) => {
 	db.close();
 });
 
-var throwErr = function(err) {
-	if (err) throw err;
+var queryDB = function(sql, data) {
+	return new Promise(function(resolve, reject) {
+		var q = db.query(sql, data, function(err, res) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(res);
+			}
+		});
+	});
 };
 
 // setup table
-db.query('CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))', throwErr);
+queryDB('CREATE TABLE IF NOT EXISTS nodes (topic TEXT, id TEXT, name TEXT, comment TEXT, delegate TEXT, UNIQUE (topic, id))');
 
 var escapeHTML = function(unsafe) {
 	return unsafe
@@ -87,9 +95,10 @@ app.get('/:topic.json', function(req, res) {
 	var topic = req.params.topic;
 	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
 
-	db.query(sql, [topic], function(err, result) {
-		if (err) return res.status(500).send(err.toString());
+	queryDB(sql, [topic]).then(function(result) {
 		res.json(result.rows);
+	}).catch(function(err) {
+		res.status(500).send(err.toString());
 	});
 });
 
@@ -98,9 +107,10 @@ app.get('/:topic/:id?', function(req, res) {
 	var topic = req.params.topic;
 
 	var sql = 'SELECT id, name, comment, delegate FROM nodes WHERE topic = $1';
-	db.query(sql, [topic], function(err, result) {
-		if (err) return res.status(500).send(err.toString());
+	queryDB(sql, [topic]).then(function(result) {
 		tpl('app.html', {'nodes': result.rows, 'topic': topic}, res);
+	}).catch(function(err) {
+		res.status(500).send(err.toString());
 	});
 });
 
@@ -111,7 +121,9 @@ io.sockets.on('connection', function(socket) {
 
 	var handleMsg = function(action, sql, v1, v2) {
 		// make sure that node exists, ignore error
-		db.query('INSERT INTO nodes (topic, id) VALUES ($1, $2)', [topic, id], function() {
+		return queryDB('INSERT INTO nodes (topic, id) VALUES ($1, $2)', [topic, id]).catch(function() {
+			return;
+		}).then(function() {
 			log.debug('Handeling:', action, topic, id, v1, v2);
 			io.to(topic).emit(action, id, v1, v2);
 
@@ -125,7 +137,7 @@ io.sockets.on('connection', function(socket) {
 				if (n >= 3) params.push(v1);
 				if (n >= 4) params.push(v2);
 
-				return db.query(s, params, throwErr);
+				return queryDB(s, params);
 			}));
 		});
 	};
@@ -169,7 +181,7 @@ io.sockets.on('connection', function(socket) {
 	socket.on('testClear', function(done) {
 		if (topic.substr(0, 4) === 'test') {
 			log.debug('Handeling:', 'testClear', topic);
-			db.query("DELETE FROM nodes WHERE topic = $1", [topic], done);
+			queryDB("DELETE FROM nodes WHERE topic = $1", [topic]).then(done);
 		} else {
 			done();
 		}
