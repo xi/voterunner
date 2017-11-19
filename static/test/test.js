@@ -42,7 +42,7 @@ describe('load', function() {
 	});
 
 	it('should work without error', function() {
-		expect(browser.contentDocument.querySelector('#name')).to.exist;
+		expect(browser.contentDocument.querySelector('.user__name')).to.exist;
 	});
 	it('should set the page title', function() {
 		var title = browser.contentDocument.title;
@@ -61,7 +61,7 @@ describe('setName', function() {
 			browser = b;
 			d = browser.contentDocument;
 
-			userName = d.querySelector('#name input');
+			userName = d.querySelector('.user__name input');
 			userName.value = name;
 			userName.dispatchEvent(new Event('change'));
 
@@ -84,18 +84,18 @@ describe('setName', function() {
 
 	it('should set node name', function() {
 		node = d.getElementById('node-' + ID);
-		nodeName = node.querySelector('.body .name').textContent;
+		nodeName = node.querySelector('.node__name').textContent;
 		expect(nodeName).to.equal(name);
 	});
 
 	it('should be permanent', function(done) {
 		browser.reload(function() {
 			d = browser.contentDocument;
-			userName = d.querySelector('#name input').value;
+			userName = d.querySelector('.user__name input').value;
 			expect(userName).to.equal(name);
 
 			node = d.getElementById('node-' + ID);
-			nodeName = node.querySelector('.body .name').textContent;
+			nodeName = node.querySelector('.node__name').textContent;
 			expect(nodeName).to.equal(name);
 
 			done();
@@ -114,7 +114,7 @@ describe('setComment', function() {
 			browser = b;
 			d = browser.contentDocument;
 
-			userComment = d.querySelector('#comment textarea');
+			userComment = d.querySelector('.user__comment textarea');
 			userComment.value = comment;
 			userComment.dispatchEvent(new Event('change'));
 
@@ -137,18 +137,22 @@ describe('setComment', function() {
 
 	it('should set node comment', function() {
 		node = d.getElementById('node-' + ID);
-		nodeComment = node.querySelector('.body .comment').textContent.trim();
+		nodeExpand = node.querySelector('.node__expand');
+		nodeExpand.dispatchEvent(new Event('click'));
+		nodeComment = node.querySelector('.node__comment').textContent.trim();
 		expect(nodeComment).to.equal(comment);
 	});
 
 	it('should be permanent', function(done) {
 		browser.reload(function() {
 			d = browser.contentDocument;
-			userComment = d.querySelector('#comment textarea').value;
+			userComment = d.querySelector('.user__comment textarea').value;
 			expect(userComment).to.equal(comment);
 
 			node = d.getElementById('node-' + ID);
-			nodeComment = node.querySelector('.body .comment').textContent.trim();
+			nodeExpand = node.querySelector('.node__expand');
+			nodeExpand.dispatchEvent(new Event('click'));
+			nodeComment = node.querySelector('.node__comment').textContent.trim();
 			expect(nodeComment).to.equal(comment);
 
 			done();
@@ -177,14 +181,14 @@ describe('remove', function() {
 			browser.contentWindow.confirm = function() {return true};
 
 			// create something to delete
-			userName = d.querySelector('#name input');
+			userName = d.querySelector('.user__name input');
 			userName.value = 'testName';
 			userName.dispatchEvent(new Event('change'));
-			userComment = d.querySelector('#comment textarea');
+			userComment = d.querySelector('.user__comment textarea');
 			userComment.value = 'testComment';
 			userComment.dispatchEvent(new Event('change'));
 
-			userRemove = d.querySelector('#rm');
+			userRemove = d.querySelector('.user__rm');
 			userRemove.dispatchEvent(new Event('click'));
 
 			setTimeout(done, TIMEOUT);
@@ -201,12 +205,12 @@ describe('remove', function() {
 	});
 
 	it('should clear user name', function() {
-		userName = d.querySelector('#name input').value;
+		userName = d.querySelector('.user__name input').value;
 		expect(userName).to.equal('');
 	});
 
 	it('should clear user comment', function() {
-		userComment = d.querySelector('#comment textarea').value;
+		userComment = d.querySelector('.user__comment textarea').value;
 		expect(userComment).to.equal('');
 	});
 
