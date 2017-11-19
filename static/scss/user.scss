@@ -10,12 +10,6 @@
 	}
 }
 
-.user__undelegate {
-	&:before {
-		content: "‒";
-	}
-}
-
 .user__name {
 	input {
 		font-size: 120%;
@@ -27,10 +21,6 @@
 	font-size: 120%;
 	padding: $padding;
 	line-height: 1.6;
-
-	&:before {
-		content: "X";
-	}
 }
 
 .user__comment textarea {

@@ -40,10 +40,6 @@
 	}
 
 	&.is-expanded > .node__body {
-		.node__expand:before {
-			content: "v";
-		}
-
 		.node__header {
 			border-bottom: 1px solid $color-border;
 		}
@@ -59,12 +55,6 @@
 .node__header {
 	@media screen {
 		background-color: $color-bg-tint;
-	}
-}
-
-.node__expand {
-	&:before {
-		content: ">";
 	}
 }
 

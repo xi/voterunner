@@ -114,12 +114,12 @@ var tplNode = function(nodes, node, ID) {
 				h('button', {
 					className: 'node__expand bar__item bar__item--button bar__item--left',
 					title: _(node.expanded ? 'collapse' : 'expand'),
-				}),
+				}, node.expanded ? '\u25BC' : '\u25B6'),
 				h('button', {
 					className: 'node__delegate bar__item bar__item--button bar__item--right',
 					title: _('delegate to ') + getName(node),
 					attributes: delegateAttrs,
-				}, '+'),
+				}, '\u2795'),
 				h('div', {className: 'node__votes bar__item bar__item--right'}, '' + getVotes(nodes, node)),
 				h('div', {className: 'node__name bar__item' + (!node.expanded && node.comment ? '' : ' bar__item--grow')}, getName(node)),
 				!node.expanded && node.comment && h('div', {className: 'node__preview bar__item bar__item--grow'}, node.comment.substr(0, 100)),
