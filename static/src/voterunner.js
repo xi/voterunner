@@ -115,7 +115,7 @@ var tplNode = function(nodes, node, ID) {
 					className: 'node__expand bar__item bar__item--button bar__item--left',
 					title: _(node.expanded ? 'collapse' : 'expand'),
 				}),
-				node.id !== ID && h('button', {
+				h('button', {
 					className: 'node__delegate bar__item bar__item--button bar__item--right',
 					title: _('delegate to ') + getName(node),
 					attributes: delegateAttrs,

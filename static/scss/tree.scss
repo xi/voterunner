@@ -16,15 +16,21 @@
 		outline-offset: -2px;
 	}
 
-	&.node--self > .node__body {
-		.node__header {
-			@media screen {
-				background-color: $color-link;
-				color: $color-bg;
-			}
+	&.node--self {
+		.node__delegate {
+			display: none;
+		}
 
-			@media print {
-				font-weight: bold;
+		> .node__body {
+			.node__header {
+				@media screen {
+					background-color: $color-link;
+					color: $color-bg;
+				}
+
+				@media print {
+					font-weight: bold;
+				}
 			}
 		}
 	}
