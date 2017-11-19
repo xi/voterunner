@@ -20,6 +20,7 @@ var log4js = require('log4js');
 var MarkdownIt = require('markdown-it');
 
 var DATABASE_URL = process.env.DATABASE_URL;
+var SQLITE = DATABASE_URL.match(/^sqlite/);
 var PORT = process.env.PORT || 5000;
 var HOST = process.env.HOST || 'localhost';
 
@@ -31,13 +32,15 @@ server.listen(PORT, HOST, function() {
 	log.info('Listening on ' + HOST + ':' + PORT);
 });
 
-var db = anyDB.createPool(DATABASE_URL);
+var db = anyDB.createPool(DATABASE_URL, {
+	max: SQLITE ? 1 : 10,
+});
 process.on('exit', (code) => {
 	db.close();
 });
 
 var queryDB = function(sql, data) {
-	if (DATABASE_URL.match(/^sqlite/)) {
+	if (SQLITE) {
 		sql = sql.replace(/\$/g, '?');
 	}
 
