@@ -33,6 +33,15 @@ var throttle = function(fn, timeout) {
 	return result;
 };
 
+var on = function(element, eventType, selector, fn) {
+	element.addEventListener(eventType, function(event) {
+		var target = event.target.closest(selector);
+		if (target && element.contains(target)) {
+			return fn.call(target, event);
+		}
+	});
+};
+
 var getVotes = function(nodes, node) {
 	if (!node.votes) {
 		node.votes = 1 + nodes
@@ -214,33 +223,25 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	};
 
-	var toggleExpand = function(event) {
-		var nodeElement = event.target.parentElement.parentElement.parentElement;
+	var update = initVDom(document.querySelector('#tree'), nodes, ID, function() {
+		updateUser();
+	});
+
+	on(document, 'click', '.node__expand', function() {
+		var nodeElement = this.parentElement.parentElement.parentElement;
 		var id = nodeElement.id.substr(5);
 		var node = getNode(id);
 		node.expanded = !node.expanded;
 		update(nodes);
-	};
-
-	var setDelegate = function(event) {
-		var nodeElement = event.target.parentElement.parentElement.parentElement;
-		var id = nodeElement.id.substr(5);
-		socket.emit('setDelegate', id);
-	};
-
-	var update = initVDom(document.querySelector('#tree'), nodes, ID, function() {
-		updateUser();
-
-		document.querySelectorAll('.node__expand').forEach(function(element) {
-			element.addEventListener('click', toggleExpand);
-		});
-
-		document.querySelectorAll('.node__delegate').forEach(function(element) {
-			element.addEventListener('click', setDelegate);
-		});
 	});
 
-	document.querySelector('.user__rm').addEventListener('click', function(event) {
+	on(document, 'click', '.node__delegate', function() {
+		var nodeElement = this.parentElement.parentElement.parentElement;
+		var id = nodeElement.id.substr(5);
+		socket.emit('setDelegate', id);
+	});
+
+	on(document, 'click', '.user__rm', function() {
 		if (confirm(_('Do you really want to delete this opinion?'))) {
 			socket.emit('rmNode');
 			document.querySelector('.user__name input').value = '';
@@ -248,15 +249,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	document.querySelector('.user__name input').addEventListener('change', function(event) {
-		socket.emit('setNodeName', event.target.value);
+	on(document, 'change', '.user__name input', function() {
+		socket.emit('setNodeName', this.value);
 	});
 
-	document.querySelector('.user__undelegate').addEventListener('click', function(event) {
+	on(document, 'click', '.user__undelegate', function() {
 		socket.emit('rmDelegate');
 	});
 
-	var pushComment = throttle(function() {
+	on(document, 'input', '.user__comment textarea', throttle(function() {
 		var comment = document.querySelector('.user__comment textarea').value;
 		var node = nodes.find(n => n.id === ID);
 		// Do not create a new node if the comment is empty.
@@ -264,10 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (node || comment) {
 			socket.emit('setNodeComment', comment);
 		}
-	}, 1000);
-
-	document.querySelector('.user__comment textarea').addEventListener('change', pushComment);
-	document.querySelector('.user__comment textarea').addEventListener('keydown', pushComment);
+	}, 1000));
 
 	socket.on('rmNode', function(id) {
 		nodes = nodes.filter(function(node) {

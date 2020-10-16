@@ -3,6 +3,10 @@
 var TIMEOUT = 400;
 var ID = 'testID';
 
+var trigger = function(target, type) {
+	target.dispatchEvent(new Event(type, {bubbles: true}));
+};
+
 var setUp = function(url, fn) {
 	var iframe = document.createElement('iframe');
 	iframe.onload = function() {fn(iframe)};
@@ -65,7 +69,7 @@ describe('setName', function() {
 
 			userName = d.querySelector('.user__name input');
 			userName.value = name;
-			userName.dispatchEvent(new Event('change'));
+			trigger(userName, 'change');
 
 			setTimeout(done, TIMEOUT);
 		});
@@ -118,7 +122,7 @@ describe('setComment', function() {
 
 			userComment = d.querySelector('.user__comment textarea');
 			userComment.value = comment;
-			userComment.dispatchEvent(new Event('change'));
+			trigger(userComment, 'input');
 
 			setTimeout(done, TIMEOUT);
 		});
@@ -140,7 +144,7 @@ describe('setComment', function() {
 	it('should set node comment', function() {
 		node = d.getElementById('node-' + ID);
 		nodeExpand = node.querySelector('.node__expand');
-		nodeExpand.dispatchEvent(new Event('click'));
+		trigger(nodeExpand, 'click');
 		nodeComment = node.querySelector('.node__comment').textContent.trim();
 		expect(nodeComment).to.equal(comment);
 	});
@@ -153,7 +157,7 @@ describe('setComment', function() {
 
 			node = d.getElementById('node-' + ID);
 			nodeExpand = node.querySelector('.node__expand');
-			nodeExpand.dispatchEvent(new Event('click'));
+			trigger(nodeExpand, 'click');
 			nodeComment = node.querySelector('.node__comment').textContent.trim();
 			expect(nodeComment).to.equal(comment);
 
@@ -184,13 +188,13 @@ describe('remove', function() {
 			// create something to delete
 			userName = d.querySelector('.user__name input');
 			userName.value = 'testName';
-			userName.dispatchEvent(new Event('change'));
+			trigger(userName, 'change');
 			userComment = d.querySelector('.user__comment textarea');
 			userComment.value = 'testComment';
-			userComment.dispatchEvent(new Event('change'));
+			trigger(userComment, 'input');
 
 			userRemove = d.querySelector('.user__rm');
-			userRemove.dispatchEvent(new Event('click'));
+			trigger(userRemove, 'click');
 
 			setTimeout(done, TIMEOUT);
 		});
