@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	socket.emit('register', TOPIC, ID);
 
 	var state = {
-		nodes: JSON.parse(document.querySelector('#json-nodes').dataset.value),
+		nodes: [],
 		id: ID,
 	};
 
