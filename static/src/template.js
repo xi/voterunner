@@ -1,7 +1,4 @@
 var h = require('preact').h;
-var MarkdownIt = require('markdown-it');
-
-var md = new MarkdownIt();
 
 var getVotes = function(nodes, node) {
 	if (!node.votes) {
@@ -79,12 +76,7 @@ var tplNode = function(nodes, node, ID) {
 				h('div', {className: 'node__name bar__item' + (!node.expanded && node.comment ? '' : ' bar__item--grow')}, getName(node)),
 				!node.expanded && node.comment && h('div', {className: 'node__preview bar__item bar__item--grow'}, node.comment.substr(0, 100)),
 			]),
-			node.expanded && h('div', {
-				className: 'node__comment',
-				dangerouslySetInnerHTML: {
-					__html: md.render(node.comment || ''),
-				},
-			}),
+			node.expanded && h('div', {className: 'node__comment'}, node.comment || ''),
 		]),
 		h('ul', {
 			className: 'tree',

@@ -64,11 +64,5 @@
 
 .node__comment {
 	padding: $padding;
-
-	> :first-child {
-		margin-top: 0;
-	}
-	> :last-child {
-		margin-bottom: 0;
-	}
+	white-space: pre-wrap;
 }
