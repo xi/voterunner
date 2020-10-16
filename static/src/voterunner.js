@@ -9,12 +9,6 @@ var _ = function(s) {
 	return s;
 };
 
-var forEach = function(list, fn) {
-	for (var i = 0; i < list.length; i++) {
-		fn(list[i], i);
-	}
-};
-
 var throttle = function(fn, timeout) {
 	var called, blocked;
 
@@ -237,11 +231,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	var update = initVDom(document.querySelector('#tree'), nodes, ID, function() {
 		updateUser();
 
-		forEach(document.querySelectorAll('.node__expand'), function(element) {
+		document.querySelectorAll('.node__expand').forEach(function(element) {
 			element.addEventListener('click', toggleExpand);
 		});
 
-		forEach(document.querySelectorAll('.node__delegate'), function(element) {
+		document.querySelectorAll('.node__delegate').forEach(function(element) {
 			element.addEventListener('click', setDelegate);
 		});
 	});
