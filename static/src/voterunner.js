@@ -41,13 +41,10 @@ var throttle = function(fn, timeout) {
 
 var getVotes = function(nodes, node) {
 	if (!node.votes) {
-		node.votes = 1 + nodes.filter(function(follower) {
-			return follower.delegate === node.id;
-		}).map(function(follower) {
-			return getVotes(nodes, follower);
-		}).reduce(function(a, b) {
-			return a + b;
-		}, 0);
+		node.votes = 1 + nodes
+			.filter(n => n.delegate === node.id)
+			.map(n => getVotes(nodes, n))
+			.reduce((sum, n) => sum + n, 0);
 	}
 
 	return node.votes;
@@ -56,9 +53,7 @@ var getVotes = function(nodes, node) {
 var getDelegationChain = function(nodes, node) {
 	if (!node.delegationChain) {
 		if (node.delegate) {
-			var delegate = nodes.find(function(n) {
-				return n.id === node.delegate;
-			});
+			var delegate = nodes.find(n => n.id === node.delegate);
 			var delegationChain = getDelegationChain(nodes, delegate);
 			node.delegationChain = [node.delegate].concat(delegationChain);
 		} else {
@@ -74,14 +69,10 @@ var getName = function(node) {
 };
 
 var tplFollowers = function(nodes, id, ID) {
-	var _tplNode = function(node) {
-		return tplNode(nodes, node, ID);
-	};
-	return nodes.filter(function(node) {
-		return node.delegate === id;
-	}).sort(function(a, b) {
-		return getVotes(nodes, b) - getVotes(nodes, a);
-	}).map(_tplNode);
+	return nodes
+		.filter(n => n.delegate === id)
+		.sort((a, b) => getVotes(nodes, b) - getVotes(nodes, a))
+		.map(n => tplNode(nodes, n, ID));
 };
 
 var tplNode = function(nodes, node, ID) {
@@ -185,9 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var nodes = JSON.parse(document.querySelector('#json-nodes').dataset.value);
 
 	var getNode = function(id) {
-		var node = nodes.find(function(node) {
-			return node.id === id;
-		});
+		var node = nodes.find(n => n.id === id);
 		if (!node) {
 			node = {
 				id: id,
@@ -213,9 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	};
 
-	var user = nodes.find(function(node) {
-		return node.id === ID;
-	});
+	var user = nodes.find(n => n.id === ID);
 	if (user) {
 		document.querySelector('.user__name input').value = user.name;
 		document.querySelector('.user__comment textarea').value = user.comment;
@@ -277,9 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var pushComment = throttle(function() {
 		var comment = document.querySelector('.user__comment textarea').value;
-		var node = nodes.find(function(n) {
-			return n.id === ID;
-		});
+		var node = nodes.find(n => n.id === ID);
 		// Do not create a new node if the comment is empty.
 		// This can happen e.g. on a keydown event from the ctrl or shift keys.
 		if (node || comment) {

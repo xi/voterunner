@@ -179,7 +179,7 @@ describe('remove', function() {
 		setUp('/test' + test + '/' + ID, function(b) {
 			browser = b;
 			d = browser.contentDocument;
-			browser.contentWindow.confirm = function() {return true};
+			browser.contentWindow.confirm = () => true;
 
 			// create something to delete
 			userName = d.querySelector('.user__name input');
