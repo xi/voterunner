@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" class="voterunner">
-
+<html class="voterunner">
 <head>
 	<meta charset="utf-8">
 	<title>voterunner - {{ topic }}</title>
@@ -8,9 +7,7 @@
 	<meta name="robots" content="noindex" />
 	<link rel="shortcut icon" href="/favicon.ico"/>
 	<link rel="stylesheet" type="text/css" href="/style.css" />
-	<script type="text/javascript" src="/voterunner.js"></script>
 </head>
-
 <body>
 	<header>
 		<h1><span class="logo1">vote</span>runner</h1>
@@ -31,7 +28,7 @@
 					</div>
 				</div>
 				<div class="user__comment">
-					<textarea></textarea>
+					<textarea autocomplete="off"></textarea>
 				</div>
 			</div>
 		</div>
@@ -41,6 +38,6 @@
 
 	{{ nodes|json }}
 
+	<script type="text/javascript" src="/voterunner.js"></script>
 </body>
-
 </html>
