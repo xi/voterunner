@@ -80,12 +80,6 @@ lines will bring it up:
     $ open http://localhost:5000/  # introduction
     $ open http://localhost:5000/my-topic/  # discuss on a topic
 
-For development it may be nice to automatically restart the app and refresh the
-browser whenever you make changes:
-
-    $ pip install -r watch_requirements.txt
-    $ bin/watch.py
-
 
 Development
 -----------
