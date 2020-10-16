@@ -4,7 +4,7 @@ static/voterunner.js: static/src/voterunner.js
 	browserify $< -o $@
 
 static/style.css: static/scss/*.scss
-	node-sass static/scss/style.scss > $@
+	sassc static/scss/style.scss $@
 
 clean:
 	rm static/voterunner.js static/style.css
