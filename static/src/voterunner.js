@@ -94,7 +94,7 @@ var tplNode = function(nodes, node, ID) {
 	}
 
 	var delegateAttrs = {};
-	if (node.id === ID || getDelegationChain(nodes, node).indexOf(ID) !== -1) {
+	if (node.id === ID || getDelegationChain(nodes, node).includes(ID)) {
 		delegateAttrs.disabled = true;
 	}
 
@@ -127,7 +127,7 @@ var tplNode = function(nodes, node, ID) {
 			node.expanded && h('div', {
 				className: 'node__comment',
 				dangerouslySetInnerHTML: {
-					__html: md.render(node.comment || '')
+					__html: md.render(node.comment || ''),
 				},
 			}),
 		]),
@@ -162,7 +162,7 @@ var uid = function() {
 	// just enough uniqueness
 	var a = Math.random() * Date.now() * 0x1000;
 	return Math.floor(a).toString(36);
-}
+};
 var setCookie = function(key, value, days) {
 	localStorage[key] = value;
 };
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	document.querySelector('.user__rm').addEventListener('click', function(event) {
-		if (confirm(_("Do you really want to delete this opinion?"))) {
+		if (confirm(_('Do you really want to delete this opinion?'))) {
 			socket.emit('rmNode');
 			document.querySelector('.user__name input').value = '';
 			document.querySelector('.user__comment textarea').value = '';

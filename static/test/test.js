@@ -1,7 +1,9 @@
-var TIMEOUT = 400;
-var ID = 'testID'
+/* global describe, before, after, it, expect */
 
-setUp = function(url, fn) {
+var TIMEOUT = 400;
+var ID = 'testID';
+
+var setUp = function(url, fn) {
 	var iframe = document.createElement('iframe');
 	iframe.onload = function() {fn(iframe)};
 	iframe.url = url;
@@ -107,7 +109,7 @@ describe('setComment', function() {
 	var test = 'setComment';
 	var comment = 'testComment';
 	var browser;
-	var d, userComment, node, nodeComment;
+	var d, userComment, node, nodeComment, nodeExpand;
 
 	before(function(done) {
 		setUp('/test' + test + '/' + ID, function(b) {
@@ -170,7 +172,6 @@ describe('removeDelegate', function() {
 
 describe('remove', function() {
 	var test = 'remove';
-	var comment = 'testComment';
 	var browser;
 	var d, userName, userComment, userRemove;
 
