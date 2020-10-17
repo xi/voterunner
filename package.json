@@ -2,8 +2,8 @@
 	"name": "voterunner",
 	"version": "0.0.1",
 	"devDependencies": {
-		"mfbs": "^3.1.1",
-		"preact": "^8.2.6"
+		"preact": "^10.5.4",
+		"mfbs": "^4.0.0"
 	},
 	"author": "Tobias Bengfort",
 	"license": "AGPL-3+"
