@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var user = state.nodes.find(n => n.id === state.id);
 	if (user) {
-		document.querySelector('.user__name input').value = user.name;
 		document.querySelector('.user__comment textarea').value = user.comment;
 		ensureVisible(user);
 	}
@@ -56,8 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.querySelector('.user__votes').textContent = template.getVotes(state.nodes, user || {});
 
 		if (user && user.delegate) {
-			var delegatee = getNode(user.delegate);
-			document.querySelector('.user__delegation').textContent = 'delegated to: ' + template.getName(delegatee);
+			document.querySelector('.user__delegation').textContent = 'delegated to: ' + user.delegate;
 		} else {
 			document.querySelector('.user__delegation').textContent = '(no delegation)';
 		}
@@ -84,13 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	utils.on(document, 'click', '.user__rm', function() {
 		if (confirm('Do you really want to delete this opinion?')) {
 			socket.emit('rmNode');
-			document.querySelector('.user__name input').value = '';
 			document.querySelector('.user__comment textarea').value = '';
 		}
 	});
 
 	utils.on(document, 'change', '.user__name input', function() {
-		socket.emit('setNodeName', this.value);
+		state.id = this.value;
+		update(state);
 	});
 
 	utils.on(document, 'click', '.user__undelegate', function() {
@@ -115,10 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			return node.id !== id;
 		});
 		invalidateVotes();
-		update(state);
-	});
-	socket.on('setNodeName', function(id, name) {
-		getNode(id).name = name;
 		update(state);
 	});
 	socket.on('setNodeComment', function(id, comment) {

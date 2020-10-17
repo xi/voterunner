@@ -25,10 +25,6 @@ var getDelegationChain = function(nodes, node) {
 	return node.delegationChain;
 };
 
-var getName = function(node) {
-	return node.name || 'anonymous';
-};
-
 var tplFollowers = function(state, id) {
 	return state.nodes
 		.filter(n => n.delegate === id)
@@ -64,14 +60,14 @@ var tplNode = function(state, node) {
 				}, node.expanded ? '\u25BC' : '\u25B6'),
 				h('button', {
 					className: 'node__delegate bar__item bar__item--button bar__item--right',
-					title: 'delegate to ' + getName(node),
+					title: 'delegate to ' + node.id,
 					disabled: (
 						node.id === state.id ||
 						getDelegationChain(state.nodes, node).includes(state.id)
 					),
 				}, '\u2795'),
 				h('div', {className: 'node__votes bar__item bar__item--right'}, '' + getVotes(state.nodes, node)),
-				h('div', {className: 'node__name bar__item' + (!node.expanded && node.comment ? '' : ' bar__item--grow')}, getName(node)),
+				h('div', {className: 'node__name bar__item' + (!node.expanded && node.comment ? '' : ' bar__item--grow')}, node.id),
 				!node.expanded && node.comment && h('div', {className: 'node__preview bar__item bar__item--grow'}, node.comment.substr(0, 100)),
 			]),
 			node.expanded && h('div', {className: 'node__comment'}, node.comment || ''),
@@ -92,6 +88,5 @@ var template = function(state) {
 
 module.exports = {
 	getVotes: getVotes,
-	getName: getName,
 	template: template,
 };
