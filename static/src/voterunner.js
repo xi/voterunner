@@ -13,22 +13,25 @@ document.addEventListener('DOMContentLoaded', function() {
 	window.socket = socket;  // make available for tests
 	socket.emit('register', TOPIC, ID);
 
-	var nodes = JSON.parse(document.querySelector('#json-nodes').dataset.value);
+	var state = {
+		nodes: JSON.parse(document.querySelector('#json-nodes').dataset.value),
+		id: ID,
+	};
 
 	var getNode = function(id) {
-		var node = nodes.find(n => n.id === id);
+		var node = state.nodes.find(n => n.id === id);
 		if (!node) {
 			node = {
 				id: id,
 				delegate: null,
 			};
-			nodes.push(node);
+			state.nodes.push(node);
 		}
 		return node;
 	};
 
 	var invalidateVotes = function() {
-		nodes.forEach(function(node) {
+		state.nodes.forEach(function(node) {
 			node.votes = null;
 			node.delegationChain = null;
 		});
@@ -42,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	};
 
-	var user = nodes.find(n => n.id === ID);
+	var user = state.nodes.find(n => n.id === state.id);
 	if (user) {
 		document.querySelector('.user__name input').value = user.name;
 		document.querySelector('.user__comment textarea').value = user.comment;
@@ -50,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	var updateUser = function() {
-		document.querySelector('.user__votes').textContent = template.getVotes(nodes, user || {});
+		document.querySelector('.user__votes').textContent = template.getVotes(state.nodes, user || {});
 
 		if (user && user.delegate) {
 			var delegatee = getNode(user.delegate);
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	};
 
-	var update = utils.initVDom(document.querySelector('#tree'), template.template, nodes, ID, function() {
+	var update = utils.initVDom(document.querySelector('#tree'), template.template, state, function() {
 		updateUser();
 	});
 
@@ -69,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var id = nodeElement.id.substr(5);
 		var node = getNode(id);
 		node.expanded = !node.expanded;
-		update(nodes);
+		update(state);
 	});
 
 	utils.on(document, 'click', '.node__delegate', function() {
@@ -96,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	utils.on(document, 'input', '.user__comment textarea', utils.throttle(function() {
 		var comment = document.querySelector('.user__comment textarea').value;
-		var node = nodes.find(n => n.id === ID);
+		var node = state.nodes.find(n => n.id === state.id);
 		// Do not create a new node if the comment is empty.
 		// This can happen e.g. on a keydown event from the ctrl or shift keys.
 		if (node || comment) {
@@ -105,32 +108,32 @@ document.addEventListener('DOMContentLoaded', function() {
 	}, 1000));
 
 	socket.on('rmNode', function(id) {
-		nodes = nodes.filter(function(node) {
+		state.nodes = state.nodes.filter(function(node) {
 			if (node.delegate === id) {
 				node.delegate = null;
 			}
 			return node.id !== id;
 		});
 		invalidateVotes();
-		update(nodes);
+		update(state);
 	});
 	socket.on('setNodeName', function(id, name) {
 		getNode(id).name = name;
-		update(nodes);
+		update(state);
 	});
 	socket.on('setNodeComment', function(id, comment) {
 		getNode(id).comment = comment;
-		update(nodes);
+		update(state);
 	});
 	socket.on('setDelegate', function(id, delegate) {
 		getNode(id).delegate = delegate;
 		invalidateVotes();
 		ensureVisible(user);
-		update(nodes);
+		update(state);
 	});
 	socket.on('rmDelegate', function(id) {
 		getNode(id).delegate = null;
 		invalidateVotes();
-		update(nodes);
+		update(state);
 	});
 });

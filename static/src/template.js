@@ -29,19 +29,19 @@ var getName = function(node) {
 	return node.name || 'anonymous';
 };
 
-var tplFollowers = function(nodes, id, ID) {
-	return nodes
+var tplFollowers = function(state, id) {
+	return state.nodes
 		.filter(n => n.delegate === id)
-		.sort((a, b) => getVotes(nodes, b) - getVotes(nodes, a))
-		.map(n => tplNode(nodes, n, ID));
+		.sort((a, b) => getVotes(state.nodes, b) - getVotes(state.nodes, a))
+		.map(n => tplNode(state, n));
 };
 
-var tplNode = function(nodes, node, ID) {
+var tplNode = function(state, node) {
 	var classList = [];
 	if (node.expanded) {
 		classList.push('is-expanded');
 	}
-	if (node.id === ID) {
+	if (node.id === state.id) {
 		classList.push('node--self');
 	}
 
@@ -66,11 +66,11 @@ var tplNode = function(nodes, node, ID) {
 					className: 'node__delegate bar__item bar__item--button bar__item--right',
 					title: 'delegate to ' + getName(node),
 					disabled: (
-						node.id === ID ||
-						getDelegationChain(nodes, node).includes(ID)
+						node.id === state.id ||
+						getDelegationChain(state.nodes, node).includes(state.id)
 					),
 				}, '\u2795'),
-				h('div', {className: 'node__votes bar__item bar__item--right'}, '' + getVotes(nodes, node)),
+				h('div', {className: 'node__votes bar__item bar__item--right'}, '' + getVotes(state.nodes, node)),
 				h('div', {className: 'node__name bar__item' + (!node.expanded && node.comment ? '' : ' bar__item--grow')}, getName(node)),
 				!node.expanded && node.comment && h('div', {className: 'node__preview bar__item bar__item--grow'}, node.comment.substr(0, 100)),
 			]),
@@ -79,15 +79,15 @@ var tplNode = function(nodes, node, ID) {
 		h('ul', {
 			className: 'tree',
 			role: 'group',
-		}, tplFollowers(nodes, node.id, ID)),
+		}, tplFollowers(state, node.id)),
 	]);
 };
 
-var template = function(nodes, ID) {
+var template = function(state) {
 	return h('ul', {
 		className: 'tree',
 		role: 'tree',
-	}, tplFollowers(nodes, null, ID));
+	}, tplFollowers(state, null));
 };
 
 module.exports = {

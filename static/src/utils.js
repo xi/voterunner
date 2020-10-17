@@ -33,14 +33,14 @@ var on = function(element, eventType, selector, fn) {
 	});
 };
 
-var initVDom = function(wrapper, template, nodes, ID, afterRender) {
+var initVDom = function(wrapper, template, state, afterRender) {
 	wrapper.innerHTML = '';
-	var tree = template(nodes, ID);
+	var tree = template(state);
 	var element = preact.render(tree, wrapper);
 	afterRender();
 
 	return function(newState) {
-		var newTree = template(newState, ID);
+		var newTree = template(newState);
 		preact.render(newTree, wrapper, element);
 		afterRender();
 	};
