@@ -7,7 +7,7 @@ static/style.css: static/scss/*.scss
 	node-sass static/scss/style.scss > $@
 
 clean:
-	rm static/voterunner.js static/markdown.js static/style.css
+	rm static/voterunner.js static/style.css
 
 .PHONY: server
 server: all
