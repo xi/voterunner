@@ -5,10 +5,6 @@ var io = require('socket.io-client');
 
 var md = new MarkdownIt();
 
-var _ = function(s) {
-	return s;
-};
-
 var throttle = function(fn, timeout) {
 	var called, blocked;
 
@@ -68,7 +64,7 @@ var getDelegationChain = function(nodes, node) {
 };
 
 var getName = function(node) {
-	return node.name || _('anonymous');
+	return node.name || 'anonymous';
 };
 
 var tplFollowers = function(nodes, id, ID) {
@@ -107,11 +103,11 @@ var tplNode = function(nodes, node, ID) {
 			}, [
 				h('button', {
 					className: 'node__expand bar__item bar__item--button bar__item--left',
-					title: _(node.expanded ? 'collapse' : 'expand'),
+					title: node.expanded ? 'collapse' : 'expand',
 				}, node.expanded ? '\u25BC' : '\u25B6'),
 				h('button', {
 					className: 'node__delegate bar__item bar__item--button bar__item--right',
-					title: _('delegate to ') + getName(node),
+					title: 'delegate to ' + getName(node),
 					attributes: delegateAttrs,
 				}, '\u2795'),
 				h('div', {className: 'node__votes bar__item bar__item--right'}, '' + getVotes(nodes, node)),
@@ -217,9 +213,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		if (user && user.delegate) {
 			var delegatee = getNode(user.delegate);
-			document.querySelector('.user__delegation').textContent = _('delegated to: ') + getName(delegatee);
+			document.querySelector('.user__delegation').textContent = 'delegated to: ' + getName(delegatee);
 		} else {
-			document.querySelector('.user__delegation').textContent = _('(no delegation)');
+			document.querySelector('.user__delegation').textContent = '(no delegation)';
 		}
 	};
 
@@ -242,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	on(document, 'click', '.user__rm', function() {
-		if (confirm(_('Do you really want to delete this opinion?'))) {
+		if (confirm('Do you really want to delete this opinion?')) {
 			socket.emit('rmNode');
 			document.querySelector('.user__name input').value = '';
 			document.querySelector('.user__comment textarea').value = '';
