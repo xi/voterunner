@@ -84,10 +84,9 @@ lines will bring it up:
 Development
 -----------
 
-The repository contains all necessary compiled files. If you want to edit the
-code yourself you will need to install [sassc](https://github.com/sass/sassc)
-and [browserify](https://www.npmjs.com/package/browserify). Once these
-requirements are met, you can simply run `make`.
+You will need to install [sassc](https://github.com/sass/sassc) and
+[browserify](https://www.npmjs.com/package/browserify). Once these
+requirements are met, you can simply run `make` to build all files.
 
 
 API

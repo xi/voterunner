@@ -1,3 +1,5 @@
 node_modules
 data
 db.sqlite3
+static/style.css
+static/voterunner.js
