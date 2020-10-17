@@ -1,172 +1,13 @@
-var preact = require('preact');
-var h = require('preact').h;
-var MarkdownIt = require('markdown-it');
 var io = require('socket.io-client');
-
-var md = new MarkdownIt();
-
-var throttle = function(fn, timeout) {
-	var called, blocked;
-
-	var result = function() {
-		if (blocked) {
-			called = true;
-		} else {
-			fn();
-			blocked = true;
-			called = false;
-
-			setTimeout(function() {
-				blocked = false;
-
-				if (called) {
-					result();
-				}
-			}, timeout);
-		}
-	};
-
-	return result;
-};
-
-var on = function(element, eventType, selector, fn) {
-	element.addEventListener(eventType, function(event) {
-		var target = event.target.closest(selector);
-		if (target && element.contains(target)) {
-			return fn.call(target, event);
-		}
-	});
-};
-
-var getVotes = function(nodes, node) {
-	if (!node.votes) {
-		node.votes = 1 + nodes
-			.filter(n => n.delegate === node.id)
-			.map(n => getVotes(nodes, n))
-			.reduce((sum, n) => sum + n, 0);
-	}
-
-	return node.votes;
-};
-
-var getDelegationChain = function(nodes, node) {
-	if (!node.delegationChain) {
-		if (node.delegate) {
-			var delegate = nodes.find(n => n.id === node.delegate);
-			var delegationChain = getDelegationChain(nodes, delegate);
-			node.delegationChain = [node.delegate].concat(delegationChain);
-		} else {
-			node.delegationChain = [];
-		}
-	}
-
-	return node.delegationChain;
-};
-
-var getName = function(node) {
-	return node.name || 'anonymous';
-};
-
-var tplFollowers = function(nodes, id, ID) {
-	return nodes
-		.filter(n => n.delegate === id)
-		.sort((a, b) => getVotes(nodes, b) - getVotes(nodes, a))
-		.map(n => tplNode(nodes, n, ID));
-};
-
-var tplNode = function(nodes, node, ID) {
-	var classList = [];
-	if (node.expanded) {
-		classList.push('is-expanded');
-	}
-	if (node.id === ID) {
-		classList.push('node--self');
-	}
-
-	var delegateAttrs = {};
-	if (node.id === ID || getDelegationChain(nodes, node).includes(ID)) {
-		delegateAttrs.disabled = true;
-	}
-
-	return h('li', {
-		key: 'node-' + node.id,
-		id: 'node-' + node.id,
-		className: 'node ' + classList.join(' '),
-		role: 'treeitem',
-		'aria-expanded': '' + !!node.expanded,
-	}, [
-		h('article', {
-			className: 'node__body',
-		}, [
-			h('header', {
-				className: 'node__header bar',
-			}, [
-				h('button', {
-					className: 'node__expand bar__item bar__item--button bar__item--left',
-					title: node.expanded ? 'collapse' : 'expand',
-				}, node.expanded ? '\u25BC' : '\u25B6'),
-				h('button', {
-					className: 'node__delegate bar__item bar__item--button bar__item--right',
-					title: 'delegate to ' + getName(node),
-					attributes: delegateAttrs,
-				}, '\u2795'),
-				h('div', {className: 'node__votes bar__item bar__item--right'}, '' + getVotes(nodes, node)),
-				h('div', {className: 'node__name bar__item' + (!node.expanded && node.comment ? '' : ' bar__item--grow')}, getName(node)),
-				!node.expanded && node.comment && h('div', {className: 'node__preview bar__item bar__item--grow'}, node.comment.substr(0, 100)),
-			]),
-			node.expanded && h('div', {
-				className: 'node__comment',
-				dangerouslySetInnerHTML: {
-					__html: md.render(node.comment || ''),
-				},
-			}),
-		]),
-		h('ul', {
-			className: 'tree',
-			role: 'group',
-		}, tplFollowers(nodes, node.id, ID)),
-	]);
-};
-
-var template = function(nodes, ID) {
-	return h('ul', {
-		className: 'tree',
-		role: 'tree',
-	}, tplFollowers(nodes, null, ID));
-};
-
-var initVDom = function(wrapper, nodes, ID, afterRender) {
-	wrapper.innerHTML = '';
-	var tree = template(nodes, ID);
-	var element = preact.render(tree, wrapper);
-	afterRender();
-
-	return function(newState) {
-		var newTree = template(newState, ID);
-		preact.render(newTree, wrapper, element);
-		afterRender();
-	};
-};
-
-var uid = function() {
-	// just enough uniqueness
-	var a = Math.random() * Date.now() * 0x1000;
-	return Math.floor(a).toString(36);
-};
-var setCookie = function(key, value, days) {
-	localStorage[key] = value;
-};
-
-var getCookie = function(key) {
-	return localStorage[key];
-};
+var template = require('./template');
+var utils = require('./utils');
 
 document.addEventListener('DOMContentLoaded', function() {
 	var TOPIC = document.URL.split('/')[3];
 	var ID = document.URL.split('/')[4];
-	if (!ID) ID = getCookie('id');
-	if (!ID) ID = uid();
-	setCookie('id', ID, 100);
+	if (!ID) ID = utils.getCookie('id');
+	if (!ID) ID = utils.randomString();
+	utils.setCookie('id', ID, 100);
 
 	var socket = io.connect('/');
 	window.socket = socket;  // make available for tests
@@ -209,21 +50,21 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	var updateUser = function() {
-		document.querySelector('.user__votes').textContent = getVotes(nodes, user || {});
+		document.querySelector('.user__votes').textContent = template.getVotes(nodes, user || {});
 
 		if (user && user.delegate) {
 			var delegatee = getNode(user.delegate);
-			document.querySelector('.user__delegation').textContent = 'delegated to: ' + getName(delegatee);
+			document.querySelector('.user__delegation').textContent = 'delegated to: ' + template.getName(delegatee);
 		} else {
 			document.querySelector('.user__delegation').textContent = '(no delegation)';
 		}
 	};
 
-	var update = initVDom(document.querySelector('#tree'), nodes, ID, function() {
+	var update = utils.initVDom(document.querySelector('#tree'), template.template, nodes, ID, function() {
 		updateUser();
 	});
 
-	on(document, 'click', '.node__expand', function() {
+	utils.on(document, 'click', '.node__expand', function() {
 		var nodeElement = this.parentElement.parentElement.parentElement;
 		var id = nodeElement.id.substr(5);
 		var node = getNode(id);
@@ -231,13 +72,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		update(nodes);
 	});
 
-	on(document, 'click', '.node__delegate', function() {
+	utils.on(document, 'click', '.node__delegate', function() {
 		var nodeElement = this.parentElement.parentElement.parentElement;
 		var id = nodeElement.id.substr(5);
 		socket.emit('setDelegate', id);
 	});
 
-	on(document, 'click', '.user__rm', function() {
+	utils.on(document, 'click', '.user__rm', function() {
 		if (confirm('Do you really want to delete this opinion?')) {
 			socket.emit('rmNode');
 			document.querySelector('.user__name input').value = '';
@@ -245,15 +86,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	on(document, 'change', '.user__name input', function() {
+	utils.on(document, 'change', '.user__name input', function() {
 		socket.emit('setNodeName', this.value);
 	});
 
-	on(document, 'click', '.user__undelegate', function() {
+	utils.on(document, 'click', '.user__undelegate', function() {
 		socket.emit('rmDelegate');
 	});
 
-	on(document, 'input', '.user__comment textarea', throttle(function() {
+	utils.on(document, 'input', '.user__comment textarea', utils.throttle(function() {
 		var comment = document.querySelector('.user__comment textarea').value;
 		var node = nodes.find(n => n.id === ID);
 		// Do not create a new node if the comment is empty.
