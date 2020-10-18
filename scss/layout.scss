@@ -25,6 +25,11 @@ body > header {
 			color: $color-bg-tint;
 		}
 	}
+
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
 }
 
 body > header,
