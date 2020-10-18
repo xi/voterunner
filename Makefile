@@ -1,14 +1,10 @@
-all: static/voterunner.js static/style.css
+all: voterunner.js style.css
 
-static/voterunner.js: static/src/*.js
-	browserify static/src/voterunner.js -o $@
+voterunner.js: src/*.js
+	browserify src/voterunner.js -o $@
 
-static/style.css: static/scss/*.scss
-	sassc static/scss/style.scss $@
+style.css: scss/*.scss
+	sassc scss/style.scss $@
 
 clean:
-	rm static/voterunner.js static/style.css
-
-.PHONY: server
-server: all
-	export DATABASE_URL='sqlite3:db.sqlite3' && node app.js
+	rm voterunner.js style.css

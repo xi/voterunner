@@ -1,19 +1,9 @@
 {
 	"name": "voterunner",
 	"version": "0.0.1",
-	"dependencies": {
-		"any-db": "^2.2.0",
-		"any-db-postgres": "^2.1.5",
-		"any-db-sqlite3": "^2.1.4",
-		"express": "^4.16.2",
-		"log4js": "^0.6.38",
-		"markdown-it": "^7.0.1",
-		"socket.io": "^1.7.4"
-	},
 	"devDependencies": {
-		"mfbs": "^3.1.1",
-		"preact": "^8.2.6",
-		"socket.io-client": "^1.7.4"
+		"preact": "^10.5.4",
+		"mfbs": "^4.0.0"
 	},
 	"author": "Tobias Bengfort",
 	"license": "AGPL-3+"
