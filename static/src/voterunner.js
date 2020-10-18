@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var state = {
 		nodes: [],
 		id: ID,
+		dirty: false,
 	};
 
 	var getNode = function(id) {
@@ -52,6 +53,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		} else {
 			document.querySelector('.user__delegation').textContent = '(no delegation)';
 		}
+
+		if (!state.dirty) {
+			document.querySelector('.user__comment textarea').value = user ? user.comment || '' : '';
+		}
 	});
 
 	utils.on(document, 'click', '.node__expand', function() {
@@ -78,11 +83,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				body: JSON.stringify(['rmNode', state.id]),
 			});
 			document.querySelector('.user__comment textarea').value = '';
+			state.dirty = false;
 		}
 	});
 
 	utils.on(document, 'change', '.user__name input', function() {
 		state.id = this.value;
+		state.dirty = false;
 		update(state);
 	});
 
@@ -103,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				method: 'POST',
 				body: JSON.stringify(['setNodeComment', state.id, comment]),
 			});
+			state.dirty = true;
 		}
 	}, 1000));
 
