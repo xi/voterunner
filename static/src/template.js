@@ -45,11 +45,6 @@ var tplNode = function(nodes, node, ID) {
 		classList.push('node--self');
 	}
 
-	var delegateAttrs = {};
-	if (node.id === ID || getDelegationChain(nodes, node).includes(ID)) {
-		delegateAttrs.disabled = true;
-	}
-
 	return h('li', {
 		key: 'node-' + node.id,
 		id: 'node-' + node.id,
@@ -70,7 +65,10 @@ var tplNode = function(nodes, node, ID) {
 				h('button', {
 					className: 'node__delegate bar__item bar__item--button bar__item--right',
 					title: 'delegate to ' + getName(node),
-					attributes: delegateAttrs,
+					disabled: (
+						node.id === ID ||
+						getDelegationChain(nodes, node).includes(ID)
+					),
 				}, '\u2795'),
 				h('div', {className: 'node__votes bar__item bar__item--right'}, '' + getVotes(nodes, node)),
 				h('div', {className: 'node__name bar__item' + (!node.expanded && node.comment ? '' : ' bar__item--grow')}, getName(node)),
