@@ -56,6 +56,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (!state.dirty) {
 			document.querySelector('.user__comment textarea').value = user ? user.comment || '' : '';
 		}
+
+		var disabled = !state.id || !navigator.onLine;
+		document.querySelector('.user__rm').disabled = disabled;
+		document.querySelector('.user__undelegate').disabled = disabled;
+		document.querySelector('.user__comment textarea').disabled = disabled;
 	});
 
 	utils.on(document, 'click', '.node__expand', function() {

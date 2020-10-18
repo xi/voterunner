@@ -62,6 +62,8 @@ var tplNode = function(state, node) {
 					className: 'node__delegate bar__item bar__item--button bar__item--right',
 					title: 'delegate to ' + node.id,
 					disabled: (
+						!navigator.onLine ||
+						!state.id ||
 						node.id === state.id ||
 						getDelegationChain(state.nodes, node).includes(state.id)
 					),
