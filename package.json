@@ -3,8 +3,7 @@
 	"version": "0.0.1",
 	"devDependencies": {
 		"mfbs": "^3.1.1",
-		"preact": "^8.2.6",
-		"socket.io-client": "^1.7.4"
+		"preact": "^8.2.6"
 	},
 	"author": "Tobias Bengfort",
 	"license": "AGPL-3+"

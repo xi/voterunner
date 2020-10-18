@@ -24,9 +24,8 @@ var setUp = function(url, fn) {
 	};
 
 	iframe.tearDown = function(done) {
-		var self = this;
-		self.contentWindow.socket.emit('testClear', function() {
-			self.parentNode.removeChild(self);
+		this.contentWindow.testClear(() => {
+			this.parentNode.removeChild(this);
 			done();
 		});
 	};

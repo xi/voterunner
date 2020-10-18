@@ -1,4 +1,3 @@
-var io = require('socket.io-client');
 var template = require('./template');
 var utils = require('./utils');
 
@@ -9,9 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (!ID) ID = utils.randomString();
 	utils.setCookie('id', ID, 100);
 
-	var socket = io.connect('/');
-	window.socket = socket;  // make available for tests
-	socket.emit('register', TOPIC, ID);
+	var url = 'https://via.ce9e.org/hmsg/voterunner/' + TOPIC;
 
 	var state = {
 		nodes: [],
@@ -76,12 +73,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	utils.on(document, 'click', '.node__delegate', function() {
 		var nodeElement = this.parentElement.parentElement.parentElement;
 		var id = nodeElement.id.substr(5);
-		socket.emit('setDelegate', id);
+		fetch(url, {
+			method: 'POST',
+			body: JSON.stringify(['setDelegate', state.id, id]),
+		});
 	});
 
 	utils.on(document, 'click', '.user__rm', function() {
 		if (confirm('Do you really want to delete this opinion?')) {
-			socket.emit('rmNode');
+			fetch(url, {
+				method: 'POST',
+				body: JSON.stringify(['rmNode', state.id]),
+			});
 			document.querySelector('.user__comment textarea').value = '';
 		}
 	});
@@ -92,7 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	utils.on(document, 'click', '.user__undelegate', function() {
-		socket.emit('rmDelegate');
+		fetch(url, {
+			method: 'POST',
+			body: JSON.stringify(['rmDelegate', state.id]),
+		});
 	});
 
 	utils.on(document, 'input', '.user__comment textarea', utils.throttle(function() {
@@ -101,33 +107,46 @@ document.addEventListener('DOMContentLoaded', function() {
 		// Do not create a new node if the comment is empty.
 		// This can happen e.g. on a keydown event from the ctrl or shift keys.
 		if (node || comment) {
-			socket.emit('setNodeComment', comment);
+			fetch(url, {
+				method: 'POST',
+				body: JSON.stringify(['setNodeComment', state.id, comment]),
+			});
 		}
 	}, 1000));
 
-	socket.on('rmNode', function(id) {
-		state.nodes = state.nodes.filter(function(node) {
-			if (node.delegate === id) {
-				node.delegate = null;
-			}
-			return node.id !== id;
-		});
-		invalidateVotes();
+	var evtSource = new EventSource(url);
+	evtSource.onmessage = function(event) {
+		var data = JSON.parse(event.data);
+		var name = data[0];
+		var id = data[1];
+
+		if (!id) {
+			return;
+		} else if (name === 'rmNode') {
+			state.nodes = state.nodes.filter(function(node) {
+				if (node.delegate === id) {
+					node.delegate = null;
+				}
+				return node.id !== id;
+			});
+			invalidateVotes();
+		} else if (name === 'setNodeComment') {
+			getNode(id).comment = data[2];
+		} else if (name === 'setDelegate') {
+			getNode(id).delegate = data[2];
+			invalidateVotes();
+			ensureVisible(state.nodes.find(n => n.id === state.id));
+		} else if (name === 'rmDelegate') {
+			getNode(id).delegate = null;
+			invalidateVotes();
+		}
 		update(state);
-	});
-	socket.on('setNodeComment', function(id, comment) {
-		getNode(id).comment = comment;
-		update(state);
-	});
-	socket.on('setDelegate', function(id, delegate) {
-		getNode(id).delegate = delegate;
-		invalidateVotes();
-		ensureVisible(user);
-		update(state);
-	});
-	socket.on('rmDelegate', function(id) {
-		getNode(id).delegate = null;
-		invalidateVotes();
-		update(state);
-	});
+	};
+
+	window.testClear = function(done) {
+		fetch(url, {
+			method: 'PUT',
+			body: JSON.stringify(['setNodes', null, []]),
+		}).then(done);
+	};
 });
