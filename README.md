@@ -1,32 +1,11 @@
 voterunner
 ==========
 
-what is this?
--------------
-
-This app tries to allow for quick and dirty votes and discussions. It is
-basically the core concept behind
-[votorolla](http://zelea.com/project/votorola/home.xht) mixed with the
-interface of [etherpad](http://etherpad.org/). Technically, it is a lot
-of client side code using a [via](https://github.com/xi/via) server.
-
-The voting mechanism
---------------------
-
-Votorolla is a complex liquid democracy project. But the core idea is
-simple:
-
-Every opinion is a node in a tree. At first, there are no edges at all.
-So people start to explain why their opinion is the one to choose. When
-you see some convincing argument you can *support* that node (*delegate
-your vote*).
-
-After a while it becomes clear which competing positions exist and which
-arguments are important. The whole discussion is conserved in the graph.
-You can go on discussing until you reach a consensus.
-
-While this concept is not perfect for every situation it is beautiful
-in its simplicity.
+Voterunner combines public [delegated
+voting](https://en.wikipedia.org/wiki/Liquid_democracy) with real-time
+communication inspired by [etherpad](http://etherpad.org/). While this
+concept is not perfect for every situation it is beautiful in its
+simplicity.
 
 How to use it
 -------------
@@ -58,6 +37,21 @@ But maybe you even have an innovative idea. In that case you may revoke
 the delegation. Now you compete directly with other ideas. Maybe you can
 convince others, but maybe you should delegate your vote again in order
 to agree on a compromise.
+
+Once everyone agrees on a single proposal you not only have a decision
+but also a record of all the little arguments that lead you there.
+
+Limitations
+-----------
+
+This uses a very simple [via](https://github.com/xi/via) backend which
+comes with a set of limitations:
+
+-	No protection against manipulation (but users can verify their own
+	votes)
+-	No protection against data loss
+-	No builtin authentication
+-	All data will be deleted after 2 weeks of inactivity
 
 Development
 -----------
