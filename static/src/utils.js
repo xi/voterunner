@@ -51,19 +51,9 @@ var randomString = function() {
 	return Math.floor(a).toString(36);
 };
 
-var setCookie = function(key, value, days) {
-	localStorage[key] = value;
-};
-
-var getCookie = function(key) {
-	return localStorage[key];
-};
-
 module.exports = {
 	throttle: throttle,
 	on: on,
 	initVDom: initVDom,
 	randomString: randomString,
-	setCookie: setCookie,
-	getCookie: getCookie,
 };

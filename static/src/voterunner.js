@@ -2,17 +2,16 @@ var template = require('./template');
 var utils = require('./utils');
 
 document.addEventListener('DOMContentLoaded', function() {
-	var TOPIC = document.URL.split('/')[3];
-	var ID = document.URL.split('/')[4];
-	if (!ID) ID = utils.getCookie('id');
-	if (!ID) ID = utils.randomString();
-	utils.setCookie('id', ID, 100);
-
-	var url = 'https://via.ce9e.org/hmsg/voterunner/' + TOPIC;
+	if (!location.hash) {
+		location.hash = utils.randomString();
+	}
+	var topic = location.hash.substr(1);
+	var url = 'https://via.ce9e.org/hmsg/voterunner/' + topic;
+	document.title += ' - ' + topic;
 
 	var state = {
 		nodes: [],
-		id: ID,
+		id: null,
 		dirty: false,
 	};
 

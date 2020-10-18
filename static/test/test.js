@@ -14,10 +14,10 @@ var setUpUser = function(browser, id) {
 	trigger(userName, 'input');
 };
 
-var setUp = function(url, fn) {
+var setUp = function(topic, fn) {
 	var iframe = document.createElement('iframe');
-	iframe.url = url;
-	iframe.src = url;
+	iframe.url = '/#test' + topic;
+
 	iframe.onload = function() {
 		setUpUser(this, ID);
 		fn(iframe);
@@ -42,6 +42,7 @@ var setUp = function(url, fn) {
 	};
 
 	document.getElementById('testarea').appendChild(iframe);
+	iframe.src = iframe.url;
 };
 
 describe('load', function() {
@@ -49,7 +50,7 @@ describe('load', function() {
 	var browser;
 
 	before(function(done) {
-		setUp('/test' + test + '/', function(b) {
+		setUp(test, function(b) {
 			browser = b;
 			done();
 		});
@@ -75,7 +76,7 @@ describe('setComment', function() {
 	var d, userComment, node, nodeComment, nodeExpand;
 
 	before(function(done) {
-		setUp('/test' + test + '/' + ID, function(b) {
+		setUp(test, function(b) {
 			browser = b;
 			d = browser.contentDocument;
 
@@ -139,7 +140,7 @@ describe('remove', function() {
 	var d, userComment, userRemove;
 
 	before(function(done) {
-		setUp('/test' + test + '/' + ID, function(b) {
+		setUp(test, function(b) {
 			browser = b;
 			d = browser.contentDocument;
 			browser.contentWindow.confirm = () => true;
