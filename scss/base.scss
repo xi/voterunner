@@ -1,3 +1,7 @@
+* {
+	box-sizing: border-box;
+}
+
 input[type="text"],
 textarea {
 	background-color: $color-bg;
@@ -6,6 +10,7 @@ textarea {
 textarea {
 	font-family: inherit;
 	font-size: inherit;
+	resize: vertical;
 }
 
 @media screen {

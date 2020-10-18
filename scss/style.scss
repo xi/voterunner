@@ -6,10 +6,7 @@ $color-bg-tint: mix($color-link, $color-bg, 25%);
 $color-border: #c0c0c0;
 
 $padding: 0.4em;
-
-@import '../node_modules/mfbs/sass/variables';
-@import '../node_modules/mfbs/sass/base';
-@import '../node_modules/mfbs/sass/layout';
+$spacer: 1.5em;
 
 @import 'base';
 @import 'layout';
