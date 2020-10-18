@@ -124,7 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		var name = data[0];
 		var id = data[1];
 
-		if (!id) {
+		if (name === 'setNodes') {
+			state.nodes = data[2];
+			ensureVisible(state.nodes.find(n => n.id === state.id));
+		} else if (!id) {
 			return;
 		} else if (name === 'rmNode') {
 			state.nodes = state.nodes.filter(function(node) {
@@ -145,6 +148,15 @@ document.addEventListener('DOMContentLoaded', function() {
 			invalidateVotes();
 		}
 		update(state);
+
+		if (Math.random() < 0.05) {
+			invalidateVotes();
+			fetch(url, {
+				method: 'PUT',
+				body: JSON.stringify(['setNodes', null, state.nodes]),
+				headers: {'Last-Event-ID': event.lastEventId},
+			});
+		}
 	};
 
 	window.testClear = function(done) {
