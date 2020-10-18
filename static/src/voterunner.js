@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	utils.on(document, 'change', '.user__name input', function() {
+	utils.on(document, 'input', '.user__name input', function() {
 		state.id = this.value;
 		state.dirty = false;
 		update(state);
