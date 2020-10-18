@@ -42,13 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	};
 
-	var user = state.nodes.find(n => n.id === state.id);
-	if (user) {
-		document.querySelector('.user__comment textarea').value = user.comment;
-		ensureVisible(user);
-	}
+	var update = utils.initVDom(document.querySelector('#tree'), template.template, state, function() {
+		var user = state.nodes.find(n => n.id === state.id);
 
-	var updateUser = function() {
 		document.querySelector('.user__votes').textContent = template.getVotes(state.nodes, user || {});
 
 		if (user && user.delegate) {
@@ -56,10 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		} else {
 			document.querySelector('.user__delegation').textContent = '(no delegation)';
 		}
-	};
-
-	var update = utils.initVDom(document.querySelector('#tree'), template.template, state, function() {
-		updateUser();
 	});
 
 	utils.on(document, 'click', '.node__expand', function() {
