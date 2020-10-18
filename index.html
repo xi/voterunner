@@ -13,28 +13,24 @@
 		<h1><span class="logo1">vote</span>runner</h1>
 	</header>
 
-	<div><div>
-		<div id="sidebar">
-			<div class="user">
-				<div class="bar">
-					<div class="user__delegation bar__item bar__item--grow">(no delegation)</div>
-					<span class="user__votes bar__item bar__item--right" title="number of votes of you and all your followers">1</span>
-					<button class="user__undelegate bar__item bar__item--button bar__item--right" title="revoke delegation">&#10134;</button>
-				</div>
-				<div class="bar">
-					<button title="remove your opinion" class="user__rm bar__item bar__item--button bar__item--right">&#10060;</button>
-					<div class="user__name bar__item bar__item--grow">
-						<input type="text" placeholder="<enter your name>" />
-					</div>
-				</div>
-				<div class="user__comment">
-					<textarea autocomplete="off"></textarea>
-				</div>
+	<div class="user">
+		<div class="bar">
+			<div class="user__delegation bar__item bar__item--grow">(no delegation)</div>
+			<span class="user__votes bar__item bar__item--right" title="number of votes of you and all your followers">1</span>
+			<button class="user__undelegate bar__item bar__item--button bar__item--right" title="revoke delegation">&#10134;</button>
+		</div>
+		<div class="bar">
+			<button title="remove your opinion" class="user__rm bar__item bar__item--button bar__item--right">&#10060;</button>
+			<div class="user__name bar__item bar__item--grow">
+				<input type="text" placeholder="<enter your name>" />
 			</div>
 		</div>
+		<div class="user__comment">
+			<textarea autocomplete="off"></textarea>
+		</div>
+	</div>
 
-		<div id="tree"></div>
-	</div></div>
+	<div id="tree"></div>
 
 	<script type="text/javascript" src="/voterunner.js"></script>
 </body>
