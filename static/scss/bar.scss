@@ -14,15 +14,21 @@
 	appearance: none;
 	background: none;
 	border: 0;
-	cursor: pointer;
 	font: inherit;
 	color: inherit;
 	text-align: center;
 	min-width: 2.3em;
 
-	&:focus,
-	&:hover {
-		background-color: rgba($color-bg, 0.2);
+	&:not(:disabled) {
+		cursor: pointer;
+
+		&:focus,
+		&:hover {
+			background-color: rgba($color-bg, 0.2);
+		}
+	}
+	&:disabled {
+		opacity: 0.5;
 	}
 
 	@media print {
