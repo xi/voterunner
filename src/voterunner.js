@@ -160,9 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	};
 
 	window.testClear = function(done) {
-		fetch(url, {
-			method: 'PUT',
-			body: JSON.stringify(['setNodes', null, []]),
-		}).then(done);
+		fetch(url, {method: 'DELETE'}).then(done);
 	};
 });
